@@ -38,6 +38,7 @@ return = "<questions>"
 
 [logic.js.show_alert_message]
 params.row_number = "<row_number>"
+params.column_number = "<column_number>"
 details = """
 alert a message "you just click on me, i am row <row_number>"
 """
@@ -54,7 +55,7 @@ style.background = "lightYellow"
 style.border = "1px, silver, solid"
 cells.style.background = "blue"
 rows.start_index = 1
-rows.onclick = "logic.js.show_alert_message(<row_number>)"
+rows.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
 
 [components.mytable]
 cells.style.background = "green"
