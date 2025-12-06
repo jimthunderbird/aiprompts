@@ -11,8 +11,18 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - for [logic.js.*], wrap it in <script> tag
 - for all css, wrap it in <style> tag
 
-output the codeblock immediately
-no github copilot actions
+output in the following format:
+<?php
+// all php logic code here...
+?>
+
+<script>
+// all javascript code here...
+</script>
+
+<style>
+//all css code here
+</style>
 
 Here is the toml spec:
 
