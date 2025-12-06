@@ -1,18 +1,16 @@
-you are an expert in PHP 8.4.13
-please create a PHP codeblock base on the following spec:
-
+[logic.get_random_questions]
+language = "php"
+version = "8.4.13"
+detail = """
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
-
-with the the data above, render the following html components
-do not include html tags such as: <!DOCTYPE html>, <html>, <head> ..., just show the component's related html
-
-here are the components:
+"""
+return = "<questions>"
 
 [components.mytable]
 id = "mytable"
 type = "html_table"
-datasource = "<question> in <questions>"
+datasource = "<question> in <questions> from logic.get_random_questions"
 headers.id.label = "ID"
 headers.id.data = "<question.id>"
 headers.question.label = "QUESTION"
