@@ -1,4 +1,4 @@
-You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the following spec, please
+You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the following toml spec, please
 - for [components.*], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - do not use echo or heredoc to output html
 - do not use inline css 
@@ -8,7 +8,7 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - do not include any mock testing code
 - show me the code only, no explanation and no extra words
 
-Here is the spec:
+Here is the toml spec:
 
 [logic.get_random_questions]
 detail = """
