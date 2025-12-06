@@ -13,11 +13,13 @@ here are the components:
 id = "mytable"
 type = "html table"
 datasource = "<question> in <questions>"
-headers.id = "map to <question.id>"
-headers.question = "map to <question.body>"
+headers.id.label = "ID"
+headers.id.data = "<question.id>"
+headers.question.label = "QUESTION"
+headers.question.data = "<question.body>"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
-onclick = "alert a message \"i am mytable, you just click on me\""
+onclick.event = "component.<id>.click"
 
 do not use echo or heredoc to output html
 do not use inline css 
