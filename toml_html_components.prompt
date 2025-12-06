@@ -1,3 +1,9 @@
+You are a PHP expert, please generate the php codeblock base on the following spec, please
+- for html related components, only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
+- return the codeblock immedidately
+
+Here is the spec:
+
 [logic.get_random_questions]
 language = "php"
 version = "8.4.13"
