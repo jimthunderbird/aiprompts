@@ -1,4 +1,4 @@
-You are a PHP coding expert, please generate the php codeblock base on the following spec, please
+You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the following spec, please
 - for [components.*], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - do not use echo or heredoc to output html
 - do not use inline css 
@@ -11,8 +11,6 @@ You are a PHP coding expert, please generate the php codeblock base on the follo
 Here is the spec:
 
 [logic.get_random_questions]
-language = "php"
-version = "8.4.13"
 detail = """
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
