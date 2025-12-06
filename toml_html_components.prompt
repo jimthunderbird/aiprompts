@@ -43,7 +43,7 @@ details = """
 alert a message "you are clicking on row <row_number>, column <column_number>"
 """
 
-[components.mytable]
+[components.questions-table]
 id = "mytable"
 type = "html_table"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
@@ -55,7 +55,14 @@ headers.style.background = "lightYellow"
 headers.style.textalign = "left"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
+cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
 cells.style.background = "blue"
 cells.style.textalign = "right"
 rows.start_index = 1
-rows.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
+
+[components.questoins-list]
+id = "questions-list"
+type = "html_div_with_paragraphs"
+datasource = "<question> in <questions> from logic.php.get_random_questions"
+paragraph.odd.style.background = "yellow"
+paragraph.even.style.background = "light yellow"
