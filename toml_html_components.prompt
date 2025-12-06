@@ -35,6 +35,7 @@ headers.question.data = "<question.body>"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
 cells.style.background = "blue"
+rows.start_index = 1
 rows.onclick = "logic.js.show_alert_message"
 
 [components.mytable]
