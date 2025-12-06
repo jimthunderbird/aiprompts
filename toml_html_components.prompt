@@ -40,7 +40,7 @@ return = "<questions>"
 params.row_number = "<row_number>"
 params.column_number = "<column_number>"
 details = """
-alert a message "you are clicking on row: <row_number>, column <column_number>"
+alert a message "you are clicking on row <row_number>, column <column_number>"
 """
 
 [components.mytable]
