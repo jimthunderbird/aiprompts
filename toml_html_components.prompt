@@ -1,8 +1,9 @@
-You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the following toml spec
+You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the toml spec
 
 - for [components.*], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for [logic.php.*], make it in php
-- for [logic.js.*], make it javascript
+- for [logic.js.*], wrap it in <script> tag
+- for all css, wrap it in <style> tag
 - do not use echo or heredoc to output html
 - do not use inline css 
 - do not use inline javascript
