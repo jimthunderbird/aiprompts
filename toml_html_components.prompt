@@ -1,0 +1,24 @@
+you are an expert in PHP 8.4.13
+please create a PHP codeblock base on the following spec:
+
+- read questions.json and save it to <questions>
+- pick 4 random questions from <questions> and save it to <questions>
+
+- with the the data above, render the following html components, just show the component's related html, no need to have a full html doc
+
+[components.mytable]
+id = "mytable"
+type = "html table"
+datasource = "<question> in <questions>"
+headers.id = "map to <question.id>"
+headers.question = "map to <question.body>"
+style.background = "lightYellow"
+style.border = "1px, silver, solid"
+onclick = "alert a message \"i am mytable, you just click on me\""
+
+do not use inline css 
+do not use inline javascript
+for all the css, make sure it works on both desktop web browser and mobile web browser
+
+show me the php code only, do not include the ?>, no explanation and no extra words. 
+output the codeblock immediately.DO NOT include any mock testing code!
