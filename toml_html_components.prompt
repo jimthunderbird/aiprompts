@@ -29,3 +29,7 @@ style.background = "lightYellow"
 style.border = "1px, silver, solid"
 cells.style.background = "blue"
 rows.onclick.event = "component.<id>.click"
+
+# override mytable styles
+[components.mytable]
+cells.style.background = "green"
