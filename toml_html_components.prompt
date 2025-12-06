@@ -5,7 +5,7 @@ please create a PHP codeblock base on the following spec:
 - pick 4 random questions from <questions> and save it to <questions>
 
 with the the data above, render the following html components
-do not show html tags such as: <!DOCTYPE html>, <html>, <head> ..., just show the component's related html
+do not include html tags such as: <!DOCTYPE html>, <html>, <head> ..., just show the component's related html
 
 here are the components:
 
