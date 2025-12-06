@@ -58,5 +58,5 @@ cells.style.background = "blue"
 rows.start_index = 1
 rows.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
 
-[components.mytable]
-cells.style.background = "green"
+#[components.mytable]
+#cells.style.background = "green"
