@@ -19,6 +19,7 @@ headers.question.label = "QUESTION"
 headers.question.data = "<question.body>"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
+cells.style.background = "blue"
 rows.onclick.event = "component.<id>.click"
 
 do not use echo or heredoc to output html
