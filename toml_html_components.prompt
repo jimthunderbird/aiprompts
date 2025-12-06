@@ -2,8 +2,6 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 
 - for [components.*], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for [logic.php.*], make it in php
-- for [logic.js.*], wrap it in <script> tag
-- for all css, wrap it in <style> tag
 - do not use echo or heredoc to output html
 - do not use inline css 
 - do not use inline javascript
@@ -11,6 +9,8 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - do not include any mock testing code
 - show me the code only, no explanation and no extra words
 - for the codeblock, do not inlcude ```php, ```javascript, ```js, ```css
+- for [logic.js.*], wrap it in <script> tag
+- for all css, wrap it in <style> tag
 
 output the codeblock immediately
 no github copilot actions
