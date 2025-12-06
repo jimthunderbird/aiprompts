@@ -10,12 +10,18 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 
 Here is the toml spec:
 
-[logic.get_random_questions]
+[logic.php.get_random_questions]
 detail = """
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
 """
 return = "<questions>"
+
+[logic.js.show_alert_message]
+params.row_number = "<row_number>"
+details = """
+alert a message "you just click on <row_number>"
+"""
 
 [components.mytable]
 id = "mytable"
@@ -28,7 +34,7 @@ headers.question.data = "<question.body>"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
 cells.style.background = "blue"
-rows.onclick.event = "component.<id>.click"
+rows.onclick = "logic.js.show_alert_message"
 
 [components.mytable]
 cells.style.background = "green"
