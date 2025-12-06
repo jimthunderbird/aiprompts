@@ -4,7 +4,14 @@ please create a PHP codeblock base on the following spec:
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
 
-- with the the data above, render the following html components, just show the component's related html, no need to have a full html doc
+with the the data above, render the following html components, just show the component's related html
+do not include 
+<!DOCTYPE html>
+<html>
+<head>
+...
+
+here are the components:
 
 [components.mytable]
 id = "mytable"
