@@ -34,7 +34,7 @@ return = "<questions>"
 [logic.js.show_alert_message]
 params.row_number = "<row_number>"
 details = """
-alert a message "you just click on row <row_number>"
+alert a message "you just click on me, i am row <row_number>"
 """
 
 [components.mytable]
