@@ -11,7 +11,7 @@ here are the components:
 
 [components.mytable]
 id = "mytable"
-type = "html table"
+type = "html_table"
 datasource = "<question> in <questions>"
 headers.id.label = "ID"
 headers.id.data = "<question.id>"
@@ -19,7 +19,7 @@ headers.question.label = "QUESTION"
 headers.question.data = "<question.body>"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
-onclick.event = "component.<id>.click"
+rows.onclick.event = "component.<id>.click"
 
 do not use echo or heredoc to output html
 do not use inline css 
