@@ -46,7 +46,7 @@ alert a message "you are clicking on row <row_number>, column <column_number>"
 [components.mytable]
 id = "mytable"
 type = "html_table"
-datasource = "<question> in <questions> from logic.get_random_questions"
+datasource = "<question> in <questions> from logic.php.get_random_questions"
 headers.id.label = "ID"
 headers.id.data = "<question.id>"
 headers.question.label = "QUESTION"
