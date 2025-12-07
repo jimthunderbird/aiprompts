@@ -9,6 +9,6 @@ paragraph.odd.style.background = "light green"
 paragraph.even.style.background = "green"
 paragraph.hover_on = """
 cell.style.font-weight: bold
-cell.style.mouse-cursor: hand
+cell.style.mouse-cursor: spinning ring
 """
 paragraph.hover_off = "change cell.style.font-weight: normal"
