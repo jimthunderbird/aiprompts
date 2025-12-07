@@ -1,6 +1,6 @@
 You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the <toml_spec>
 
-- for [components.*], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
+- for all [components], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for [logic.php.<name>], make the php function name same as <name>
   for example:
   [logic.php.hello_world] corresponds to a php function hello_world

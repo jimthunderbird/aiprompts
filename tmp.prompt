@@ -1,7 +1,7 @@
 
 You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the <toml_spec>
 
-- for [components.*], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
+- for all [components], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for [logic.php.<name>], make the php function name same as <name>
   for example:
   [logic.php.hello_world] corresponds to a php function hello_world
@@ -39,11 +39,12 @@ return = "<questions>"
 [logic.js.show_alert_message]
 params.row_number = "<row_number>"
 params.column_number = "<column_number>"
+params.question = "<question>"
 details = """
-alert a message "you clicked on row <row_number>, column <column_number>"
+alert a message "you clicked on row <row_number>, column <column_number>, question id: <question.id>"
 """
 
-[components.questions-table]
+[[components]]
 id = "questions-table"
 type = "html_table"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
@@ -58,12 +59,12 @@ style.border = "1px, blue, solid"
 cells.style.details = """
 padding: 10px
 """
-cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
+cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
 cells.style.background = "wheat"
 cells.style.textalign = "right"
 rows.start_index = 1
 
-[components.questoins-list]
+[[components]]
 id = "questions-list"
 type = "html_div_with_paragraphs"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
