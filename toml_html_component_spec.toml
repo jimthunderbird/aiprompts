@@ -14,12 +14,4 @@ pick 2 random questions from <questions> and save it to <questions>
 return <questions>
 """
 
-[logic.js.show_alert_message]
-param.row_number = "<row_number>"
-param.column_number = "<column_number>"
-param.question = "<question>"
-detail = """
-pop up a message:"<question.body>"
-"""
-
 @include custom.toml

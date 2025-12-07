@@ -2,7 +2,8 @@
 You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the <toml_spec>
 
 - for all [component], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
-- for all [component.<name>], if the datasource does not refer to a logic, generate a php function named "component_<replace_dash_to_underscore_in_name>_datasource"
+- for all [component.<name>], if the datasource does not refer to a php logic, generate a php function named "component_<replace_dash_to_underscore_in_name>_datasource"
+- for all [component.<name>], if the events like click,keypress...etc does not refer to a javascript logic, generate an anonymous javascript function for it
 - for [logic.php.<name>], make the php function name same as <name>
   for example:
   [logic.php.hello_world] corresponds to a php function hello_world
@@ -34,6 +35,7 @@ Here is the <toml_spec>:
 datasource = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\n"
 id = "questions-table"
 type = "html_table"
+click = "pop up a message: \"question details: <question.body> (<row_number>, <column_number>)\"\n"
 
 [component.questions-list]
 type = "html section with paragraphs"
@@ -43,16 +45,14 @@ datasource = "get questions from logic.php.get_random_questions"
 detail = "background: light yellow, border: 3px gold solid"
 
 [component.questions-table.cell]
-click = "do logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
+hover_on = "change cell.style.font-weight: bold"
+hover_off = "change cell.style.font-weight: normal"
 
 [component.questions-table.row]
 start_index = 1
 
 [logic.php.get_random_questions]
 details = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
-
-[logic.js.show_alert_message]
-detail = "pop up a message:\"<question.body>\"\n"
 
 [component.questions-table.header.id]
 label = "ID"
@@ -72,11 +72,6 @@ textalign = "center"
 
 [component.questions-list.paragraph.style]
 detail = "margin left 10px, margin right 10px"
-
-[logic.js.show_alert_message.param]
-row_number = "<row_number>"
-column_number = "<column_number>"
-question = "<question>"
 
 [component.questions-list.paragraph.odd.style]
 background = "light red"

@@ -2,6 +2,7 @@
 datasource = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\n"
 id = "questions-table"
 type = "html_table"
+click = "pop up a message: \"question details: <question.body> (<row_number>, <column_number>)\"\n"
 
 [component.questions-list]
 type = "html section with paragraphs"
@@ -11,16 +12,14 @@ datasource = "get questions from logic.php.get_random_questions"
 detail = "background: light yellow, border: 3px gold solid"
 
 [component.questions-table.cell]
-click = "do logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
+hover_on = "change cell.style.font-weight: bold"
+hover_off = "change cell.style.font-weight: normal"
 
 [component.questions-table.row]
 start_index = 1
 
 [logic.php.get_random_questions]
 details = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
-
-[logic.js.show_alert_message]
-detail = "pop up a message:\"<question.body>\"\n"
 
 [component.questions-table.header.id]
 label = "ID"
@@ -40,11 +39,6 @@ textalign = "center"
 
 [component.questions-list.paragraph.style]
 detail = "margin left 10px, margin right 10px"
-
-[logic.js.show_alert_message.param]
-row_number = "<row_number>"
-column_number = "<column_number>"
-question = "<question>"
 
 [component.questions-list.paragraph.odd.style]
 background = "light red"
