@@ -2,18 +2,50 @@
 <?php
 function get_random_questions() {
     $json = file_get_contents('questions.json');
-    $all_questions = json_decode($json, true);
-    $questions = [];
-    $keys = array_rand($all_questions, min(4, count($all_questions)));
-    if (!is_array($keys)) $keys = [$keys];
-    foreach ($keys as $key) {
-        $questions[] = $all_questions[$key];
+    $questions = json_decode($json, true);
+    
+    $random_keys = array_rand($questions, min(4, count($questions)));
+    if (!is_array($random_keys)) {
+        $random_keys = [$random_keys];
     }
-    return $questions;
+    
+    $result = [];
+    foreach ($random_keys as $key) {
+        $result[] = $questions[$key];
+    }
+    
+    return $result;
 }
 
 $questions = get_random_questions();
 ?>
+
+<div id="questions-table">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>QUESTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $row_index = 1; foreach ($questions as $question): ?>
+            <tr>
+                <td onclick="show_alert_message(<?php echo $row_index; ?>, 1, <?php echo htmlspecialchars(json_encode($question), ENT_QUOTES); ?>)"><?php echo htmlspecialchars($question['id']); ?></td>
+                <td onclick="show_alert_message(<?php echo $row_index; ?>, 2, <?php echo htmlspecialchars(json_encode($question), ENT_QUOTES); ?>)"><?php echo htmlspecialchars($question['body']); ?></td>
+            </tr>
+            <?php $row_index++; endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<div id="questions-list">
+    <?php $index = 0; foreach ($questions as $question): ?>
+    <p class="<?php echo ($index % 2 == 0) ? 'odd' : 'even'; ?>">
+        <?php echo htmlspecialchars($question['body']); ?>
+    </p>
+    <?php $index++; endforeach; ?>
+</div>
 
 <script>
 function show_alert_message(row_number, column_number, question) {
@@ -21,44 +53,15 @@ function show_alert_message(row_number, column_number, question) {
 }
 </script>
 
-<table id="questions-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>QUESTION</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php $row_index = 1; foreach ($questions as $question): ?>
-        <tr>
-            <td onclick='show_alert_message(<?php echo $row_index; ?>, 1, <?php echo json_encode($question); ?>)'>
-                <?php echo htmlspecialchars($question['id']); ?>
-            </td>
-            <td onclick='show_alert_message(<?php echo $row_index; ?>, 2, <?php echo json_encode($question); ?>)'>
-                <?php echo htmlspecialchars($question['body']); ?>
-            </td>
-        </tr>
-        <?php $row_index++; endforeach; ?>
-    </tbody>
-</table>
-
-<section id="questions-list">
-    <?php $para_index = 0; foreach ($questions as $question): ?>
-    <p class="<?php echo ($para_index % 2 == 0) ? 'even' : 'odd'; ?>">
-        <?php echo htmlspecialchars($question['body']); ?>
-    </p>
-    <?php $para_index++; endforeach; ?>
-</section>
-
 <style>
-#questions-table {
+#questions-table table {
     background: lightYellow;
     border: 1px solid blue;
     width: 100%;
     border-collapse: collapse;
 }
 
-#questions-table thead {
+#questions-table thead tr {
     background: lightYellow;
 }
 
@@ -89,8 +92,8 @@ function show_alert_message(row_number, column_number, question) {
     background: lightYellow;
 }
 
-@media screen and (max-width: 768px) {
-    #questions-table {
+@media (max-width: 768px) {
+    #questions-table table {
         font-size: 14px;
     }
     
@@ -100,7 +103,8 @@ function show_alert_message(row_number, column_number, question) {
     }
     
     #questions-list p {
-        font-size: 14px;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 }
 </style>

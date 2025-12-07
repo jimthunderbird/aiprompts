@@ -29,21 +29,6 @@ output in the following format:
 
 Here is the <toml_spec>:
 
-[logic.php.get_random_questions]
-detail = """
-- read questions.json and save it to <questions>
-- pick 4 random questions from <questions> and save it to <questions>
-"""
-return = "<questions>"
-
-[logic.js.show_alert_message]
-param.row_number = "<row_number>"
-param.column_number = "<column_number>"
-param.question = "<question>"
-detail = """
-pop up a message:"<question.body>"
-"""
-
 [[components]]
 id = "questions-table"
 type = "html_table"
@@ -75,4 +60,19 @@ margin-right: 10px"
 """
 paragraph.odd.style.background = "yellow"
 paragraph.even.style.background = "light yellow"
+
+[logic.php.get_random_questions]
+detail = """
+- read questions.json and save it to <questions>
+- pick 4 random questions from <questions> and save it to <questions>
+"""
+return = "<questions>"
+
+[logic.js.show_alert_message]
+param.row_number = "<row_number>"
+param.column_number = "<column_number>"
+param.question = "<question>"
+detail = """
+pop up a message:"<question.body>"
+"""
 
