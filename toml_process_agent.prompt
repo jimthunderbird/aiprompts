@@ -1,0 +1,14 @@
+you are a coding expert using python 3.11
+please give me a python script and do the following:
+
+- it will accept one cli argument <cli_arg>, validate the <cli_arg>
+- make sure the <cli_arg> is a valid toml file <toml_file>
+- analyze the content of <toml_file>
+  - if it has @include followed by a toml file path, read the content of included toml file and merge into the toml content <toml_content>
+  for example, if we have
+  @include a.toml
+  @include b.toml
+  we then need to read the content of a.toml and b.toml and merge them into <toml_content>
+- print the <toml_content> 
+
+output the python codeblock immediately, no explanation, no extra words
