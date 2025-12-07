@@ -1,0 +1,8 @@
+[component.questions-list]
+type = "html section with paragraphs"
+datasource="get questions from logic.php.get_random_questions"
+paragraph.style.detail = "margin left 10px, margin right 10px"
+paragraph.odd.style.background = "light green"
+paragraph.even.style.background = "green"
+paragraph.hover_on = "change cell.style.font-weight: bold"
+paragraph.hover_off = "change cell.style.font-weight: normal"

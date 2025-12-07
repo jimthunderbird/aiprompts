@@ -1,11 +1,5 @@
 @include component.questions-table.toml
-
-[component.questions-list]
-type = "html section with paragraphs"
-datasource="get questions from logic.php.get_random_questions"
-paragraph.style.detail = "margin left 10px, margin right 10px"
-paragraph.odd.style.background = "light green"
-paragraph.even.style.background = "green"
+@include component.questions-list.toml
 
 [logic.php.get_random_questions]
 details = """

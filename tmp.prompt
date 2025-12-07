@@ -51,6 +51,10 @@ hover_off = "change cell.style.font-weight: normal"
 [component.questions-table.row]
 start_index = 1
 
+[component.questions-list.paragraph]
+hover_on = "change cell.style.font-weight: bold"
+hover_off = "change cell.style.font-weight: normal"
+
 [logic.php.get_random_questions]
 details = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
 
