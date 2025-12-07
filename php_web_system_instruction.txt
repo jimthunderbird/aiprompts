@@ -14,4 +14,4 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - do not use inline javascript
 - for all the css, make sure it works on both desktop web browser and mobile web browser
 - do not include any mock testing code
-- show me the code only, no explanation and no extra words
+- output the codeblock immediately, no explanation, no extra words

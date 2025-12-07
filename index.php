@@ -3,8 +3,9 @@
 function component_questions_table_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
-    shuffle($questions);
-    return array_slice($questions, 0, 2);
+    $shuffled = $questions;
+    shuffle($shuffled);
+    return array_slice($shuffled, 0, 2);
 }
 
 function get_random_questions() {
@@ -18,7 +19,7 @@ $questionsTableData = component_questions_table_datasource();
 $questionsListData = get_random_questions();
 ?>
 
-<table id="questions-table" class="questions-table">
+<table id="questions-table">
     <thead>
         <tr>
             <th>ID</th>
@@ -28,16 +29,16 @@ $questionsListData = get_random_questions();
     <tbody>
         <?php foreach ($questionsTableData as $index => $question): ?>
         <tr data-row="<?php echo $index + 1; ?>">
-            <td data-col="1" data-row="<?php echo $index + 1; ?>" data-body="<?php echo htmlspecialchars($question['body']); ?>"><?php echo htmlspecialchars($question['id']); ?></td>
-            <td data-col="2" data-row="<?php echo $index + 1; ?>" data-body="<?php echo htmlspecialchars($question['body']); ?>"><?php echo htmlspecialchars($question['body']); ?></td>
+            <td data-col="1" data-value="<?php echo htmlspecialchars($question['id']); ?>"><?php echo htmlspecialchars($question['id']); ?></td>
+            <td data-col="2" data-value="<?php echo htmlspecialchars($question['body']); ?>"><?php echo htmlspecialchars($question['body']); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
-<section class="questions-list">
+<section id="questions-list">
     <?php foreach ($questionsListData as $index => $question): ?>
-    <p class="<?php echo ($index + 1) % 2 === 1 ? 'odd' : 'even'; ?>">
+    <p class="<?php echo ($index % 2 === 0) ? 'even' : 'odd'; ?>" data-question="<?php echo htmlspecialchars($question['body']); ?>">
         <?php echo htmlspecialchars($question['body']); ?>
     </p>
     <?php endforeach; ?>
@@ -45,19 +46,20 @@ $questionsListData = get_random_questions();
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const table = document.getElementById('questions-table');
-    if (table) {
-        table.addEventListener('click', function(e) {
+    const tableBody = document.querySelector('#questions-table tbody');
+    if (tableBody) {
+        tableBody.addEventListener('click', function(e) {
             const cell = e.target.closest('td');
             if (cell) {
-                const rowNumber = cell.getAttribute('data-row');
-                const colNumber = cell.getAttribute('data-col');
-                const questionBody = cell.getAttribute('data-body');
-                alert(`question details: ${questionBody} (${rowNumber}, ${colNumber})`);
+                const row = cell.closest('tr');
+                const rowNumber = row.dataset.row;
+                const colNumber = cell.dataset.col;
+                const questionBody = cell.dataset.value;
+                alert('question details: ' + questionBody + ' (' + rowNumber + ', ' + colNumber + ')');
             }
         });
-        
-        const cells = table.querySelectorAll('td');
+
+        const cells = tableBody.querySelectorAll('td');
         cells.forEach(cell => {
             cell.addEventListener('mouseenter', function() {
                 this.style.fontWeight = 'bold';
@@ -67,9 +69,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
-    const listParagraphs = document.querySelectorAll('.questions-list p');
-    listParagraphs.forEach(p => {
+
+    const paragraphs = document.querySelectorAll('#questions-list p');
+    paragraphs.forEach(p => {
         p.addEventListener('mouseenter', function() {
             this.style.fontWeight = 'bold';
         });
@@ -81,56 +83,59 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-.questions-table {
+#questions-table {
     background: lightyellow;
     border: 3px solid gold;
-    width: 100%;
     border-collapse: collapse;
+    width: 100%;
 }
 
-.questions-table th {
+#questions-table thead th {
     background: lightyellow;
     text-align: left;
     padding: 8px;
+    border: 1px solid gold;
 }
 
-.questions-table td {
+#questions-table tbody td {
     background: wheat;
     text-align: center;
     padding: 8px;
+    border: 1px solid gold;
     cursor: pointer;
 }
 
-.questions-list p {
+#questions-list p {
     margin-left: 10px;
     margin-right: 10px;
     padding: 10px;
+    cursor: pointer;
 }
 
-.questions-list p.odd {
+#questions-list p.odd {
     background: lightcoral;
 }
 
-.questions-list p.even {
+#questions-list p.even {
     background: red;
     color: white;
 }
 
 @media (max-width: 768px) {
-    .questions-table {
+    #questions-table {
         font-size: 14px;
     }
     
-    .questions-table th,
-    .questions-table td {
+    #questions-table thead th,
+    #questions-table tbody td {
         padding: 6px;
     }
     
-    .questions-list p {
+    #questions-list p {
+        font-size: 14px;
         margin-left: 5px;
         margin-right: 5px;
         padding: 8px;
-        font-size: 14px;
     }
 }
 </style>
