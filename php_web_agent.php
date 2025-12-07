@@ -32,8 +32,14 @@ ob_end_clean();
 
 $prompt_response_content = shell_exec("copilot -p \"\$(cat tmp.prompt)\"");
 
+$marker = "```php";
+
+$position = strpos($prompt_response_content, $marker);
+
+if ($position !== false) {
+    $prompt_response_content = substr($prompt_response_content, $position);
+}
+
 $prompt_response_content = str_replace(["```php","```"],"", $prompt_response_content);
 
 file_put_contents("index.php", $prompt_response_content);
-
-?>
