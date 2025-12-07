@@ -1,0 +1,15 @@
+[component.questions-table]
+# get questions from logic.php.get_random_questions
+id = "questions-table"
+type = "html_table"
+header.id.label = "ID"
+header.id.data = "<question.id>"
+header.question.label = "QUESTION"
+header.question.data = "<question.body>"
+header.style.background = "lightYellow"
+header.style.textalign = "left"
+style.detail = "background: light yellow, border: 1px blue solid"
+cell.click = "do logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
+cell.style.background = "wheat"
+cell.style.textalign = "center"
+row.start_index = 1

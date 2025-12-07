@@ -1,65 +1,81 @@
+#!/usr/bin/env python3
 import sys
-import tomllib
+import re
 from pathlib import Path
+import toml
 
 
-def merge_toml_content(toml_file_path):
-    """Read TOML file and merge any @include directives."""
-    base_path = Path(toml_file_path).parent
+def recursive_merge(base, update):
+    """Recursively merge update dict into base dict"""
+    for key, value in update.items():
+        if key in base and isinstance(base[key], dict) and isinstance(value, dict):
+            recursive_merge(base[key], value)
+        else:
+            base[key] = value
+    return base
+
+
+def process_includes(content, base_path):
+    """Process @include directives and merge TOML files"""
+    lines = content.split('\n')
+    include_pattern = re.compile(r'^\s*@include\s+(.+\.toml)\s*$')
     
-    with open(toml_file_path, 'r') as f:
-        lines = f.readlines()
+    merged_content = {}
+    current_lines = []
     
-    merged_lines = []
     for line in lines:
-        stripped = line.strip()
-        if stripped.startswith('@include '):
-            include_file = stripped.split('@include ', 1)[1].strip()
+        match = include_pattern.match(line)
+        if match:
+            # Parse accumulated lines before this include
+            if current_lines:
+                current_toml = toml.loads('\n'.join(current_lines))
+                merged_content = recursive_merge(merged_content, current_toml)
+                current_lines = []
+            
+            # Process included file
+            include_file = match.group(1).strip()
             include_path = base_path / include_file
             
-            if not include_path.exists():
-                print(f"Error: Include file '{include_path}' not found", file=sys.stderr)
-                sys.exit(1)
-            
-            with open(include_path, 'r') as inc_f:
-                merged_lines.extend(inc_f.readlines())
+            if include_path.exists():
+                included_content = include_path.read_text()
+                # Recursively process includes in included file
+                included_data = process_includes(included_content, include_path.parent)
+                merged_content = recursive_merge(merged_content, included_data)
         else:
-            merged_lines.append(line)
+            current_lines.append(line)
     
-    toml_content = ''.join(merged_lines)
+    # Parse remaining lines
+    if current_lines:
+        current_toml = toml.loads('\n'.join(current_lines))
+        merged_content = recursive_merge(merged_content, current_toml)
     
-    # Validate it's valid TOML
-    try:
-        tomllib.loads(toml_content)
-    except tomllib.TOMLDecodeError as e:
-        print(f"Error: Invalid TOML content: {e}", file=sys.stderr)
-        sys.exit(1)
-    
-    return toml_content
+    return merged_content
 
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: script.py <toml_file>", file=sys.stderr)
+        print("Error: Expected exactly one command-line argument", file=sys.stderr)
         sys.exit(1)
     
-    toml_file = Path(sys.argv[1])
+    cli_arg = sys.argv[1]
+    
+    if not cli_arg.strip():
+        print("Error: Argument cannot be empty", file=sys.stderr)
+        sys.exit(1)
+    
+    toml_file = Path(cli_arg)
     
     if not toml_file.exists():
-        print(f"Error: File '{toml_file}' does not exist", file=sys.stderr)
+        print(f"Error: File '{cli_arg}' does not exist", file=sys.stderr)
         sys.exit(1)
     
-    if not toml_file.is_file():
-        print(f"Error: '{toml_file}' is not a file", file=sys.stderr)
-        sys.exit(1)
+    content = toml_file.read_text()
+    base_path = toml_file.parent if toml_file.parent != Path('.') else Path.cwd()
     
-    if toml_file.suffix.lower() != '.toml':
-        print(f"Error: '{toml_file}' is not a TOML file", file=sys.stderr)
-        sys.exit(1)
+    toml_content = process_includes(content, base_path)
     
-    toml_content = merge_toml_content(toml_file)
-    print(toml_content)
+    print(toml.dumps(toml_content))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

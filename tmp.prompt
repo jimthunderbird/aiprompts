@@ -32,50 +32,54 @@ Here is the <toml_spec>:
 [component.questions-table]
 id = "questions-table"
 type = "html_table"
-datasource = "<question> in <questions> from logic.php.get_random_questions"
-header.id.label = "ID"
-header.id.data = "<question.id>"
-header.question.label = "QUESTION"
-header.question.data = "<question.body>"
-header.style.background = "lightYellow"
-header.style.textalign = "left"
-style.background = "lightYellow"
-style.border = "1px, blue, solid"
-cell.style.details = """
-padding: 10px
-font-weight: bold
-"""
-cell.onclick = "logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
-cell.style.background = "wheat"
-cell.style.textalign = "center"
-row.start_index = 1
 
 [component.questions-list]
-id = "questions-list"
-type = "html_section_paragraph"
-datasource = "<question> in <questions> from logic.php.get_random_questions"
-paragraph.style.details = """
-margin left: 10px; 
-margin-right: 10px"
-"""
-paragraph.odd.style.background = "yellow"
-paragraph.even.style.background = "light yellow"
+type = "html section with paragraphs"
+datasource = "get questions from logic.php.get_random_questions"
+
+[component.questions-table.style]
+detail = "background: light yellow, border: 3px gold solid"
+
+[component.questions-table.cell]
+click = "do logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
+
+[component.questions-table.row]
+start_index = 1
 
 [logic.php.get_random_questions]
-detail = """
-- read questions.json and save it to <questions>
-- pick 4 random questions from <questions> and save it to <questions>
-"""
-return = "<questions>"
+details = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
 
 [logic.js.show_alert_message]
-param.row_number = "<row_number>"
-param.column_number = "<column_number>"
-param.question = "<question>"
-detail = """
-pop up a message:"<question.body>"
-"""
+detail = "pop up a message:\"<question.body>\"\n"
 
-# change component questions-table header's background to black
+[component.questions-table.header.id]
+label = "ID"
+data = "<question.id>"
+
+[component.questions-table.header.question]
+label = "QUESTION"
+data = "<question.body>"
+
+[component.questions-table.header.style]
+background = "lightYellow"
+textalign = "left"
+
+[component.questions-table.cell.style]
+background = "wheat"
+textalign = "center"
+
+[component.questions-list.paragraph.style]
+detail = "margin left 10px, margin right 10px"
+
+[logic.js.show_alert_message.param]
+row_number = "<row_number>"
+column_number = "<column_number>"
+question = "<question>"
+
+[component.questions-list.paragraph.odd.style]
+background = "light red"
+
+[component.questions-list.paragraph.even.style]
+background = "red"
 
 
