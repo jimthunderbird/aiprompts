@@ -6,7 +6,8 @@ click = "pop up a message: \"question details: <question.body> (<row_number>, <c
 
 [component.questions-list]
 type = "html section with paragraphs"
-datasource = "get questions from logic.php.get_random_questions"
+datasource = "<question> in <questions> from logic.php.get_random_questions"
+hover_on = "cell.style.font-weight: bold\ncell.style.mouse-cursor: hand\n"
 
 [component.questions-table.style]
 detail = "background: light yellow, border: 3px gold solid"
@@ -19,7 +20,6 @@ hover_off = "change cell.style.font-weight: normal"
 start_index = 1
 
 [component.questions-list.paragraph]
-hover_on = "change cell.style.font-weight: bold"
 hover_off = "change cell.style.font-weight: normal"
 
 [logic.php.get_random_questions]

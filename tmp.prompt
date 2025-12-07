@@ -37,6 +37,11 @@ id = "questions-table"
 type = "html_table"
 click = "pop up a message: \"question details: <question.body> (<row_number>, <column_number>)\"\n"
 
+[component.questions-list]
+type = "html section with paragraphs"
+datasource = "<question> in <questions> from logic.php.get_random_questions"
+hover_on = "cell.style.font-weight: bold\ncell.style.mouse-cursor: hand\n"
+
 [component.questions-table.style]
 detail = "background: light yellow, border: 3px gold solid"
 
@@ -46,6 +51,12 @@ hover_off = "change cell.style.font-weight: normal"
 
 [component.questions-table.row]
 start_index = 1
+
+[component.questions-list.paragraph]
+hover_off = "change cell.style.font-weight: normal"
+
+[logic.php.get_random_questions]
+details = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
 
 [component.questions-table.header.id]
 label = "ID"
@@ -62,3 +73,14 @@ textalign = "left"
 [component.questions-table.cell.style]
 background = "wheat"
 textalign = "center"
+
+[component.questions-list.paragraph.style]
+detail = "margin left 10px, margin right 10px"
+
+[component.questions-list.paragraph.odd.style]
+background = "light red"
+
+[component.questions-list.paragraph.even.style]
+background = "red"
+
+
