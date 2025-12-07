@@ -1,31 +1,31 @@
 
 <?php
-function get_random_questions() {
-    $json = file_get_contents('questions.json');
-    $questions = json_decode($json, true);
-    shuffle($questions);
-    $questions = array_slice($questions, 0, 2);
-    return $questions;
-}
-
 function component_questions_table_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
-    shuffle($questions);
-    $questions = array_slice($questions, 0, 2);
-    return $questions;
+    $shuffled = $questions;
+    shuffle($shuffled);
+    return array_slice($shuffled, 0, 2);
 }
 
 function component_questions_list_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
-    shuffle($questions);
-    $questions = array_slice($questions, 0, 4);
-    return $questions;
+    $shuffled = $questions;
+    shuffle($shuffled);
+    return array_slice($shuffled, 0, 4);
 }
 
-$questions_table_data = component_questions_table_datasource();
-$questions_list_data = component_questions_list_datasource();
+function get_random_questions() {
+    $json = file_get_contents('questions.json');
+    $questions = json_decode($json, true);
+    $shuffled = $questions;
+    shuffle($shuffled);
+    return array_slice($shuffled, 0, 2);
+}
+
+$questionsTableData = component_questions_table_datasource();
+$questionsListData = component_questions_list_datasource();
 ?>
 
 <table id="questions-table">
@@ -36,7 +36,7 @@ $questions_list_data = component_questions_list_datasource();
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($questions_table_data as $index => $question): ?>
+        <?php foreach ($questionsTableData as $index => $question): ?>
         <tr data-row="<?php echo $index + 1; ?>">
             <td data-col="1"><?php echo htmlspecialchars($question['id']); ?></td>
             <td data-col="2"><?php echo htmlspecialchars($question['body']); ?></td>
@@ -46,8 +46,8 @@ $questions_list_data = component_questions_list_datasource();
 </table>
 
 <section id="questions-list">
-    <?php foreach ($questions_list_data as $index => $question): ?>
-    <p class="<?php echo ($index % 2 === 0) ? 'even' : 'odd'; ?>" data-question='<?php echo htmlspecialchars(json_encode($question), ENT_QUOTES); ?>'>
+    <?php foreach ($questionsListData as $index => $question): ?>
+    <p class="question-paragraph <?php echo ($index % 2 === 0) ? 'odd' : 'even'; ?>" data-body="<?php echo htmlspecialchars($question['body']); ?>">
         <?php echo htmlspecialchars($question['body']); ?>
     </p>
     <?php endforeach; ?>
@@ -56,43 +56,38 @@ $questions_list_data = component_questions_list_datasource();
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const table = document.getElementById('questions-table');
-    if (table) {
-        table.addEventListener('click', function(e) {
-            const cell = e.target.closest('td');
-            if (cell) {
-                const row = cell.closest('tr');
-                const rowNumber = row.dataset.row;
-                const columnNumber = cell.dataset.col;
-                const questionBody = row.querySelector('td[data-col="2"]').textContent;
-                alert('question details: ' + questionBody + ' (' + rowNumber + ', ' + columnNumber + ')');
-            }
+    const cells = table.querySelectorAll('tbody td');
+    
+    cells.forEach(cell => {
+        cell.addEventListener('click', function(e) {
+            const row = e.target.closest('tr');
+            const rowNumber = row.dataset.row;
+            const columnNumber = e.target.dataset.col;
+            const questionBody = row.querySelector('td[data-col="2"]').textContent;
+            alert(`question details: ${questionBody} (${rowNumber}, ${columnNumber})`);
         });
         
-        const cells = table.querySelectorAll('td');
-        cells.forEach(function(cell) {
-            cell.addEventListener('mouseenter', function() {
-                this.style.fontWeight = 'bold';
-            });
-            cell.addEventListener('mouseleave', function() {
-                this.style.fontWeight = 'normal';
-            });
+        cell.addEventListener('mouseenter', function(e) {
+            e.target.style.fontWeight = 'bold';
         });
-    }
+        
+        cell.addEventListener('mouseleave', function(e) {
+            e.target.style.fontWeight = 'normal';
+        });
+    });
     
-    const listSection = document.getElementById('questions-list');
-    if (listSection) {
-        const paragraphs = listSection.querySelectorAll('p');
-        paragraphs.forEach(function(paragraph) {
-            paragraph.addEventListener('mouseenter', function() {
-                this.style.fontWeight = 'bold';
-                this.style.cursor = 'wait';
-            });
-            paragraph.addEventListener('mouseleave', function() {
-                this.style.fontWeight = 'normal';
-                this.style.cursor = 'default';
-            });
+    const paragraphs = document.querySelectorAll('#questions-list .question-paragraph');
+    paragraphs.forEach(paragraph => {
+        paragraph.addEventListener('mouseenter', function(e) {
+            e.target.style.fontWeight = 'bold';
+            e.target.style.cursor = 'wait';
         });
-    }
+        
+        paragraph.addEventListener('mouseleave', function(e) {
+            e.target.style.fontWeight = 'normal';
+            e.target.style.cursor = 'default';
+        });
+    });
 });
 </script>
 
@@ -104,43 +99,45 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 100%;
 }
 
-#questions-table th {
+#questions-table thead th {
     background: lightyellow;
     text-align: left;
+    padding: 8px;
 }
 
-#questions-table td {
+#questions-table tbody td {
     background: wheat;
     text-align: center;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
 }
 
-#questions-list p {
+#questions-list .question-paragraph {
     margin-left: 10px;
     margin-right: 10px;
     padding: 10px;
 }
 
-#questions-list p.odd {
+#questions-list .question-paragraph.odd {
     background: lightcoral;
 }
 
-#questions-list p.even {
+#questions-list .question-paragraph.even {
     background: red;
     color: white;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     #questions-table {
         font-size: 14px;
     }
     
-    #questions-table td {
+    #questions-table thead th,
+    #questions-table tbody td {
         padding: 6px;
     }
     
-    #questions-list p {
+    #questions-list .question-paragraph {
         margin-left: 5px;
         margin-right: 5px;
         padding: 8px;

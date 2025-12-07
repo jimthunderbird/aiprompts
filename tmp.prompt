@@ -3,6 +3,7 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 
 - for all [component], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for all [component.<name>], if the datasource does not refer to a php logic, generate a php function named "component_<replace_dash_to_underscore_in_name>_datasource"
+- for all [component.<name>], if it is an html component and there is no "id" attribute defined, make the html component id same as <name>
 - for all [component.<name>], if the events like click,keypress...etc does not refer to a javascript logic, generate an anonymous javascript function for it
 - for [logic.php.<name>], make the php function name same as <name>
   for example:
@@ -33,8 +34,7 @@ Here is the <toml_spec>:
 
 [component.questions-table]
 datasource = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\n"
-id = "questions-table"
-type = "html_table"
+type = "html table"
 click = "pop up a message: \"question details: <question.body> (<row_number>, <column_number>)\"\n"
 
 [component.questions-list]
