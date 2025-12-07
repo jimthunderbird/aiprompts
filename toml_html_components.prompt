@@ -56,7 +56,7 @@ headers.style.textalign = "left"
 style.background = "lightYellow"
 style.border = "1px, silver, solid"
 cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
-cells.style.background = "blue"
+cells.style.background = "wheat"
 cells.style.textalign = "right"
 rows.start_index = 1
 
