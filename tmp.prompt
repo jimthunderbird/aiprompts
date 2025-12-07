@@ -8,16 +8,13 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
   for example:
   [logic.js.hello_world] corresponds to a javascript function hello_world
 - do not use echo or heredoc to output html
-- do not use inline css 
+- do not use inline css
 - do not use inline javascript
 - for all the css, make sure it works on both desktop web browser and mobile web browser
 - do not include any mock testing code
 - show me the code only, no explanation and no extra words
 
 output in the following format:
-<?php
-// all php logic code here...
-?>
 
 <script>
 // all javascript code here...
@@ -54,7 +51,7 @@ headers.question.data = "<question.body>"
 headers.style.background = "lightYellow"
 headers.style.textalign = "left"
 style.background = "lightYellow"
-style.border = "1px, silver, solid"
+style.border = "1px, blue, solid"
 cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
 cells.style.background = "wheat"
 cells.style.textalign = "right"
