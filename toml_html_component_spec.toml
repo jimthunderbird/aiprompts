@@ -27,15 +27,16 @@ style.background = "lightYellow"
 style.border = "1px, blue, solid"
 cells.style.details = """
 padding: 10px
+font-weight: bold
 """
 cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
 cells.style.background = "wheat"
-cells.style.textalign = "right"
+cells.style.textalign = "center"
 rows.start_index = 1
 
 [[components]]
 id = "questions-list"
-type = "html_div_wrapping_paragraphs"
+type = "html_section_wrapping_paragraphs"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
 paragraphs.style.details = """
 margin left: 10px; 

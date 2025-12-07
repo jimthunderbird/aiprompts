@@ -30,7 +30,7 @@ output in the following format:
 Here is the <toml_spec>:
 
 [logic.php.get_random_questions]
-detail = """
+details = """
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
 """
@@ -58,15 +58,16 @@ style.background = "lightYellow"
 style.border = "1px, blue, solid"
 cells.style.details = """
 padding: 10px
+font-weight: bold
 """
 cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
 cells.style.background = "wheat"
-cells.style.textalign = "right"
+cells.style.textalign = "center"
 rows.start_index = 1
 
 [[components]]
 id = "questions-list"
-type = "html_div_wrapping_paragraphs"
+type = "html_section_wrapping_paragraphs"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
 paragraphs.style.details = """
 margin left: 10px; 

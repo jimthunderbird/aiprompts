@@ -1,9 +1,11 @@
+
 <?php
 function get_random_questions() {
     $json = file_get_contents('questions.json');
     $all_questions = json_decode($json, true);
-    shuffle($all_questions);
-    $questions = array_slice($all_questions, 0, 4);
+    $shuffled = $all_questions;
+    shuffle($shuffled);
+    $questions = array_slice($shuffled, 0, 4);
     return $questions;
 }
 
@@ -12,92 +14,85 @@ $questions = get_random_questions();
 
 <script>
 function show_alert_message(row_number, column_number, question) {
-    alert(`you clicked on row ${row_number}, column ${column_number}, question id: ${question.id}`);
+    alert("you clicked on row " + row_number + ", column " + column_number + ", question id: " + question.id);
 }
 </script>
 
-<div id="questions-table">
-    <table>
-        <thead>
-            <tr>
-                <th class="header-cell">ID</th>
-                <th class="header-cell">QUESTION</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $row_index = 1; ?>
-            <?php foreach ($questions as $question): ?>
-                <tr>
-                    <td class="body-cell" onclick='show_alert_message(<?= $row_index ?>, 1, <?= json_encode($question) ?>)'><?= htmlspecialchars($question['id']) ?></td>
-                    <td class="body-cell" onclick='show_alert_message(<?= $row_index ?>, 2, <?= json_encode($question) ?>)'><?= htmlspecialchars($question['body']) ?></td>
-                </tr>
-                <?php $row_index++; ?>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<div id="questions-list">
-    <?php $para_index = 0; ?>
-    <?php foreach ($questions as $question): ?>
-        <p class="paragraph-item <?= $para_index % 2 === 0 ? 'para-even' : 'para-odd' ?>">
-            <?= htmlspecialchars($question['body']) ?>
-        </p>
-        <?php $para_index++; ?>
-    <?php endforeach; ?>
-</div>
-
 <style>
-#questions-table table {
+#questions-table {
     background: lightYellow;
     border: 1px solid blue;
-    border-collapse: collapse;
-    width: 100%;
 }
 
-#questions-table .header-cell {
+#questions-table thead {
     background: lightYellow;
     text-align: left;
-    padding: 10px;
-    border: 1px solid blue;
 }
 
-#questions-table .body-cell {
-    background: wheat;
-    text-align: right;
+#questions-table td {
     padding: 10px;
-    border: 1px solid blue;
+    font-weight: bold;
+    background: wheat;
+    text-align: center;
     cursor: pointer;
 }
 
-#questions-list .paragraph-item {
+#questions-list p {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-#questions-list .para-odd {
+#questions-list p:nth-child(odd) {
     background: yellow;
 }
 
-#questions-list .para-even {
+#questions-list p:nth-child(even) {
     background: lightyellow;
 }
 
-@media (max-width: 768px) {
-    #questions-table table {
-        font-size: 14px;
+@media screen and (max-width: 768px) {
+    #questions-table {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
     }
     
-    #questions-table .header-cell,
-    #questions-table .body-cell {
+    #questions-table td {
+        font-size: 14px;
         padding: 8px;
     }
     
-    #questions-list .paragraph-item {
-        margin-left: 5px;
-        margin-right: 5px;
+    #questions-list p {
         font-size: 14px;
     }
 }
 </style>
+
+<table id="questions-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>QUESTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $row_num = 1; foreach ($questions as $question): ?>
+        <tr>
+            <td onclick='show_alert_message(<?php echo $row_num; ?>, 1, <?php echo json_encode($question); ?>)'>
+                <?php echo htmlspecialchars($question['id']); ?>
+            </td>
+            <td onclick='show_alert_message(<?php echo $row_num; ?>, 2, <?php echo json_encode($question); ?>)'>
+                <?php echo htmlspecialchars($question['body']); ?>
+            </td>
+        </tr>
+        <?php $row_num++; endforeach; ?>
+    </tbody>
+</table>
+
+<section id="questions-list">
+    <?php foreach ($questions as $question): ?>
+    <p><?php echo htmlspecialchars($question['body']); ?></p>
+    <?php endforeach; ?>
+</section>
+
 
