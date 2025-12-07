@@ -1,5 +1,5 @@
 [logic.php.get_random_questions]
-detail = """
+details = """
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
 """
@@ -35,11 +35,11 @@ rows.start_index = 1
 
 [[components]]
 id = "questions-list"
-type = "html_div_with_paragraphs"
+type = "html_div_wrapping_paragraphs"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
-paragraph.style.details = """
+paragraphs.style.details = """
 margin left: 10px; 
 margin-right: 10px"
 """
-paragraph.odd.style.background = "yellow"
-paragraph.even.style.background = "light yellow"
+paragraphs.odd.style.background = "yellow"
+paragraphs.even.style.background = "light yellow"
