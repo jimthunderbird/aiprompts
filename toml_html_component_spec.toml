@@ -1,4 +1,4 @@
-[[components]]
+[component.questions-table]
 id = "questions-table"
 type = "html_table"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
@@ -19,7 +19,7 @@ cell.style.background = "wheat"
 cell.style.textalign = "center"
 row.start_index = 1
 
-[[components]]
+[component.questions-list]
 id = "questions-list"
 type = "html_section_paragraph"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
@@ -44,3 +44,5 @@ param.question = "<question>"
 detail = """
 pop up a message:"<question.body>"
 """
+
+@include custom.toml

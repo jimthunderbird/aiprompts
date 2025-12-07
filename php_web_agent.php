@@ -22,7 +22,7 @@ CODE;
 Here is the <toml_spec>:
 
 <?php
-echo file_get_contents("./toml_html_component_spec.toml");
+echo file_get_contents("./tmp_spec.toml");
 ?>
 
 <?php
