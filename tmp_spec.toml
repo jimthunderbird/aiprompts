@@ -6,7 +6,7 @@ click = "pop up a message: \"question details: <question.body> (<row_number>, <c
 
 [component.questions-list]
 type = "html section with paragraphs"
-datasource = "<question> in <questions> from logic.php.get_random_questions"
+datasource = "read questions.json and save it to <questions>\npick 4 random questions from <questions> and save it to <questions>\n"
 hover_on = "cell.style.font-weight: bold\ncell.style.mouse-cursor: hand\n"
 
 [component.questions-table.style]
