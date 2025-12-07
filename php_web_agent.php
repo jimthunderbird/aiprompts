@@ -1,3 +1,5 @@
+<?php ob_start(); ?>
+
 <?php require_once "php_web_system_instruction.txt"; ?>
 
 output in the following format:
@@ -21,4 +23,17 @@ Here is the <toml_spec>:
 
 <?php
 echo file_get_contents("./toml_html_component_spec.toml");
+?>
+
+<?php
+$final_content = ob_get_contents();
+file_put_contents("tmp.prompt", $final_content);
+ob_end_clean();
+
+$prompt_response_content = shell_exec("copilot -p \"\$(cat tmp.prompt)\"");
+
+$prompt_response_content = str_replace(["```php","```"],"", $prompt_response_content);
+
+file_put_contents("index.php", $prompt_response_content);
+
 ?>

@@ -2,100 +2,107 @@
 
 ✓ Read questions.json (6 lines)
 
-```php
+
 <?php
 function get_random_questions() {
     $json = file_get_contents('questions.json');
     $all_questions = json_decode($json, true);
-    shuffle($all_questions);
-    $questions = array_slice($all_questions, 0, 4);
+    $keys = array_rand($all_questions, min(4, count($all_questions)));
+    if (!is_array($keys)) {
+        $keys = [$keys];
+    }
+    $questions = [];
+    foreach ($keys as $key) {
+        $questions[] = $all_questions[$key];
+    }
     return $questions;
 }
 
 $questions = get_random_questions();
 ?>
-
-<!-- questions-table -->
-<table id="questions-table">
-    <thead>
-        <tr>
-            <th class="table-header">ID</th>
-            <th class="table-header">QUESTION</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($questions as $index => $question): ?>
-        <tr>
-            <td class="table-cell" onclick="show_alert_message(<?php echo $index + 1; ?>, 1)"><?php echo htmlspecialchars($question['id']); ?></td>
-            <td class="table-cell" onclick="show_alert_message(<?php echo $index + 1; ?>, 2)"><?php echo htmlspecialchars($question['body']); ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-
-<!-- questions-list -->
-<div id="questions-list">
-    <?php foreach ($questions as $index => $question): ?>
-    <p class="paragraph <?php echo ($index % 2 === 0) ? 'paragraph-even' : 'paragraph-odd'; ?>">
-        <?php echo htmlspecialchars($question['body']); ?>
-    </p>
-    <?php endforeach; ?>
-</div>
-
 <script>
 function show_alert_message(row_number, column_number) {
     alert("you clicked on row " + row_number + ", column " + column_number);
 }
 </script>
 
+<table id="questions-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>QUESTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $row_index = 1; foreach ($questions as $question): ?>
+        <tr>
+            <td onclick="show_alert_message(<?php echo $row_index; ?>, 1)"><?php echo htmlspecialchars($question['id']); ?></td>
+            <td onclick="show_alert_message(<?php echo $row_index; ?>, 2)"><?php echo htmlspecialchars($question['body']); ?></td>
+        </tr>
+        <?php $row_index++; endforeach; ?>
+    </tbody>
+</table>
+
+<div id="questions-list">
+    <?php $para_index = 0; foreach ($questions as $question): $para_index++; ?>
+    <p class="<?php echo ($para_index % 2 == 1) ? 'odd' : 'even'; ?>"><?php echo htmlspecialchars($question['body']); ?></p>
+    <?php endforeach; ?>
+</div>
+
 <style>
 #questions-table {
     background: lightYellow;
     border: 1px solid blue;
-    width: 100%;
     border-collapse: collapse;
+    width: 100%;
 }
 
-.table-header {
+#questions-table thead th {
     background: lightYellow;
     text-align: left;
     padding: 10px;
+    border: 1px solid blue;
 }
 
-.table-cell {
+#questions-table tbody td {
+    padding: 10px;
     background: wheat;
     text-align: right;
-    padding: 10px;
+    border: 1px solid blue;
     cursor: pointer;
 }
 
-#questions-list {
-    width: 100%;
-}
-
-.paragraph {
+#questions-list p {
     margin-left: 10px;
     margin-right: 10px;
+    padding: 10px;
 }
 
-.paragraph-odd {
+#questions-list p.odd {
     background: yellow;
 }
 
-.paragraph-even {
+#questions-list p.even {
     background: lightYellow;
 }
 
-@media screen and (max-width: 768px) {
-    .table-cell, .table-header {
+@media (max-width: 768px) {
+    #questions-table {
         font-size: 14px;
+    }
+    
+    #questions-table thead th,
+    #questions-table tbody td {
         padding: 8px;
     }
     
-    .paragraph {
+    #questions-list p {
         font-size: 14px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 8px;
     }
 }
 </style>
-```
+
 
