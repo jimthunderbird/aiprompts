@@ -30,49 +30,49 @@ output in the following format:
 Here is the <toml_spec>:
 
 [logic.php.get_random_questions]
-details = """
+detail = """
 - read questions.json and save it to <questions>
 - pick 4 random questions from <questions> and save it to <questions>
 """
 return = "<questions>"
 
 [logic.js.show_alert_message]
-params.row_number = "<row_number>"
-params.column_number = "<column_number>"
-params.question = "<question>"
-details = """
-alert a message "you clicked on row <row_number>, column <column_number>, question id: <question.id>"
+param.row_number = "<row_number>"
+param.column_number = "<column_number>"
+param.question = "<question>"
+detail = """
+pop up a message:"<question.body>"
 """
 
 [[components]]
 id = "questions-table"
 type = "html_table"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
-headers.id.label = "ID"
-headers.id.data = "<question.id>"
-headers.question.label = "QUESTION"
-headers.question.data = "<question.body>"
-headers.style.background = "lightYellow"
-headers.style.textalign = "left"
+header.id.label = "ID"
+header.id.data = "<question.id>"
+header.question.label = "QUESTION"
+header.question.data = "<question.body>"
+header.style.background = "lightYellow"
+header.style.textalign = "left"
 style.background = "lightYellow"
 style.border = "1px, blue, solid"
-cells.style.details = """
+cell.style.details = """
 padding: 10px
 font-weight: bold
 """
-cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
-cells.style.background = "wheat"
-cells.style.textalign = "center"
-rows.start_index = 1
+cell.onclick = "logic.js.show_alert_message(<row_number>, <column_number>, <question>)"
+cell.style.background = "wheat"
+cell.style.textalign = "center"
+row.start_index = 1
 
 [[components]]
 id = "questions-list"
-type = "html_section_wrapping_paragraphs"
+type = "html_section_paragraph"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
-paragraphs.style.details = """
+paragraph.style.details = """
 margin left: 10px; 
 margin-right: 10px"
 """
-paragraphs.odd.style.background = "yellow"
-paragraphs.even.style.background = "light yellow"
+paragraph.odd.style.background = "yellow"
+paragraph.even.style.background = "light yellow"
 
