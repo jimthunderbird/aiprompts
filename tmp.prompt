@@ -15,7 +15,9 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - show me the code only, no explanation and no extra words
 
 output in the following format:
-
+<?php
+// all php logic code here...
+?>
 <script>
 // all javascript code here...
 </script>
@@ -37,7 +39,7 @@ return = "<questions>"
 params.row_number = "<row_number>"
 params.column_number = "<column_number>"
 details = """
-alert a message "you are clicking on row <row_number>, column <column_number>"
+alert a message "you clicked on row <row_number>, column <column_number>"
 """
 
 [components.questions-table]
@@ -52,6 +54,9 @@ headers.style.background = "lightYellow"
 headers.style.textalign = "left"
 style.background = "lightYellow"
 style.border = "1px, blue, solid"
+cells.style.details = """
+padding: 10px
+"""
 cells.onclick = "logic.js.show_alert_message(<row_number>, <column_number>)"
 cells.style.background = "wheat"
 cells.style.textalign = "right"
@@ -61,5 +66,9 @@ rows.start_index = 1
 id = "questions-list"
 type = "html_div_with_paragraphs"
 datasource = "<question> in <questions> from logic.php.get_random_questions"
+paragraph.style.details = """
+margin left: 10px; 
+margin-right: 10px"
+"""
 paragraph.odd.style.background = "yellow"
 paragraph.even.style.background = "light yellow"
