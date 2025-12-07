@@ -8,7 +8,7 @@ paragraph.style.detail = "margin left 10px, margin right 10px"
 paragraph.odd.style.background = "light green"
 paragraph.even.style.background = "green"
 paragraph.hover_on = """
-cell.style.font-weight: bold
-cell.style.mouse-cursor: spinning ring
+current_paragraph.style.font-weight: bold
+current_paragraph.style.mouse-cursor: spinning ring
 """
-paragraph.hover_off = "change cell.style.font-weight: normal"
+paragraph.hover_off = "current_paragraph.style.font-weight: normal"

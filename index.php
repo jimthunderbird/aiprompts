@@ -1,24 +1,27 @@
 
 <?php
+function get_random_questions() {
+    $json = file_get_contents('questions.json');
+    $questions = json_decode($json, true);
+    shuffle($questions);
+    $questions = array_slice($questions, 0, 2);
+    return $questions;
+}
+
 function component_questions_table_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
     shuffle($questions);
-    return array_slice($questions, 0, 2);
+    $questions = array_slice($questions, 0, 2);
+    return $questions;
 }
 
 function component_questions_list_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
     shuffle($questions);
-    return array_slice($questions, 0, 4);
-}
-
-function get_random_questions() {
-    $json = file_get_contents('questions.json');
-    $questions = json_decode($json, true);
-    shuffle($questions);
-    return array_slice($questions, 0, 2);
+    $questions = array_slice($questions, 0, 4);
+    return $questions;
 }
 
 $questions_table_data = component_questions_table_datasource();
@@ -59,14 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (cell) {
                 const row = cell.closest('tr');
                 const rowNumber = row.dataset.row;
-                const colNumber = cell.dataset.col;
-                const questionBody = row.cells[1].textContent;
-                alert(`question details: ${questionBody} (${rowNumber}, ${colNumber})`);
+                const columnNumber = cell.dataset.col;
+                const questionBody = row.querySelector('td[data-col="2"]').textContent;
+                alert('question details: ' + questionBody + ' (' + rowNumber + ', ' + columnNumber + ')');
             }
         });
-
+        
         const cells = table.querySelectorAll('td');
-        cells.forEach(cell => {
+        cells.forEach(function(cell) {
             cell.addEventListener('mouseenter', function() {
                 this.style.fontWeight = 'bold';
             });
@@ -75,16 +78,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
+    
     const listSection = document.getElementById('questions-list');
     if (listSection) {
         const paragraphs = listSection.querySelectorAll('p');
-        paragraphs.forEach(p => {
-            p.addEventListener('mouseenter', function() {
+        paragraphs.forEach(function(paragraph) {
+            paragraph.addEventListener('mouseenter', function() {
                 this.style.fontWeight = 'bold';
                 this.style.cursor = 'wait';
             });
-            p.addEventListener('mouseleave', function() {
+            paragraph.addEventListener('mouseleave', function() {
                 this.style.fontWeight = 'normal';
                 this.style.cursor = 'default';
             });
@@ -104,15 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
 #questions-table th {
     background: lightyellow;
     text-align: left;
-    padding: 8px;
-    border: 1px solid gold;
 }
 
 #questions-table td {
     background: wheat;
     text-align: center;
     padding: 8px;
-    border: 1px solid gold;
+    border: 1px solid #ddd;
 }
 
 #questions-list p {
@@ -135,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
         font-size: 14px;
     }
     
-    #questions-table th,
     #questions-table td {
         padding: 6px;
     }
