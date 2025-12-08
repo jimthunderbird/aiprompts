@@ -1,11 +1,4 @@
 {
-  "logic": {
-    "php": {
-      "get_random_questions": {
-        "details": "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
-      }
-    }
-  },
   "component": {
     "questions-table": {
       "datasource": "logic.php.get_random_questions",
@@ -68,8 +61,15 @@
       "style": {
         "detail": "width: 400px\nheight: 300px\nalign: center of the screen\nbackground: #27CCF5\nvisibility: hidden\n"
       },
-      "click": "if outside of this component's boundary,visibility: hidden",
+      "click": "if clicking outside of the div, set visibility to hidden",
       "inner_html": "<question.body>"
+    }
+  },
+  "logic": {
+    "php": {
+      "get_random_questions": {
+        "details": "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
+      }
     }
   }
 }

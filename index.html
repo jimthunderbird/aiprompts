@@ -1,0 +1,142 @@
+
+<style>
+table {
+    background: lightyellow;
+    border: 3px solid gold;
+}
+
+th {
+    background: lightyellow;
+    text-align: left;
+}
+
+td {
+    background: wheat;
+    text-align: center;
+    cursor: pointer;
+}
+</style>
+
+<table id="questions-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>QUESTION</th>
+        </tr>
+    </thead>
+    <tbody>
+                            <tr>
+                <td data-question='{"id":"Q-20251206-003","body":"Describe the concept of supply and demand in economics, and illustrate how a shift in one affects the equilibrium price."}'>Q-20251206-003</td>
+                <td data-question='{"id":"Q-20251206-003","body":"Describe the concept of supply and demand in economics, and illustrate how a shift in one affects the equilibrium price."}'>Describe the concept of supply and demand in economics, and illustrate how a shift in one affects the equilibrium price.</td>
+            </tr>
+                                <tr>
+                <td data-question='{"id":"Q-20251206-004","body":"Calculate the magnitude of the force exerted between two point charges, $q_1 = 3 \\mu\\text{C}$ and $q_2 = -4 \\mu\\text{C}$, separated by a distance $r = 0.5 \\text{m}$ in a vacuum, using Coulomb's Law."}'>Q-20251206-004</td>
+                <td data-question='{"id":"Q-20251206-004","body":"Calculate the magnitude of the force exerted between two point charges, $q_1 = 3 \\mu\\text{C}$ and $q_2 = -4 \\mu\\text{C}$, separated by a distance $r = 0.5 \\text{m}$ in a vacuum, using Coulomb's Law."}'>Calculate the magnitude of the force exerted between two point charges, $q_1 = 3 \mu\text{C}$ and $q_2 = -4 \mu\text{C}$, separated by a distance $r = 0.5 \text{m}$ in a vacuum, using Coulomb's Law.</td>
+            </tr>
+                        </tbody>
+</table>
+
+<script>
+document.querySelectorAll('#questions-table td').forEach(cell => {
+    cell.addEventListener('mouseenter', function() {
+        this.style.fontWeight = 'bold';
+    });
+    
+    cell.addEventListener('mouseleave', function() {
+        this.style.fontWeight = 'normal';
+    });
+    
+    cell.addEventListener('click', function() {
+        const questionData = JSON.parse(this.getAttribute('data-question'));
+        const popup = document.getElementById('question-popup');
+        if (popup) {
+            popup.style.visibility = 'visible';
+            popup.dataset.question = JSON.stringify(questionData);
+            if (typeof updateQuestionPopup === 'function') {
+                updateQuestionPopup(questionData);
+            }
+        }
+    });
+});
+</script>
+
+<section id="questions-section">
+            <p class="question-paragraph even" 
+           data-question="{"id":"Q-20251206-002","body":"What are the three main types of rock (igneous, sedimentary, and metamorphic), and how is each formed?"}">
+            What are the three main types of rock (igneous, sedimentary, and metamorphic), and how is each formed?        </p>
+            <p class="question-paragraph odd" 
+           data-question="{"id":"Q-20251206-005","body":"Summarize the key causes and major outcomes of the Industrial Revolution in Great Britain during the 18th and 19th centuries."}">
+            Summarize the key causes and major outcomes of the Industrial Revolution in Great Britain during the 18th and 19th centuries.        </p>
+    </section>
+
+<style>
+    .question-paragraph {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    .question-paragraph.odd {
+        background: #ffcccb;
+    }
+    
+    .question-paragraph.even {
+        background: #ff0000;
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.question-paragraph').forEach(paragraph => {
+        paragraph.addEventListener('mouseenter', function() {
+            this.style.fontWeight = 'bold';
+            this.style.cursor = 'wait';
+        });
+        
+        paragraph.addEventListener('mouseleave', function() {
+            this.style.fontWeight = 'normal';
+        });
+        
+        paragraph.addEventListener('click', function() {
+            const questionPopup = document.getElementById('question-popup');
+            if (questionPopup) {
+                questionPopup.style.visibility = 'visible';
+                const questionData = JSON.parse(this.getAttribute('data-question'));
+                questionPopup.setAttribute('data-question', JSON.stringify(questionData));
+                if (typeof questionPopup.updateDatasource === 'function') {
+                    questionPopup.updateDatasource(questionData);
+                }
+            }
+        });
+    });
+</script>
+<div id="question-popup">
+    Summarize the key causes and major outcomes of the Industrial Revolution in Great Britain during the 18th and 19th centuries.</div>
+
+<style>
+#question-popup {
+    width: 400px;
+    height: 300px;
+    background: #27CCF5;
+    visibility: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+@media (max-width: 768px) {
+    #question-popup {
+        width: 90%;
+        max-width: 400px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('click', function(e) {
+    const popup = document.getElementById('question-popup');
+    if (!popup.contains(e.target)) {
+        popup.style.visibility = 'hidden';
+    }
+});
+</script>
