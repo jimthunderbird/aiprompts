@@ -19,3 +19,14 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - do not include any mock testing code
 
 here is the <json_spec>
+
+
+{
+    "datasource": "<question>",
+    "type": "html div",
+    "style": {
+        "detail": "width: 400px\nheight: 300px\nalign: center of the screen\nbackground: #27CCF5\nvisibility: hidden\n"
+    },
+    "click": "if outside of this component's boundary,visibility: hidden",
+    "text": "<question.body>"
+}

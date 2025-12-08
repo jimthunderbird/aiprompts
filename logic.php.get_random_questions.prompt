@@ -19,3 +19,8 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - do not include any mock testing code
 
 here is the <json_spec>
+
+
+{
+    "details": "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
+}

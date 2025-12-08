@@ -9,4 +9,4 @@ background: #27CCF5
 visibility: hidden
 """
 click = "if outside of this component's boundary,visibility: hidden"
-text = "<question.body>"
+inner_html = "<question.body>"

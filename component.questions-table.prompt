@@ -19,3 +19,38 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 - do not include any mock testing code
 
 here is the <json_spec>
+
+
+{
+    "datasource": "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\neach row maps to <question> in <questions>\n",
+    "type": "html table",
+    "header": {
+        "id": {
+            "label": "ID",
+            "data": "<question.id>"
+        },
+        "question": {
+            "label": "QUESTION",
+            "data": "<question.body>"
+        },
+        "style": {
+            "background": "lightYellow",
+            "textalign": "left"
+        }
+    },
+    "style": {
+        "detail": "background: light yellow, border: 3px gold solid"
+    },
+    "cell": {
+        "hover_on": "change cell.style.font-weight: bold",
+        "hover_off": "change cell.style.font-weight: normal",
+        "click": "component.question-popup.style.visibility: visible\ncomponent.question-popup.datasource = \"<question>\"\n",
+        "style": {
+            "background": "wheat",
+            "textalign": "center"
+        }
+    },
+    "row": {
+        "start_index": 1
+    }
+}

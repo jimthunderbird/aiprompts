@@ -1,9 +1,9 @@
 You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the following spec:
 
 - read the content of tmp_spec.json and save it to <tmp_spec_json>
-- store all logic.php.*, logic.js.* and component.* into its individual json file
-  for example:
-  for logic.php.abc, we will save the sub json into logic.php.abc.json
-  for logic.js.abc, we will save the sub json into logic.js.abc.json
-  for component.abc, we will save the sub json into component.abc.json
-- output the codeblock immediately, no explanation, no extra words
+- for each logic > php > *, logic > js.* and component > * as <key>, get its sub json <sub_json>
+    - read the file php_web_system_instruction.txt and save its content to <instruction_content>
+    - let <prompt> be <instruction_content> plus <sub_json>
+    - write <prompt> to <key>.prompt
+
+output the php codeblock immediately, no explanation, no extra words
