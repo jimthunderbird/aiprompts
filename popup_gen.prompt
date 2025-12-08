@@ -8,7 +8,7 @@ put all javascript inside <script> tag
 do not output ```html and ```
 
 also, please note that:
-when we set up "local variable" or "data" for a component, it means we are setting up variable binding to this component only, it will not interfere with other components
+when we set up "local variable" or "data" for a component, it means we are setting up java variables binding to this component only, they will not interfere with other components
 
 # component
 div
@@ -41,7 +41,8 @@ div
         - text alignment: horizontal center, veritcal top
     - div
       - id: "numbers-list"
-      - make all paragraphs draggable and sortable
+      - setup:
+        - make all paragraphs draggable and sortable
       - elements:
         - paragraph: for each <number>, <number_index> in <numbers>, <number_index> starts from 1
           - odd.style:
