@@ -27,9 +27,10 @@ div
   - click outside of the component: 
     - change background back
     - change paragraph font weight to normal
-  - element:
+  - elements:
     - paragraph:
-      - text: this is a popup
+      - id: status
+      - text: number drag and drop status...
       - style:
         - background: light yellow
         - no gap around it
@@ -38,19 +39,29 @@ div
         - padingg left, right, bottom: 10px
         - font color: gold
         - text alignment: horizontal center, veritcal top
-    - paragraph: for each <number>, <number_index> in <numbers>, <number_index> starts from 1
-      - odd.style:
-        - background: red
-      - even.style:
-        - background: light red
-      - id: p<number_index>
-      - text: this is <number>
-      - hover on: 
-        - set cursor to hand
-      - hover off:
-        - set cursor back to normal
-      - click:
-        - pop up a messsage: "you click on paragraph <number_index>"
+    - div
+      - id: "numbers-list"
+      - make all paragraphs draggable and sortable
+      - elements:
+        - paragraph: for each <number>, <number_index> in <numbers>, <number_index> starts from 1
+          - odd.style:
+            - background: red
+          - even.style:
+            - background: light red
+          - id: p<number_index>
+          - text: this is <number>
+          - dragging start: 
+            - set <paragraph with id "status">.text to "dragging number <number>"
+            - set <current_paragraph>.style border to: 5px gold solid
+          - drop:
+            - set <paragraph with id "status">.text to "dropped number <number>"
+            - set <current_paragraph>.style border back to normal
+          - hover on: 
+            - set cursor to hand
+          - hover off:
+            - set cursor back to normal
+          - click:
+            - pop up a messsage: "you click on paragraph <number_index>"
     - button:
       - id: question-popup-inner-button
       - text: click on me

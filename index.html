@@ -1,5 +1,7 @@
 <div id="question-popup">
-  <p id="popup-title">this is a popup</p>
+  <p id="status">number drag and drop status...</p>
+  <div id="numbers-list"></div>
+  <button id="question-popup-inner-button">click on me</button>
 </div>
 
 <style>
@@ -13,33 +15,34 @@
     transform: translate(-50%, -50%);
   }
 
-  #popup-title {
+  #status {
     background: lightyellow;
     margin: 0;
-    border: 1px solid silver;
+    border: 1px silver solid;
     padding: 0 10px 10px 10px;
     color: gold;
     text-align: center;
+    font-weight: normal;
   }
 
-  .number-paragraph {
+  #numbers-list p {
     cursor: default;
   }
 
-  .number-paragraph:hover {
-    cursor: pointer;
-  }
-
-  .odd {
+  #numbers-list p:nth-child(odd) {
     background: red;
   }
 
-  .even {
+  #numbers-list p:nth-child(even) {
     background: lightcoral;
   }
 
+  #numbers-list p.dragging {
+    border: 5px gold solid;
+  }
+
   #question-popup-inner-button {
-    border: 5px solid gold;
+    border: 5px gold solid;
   }
 </style>
 
@@ -49,43 +52,86 @@
     const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
     
     const popup = document.getElementById('question-popup');
-    const popupTitle = document.getElementById('popup-title');
+    const status = document.getElementById('status');
+    const numbersList = document.getElementById('numbers-list');
+    const button = document.getElementById('question-popup-inner-button');
     
+    // Populate numbers list
     numbers.forEach((number, index) => {
-      const numberIndex = index + 1;
       const p = document.createElement('p');
-      p.id = 'p' + numberIndex;
-      p.className = 'number-paragraph ' + (numberIndex % 2 === 0 ? 'even' : 'odd');
+      p.id = 'p' + (index + 1);
       p.textContent = 'this is ' + number;
-      p.addEventListener('click', function(e) {
-        e.stopPropagation();
-        alert('you click on paragraph ' + numberIndex);
+      p.draggable = true;
+      p.dataset.number = number;
+      p.dataset.index = index + 1;
+      
+      p.addEventListener('dragstart', function(e) {
+        status.textContent = 'dragging number ' + number;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', this.innerHTML);
       });
-      popup.appendChild(p);
+      
+      p.addEventListener('dragend', function() {
+        this.classList.remove('dragging');
+      });
+      
+      p.addEventListener('drop', function(e) {
+        e.preventDefault();
+        status.textContent = 'dropped number ' + this.dataset.number;
+        const dragging = numbersList.querySelector('.dragging');
+        if (dragging && dragging !== this) {
+          const allP = Array.from(numbersList.querySelectorAll('p'));
+          const dragIndex = allP.indexOf(dragging);
+          const dropIndex = allP.indexOf(this);
+          if (dragIndex < dropIndex) {
+            this.parentNode.insertBefore(dragging, this.nextSibling);
+          } else {
+            this.parentNode.insertBefore(dragging, this);
+          }
+        }
+      });
+      
+      p.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+      
+      p.addEventListener('mouseenter', function() {
+        this.style.cursor = 'pointer';
+      });
+      
+      p.addEventListener('mouseleave', function() {
+        this.style.cursor = 'default';
+      });
+      
+      p.addEventListener('click', function() {
+        alert('you click on paragraph ' + this.dataset.index);
+      });
+      
+      numbersList.appendChild(p);
     });
     
-    const button = document.createElement('button');
-    button.id = 'question-popup-inner-button';
-    button.textContent = 'click on me';
+    // Popup click inside
+    popup.addEventListener('click', function(e) {
+      e.stopPropagation();
+      this.style.background = 'green';
+      status.style.fontWeight = 'bold';
+    });
+    
+    // Click outside
+    document.addEventListener('click', function() {
+      popup.style.background = 'blue';
+      status.style.fontWeight = 'normal';
+    });
+    
+    // Button click
     button.addEventListener('click', function(e) {
       e.stopPropagation();
-      button.style.borderColor = 'black';
-      button.style.fontWeight = 'bold';
+      this.style.borderColor = 'black';
+      this.style.fontWeight = 'bold';
       alert('you click on me ' + counter + ' times');
       counter += 2;
-    });
-    popup.appendChild(button);
-    
-    popup.addEventListener('click', function(e) {
-      popup.style.background = 'green';
-      popupTitle.style.fontWeight = 'bold';
-    });
-    
-    document.addEventListener('click', function(e) {
-      if (!popup.contains(e.target)) {
-        popup.style.background = 'blue';
-        popupTitle.style.fontWeight = 'normal';
-      }
     });
   })();
 </script>
