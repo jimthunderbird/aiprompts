@@ -73,7 +73,7 @@ div
           - click:
             - pop up a messsage: "you click on paragraph <number_index>"
     - button:
-      - id: question-popup-inner-button
+      - id: control-button
       - text: click on me
       - style:
         - border 5px gold solid
