@@ -7,13 +7,15 @@ put all css inside <style> tag
 put all javascript inside <script> tag
 do not output ```html and ```
 
-set <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will change on each page load
+also, please note that:
+when we set up "local variable" for a component, it means we are setting up variable binding to this component only, it do not interfere with other component
 
 # component
 div
-  - setup variables bind to this component only, do not interfere with other component:
-    - <counter>: starts with 1
   - id: question-popup
+  - local variable:
+    - <counter>: starts with 1
+    - <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will change on each page load
   - style: 
     - width: 400px
     - height: 300px 

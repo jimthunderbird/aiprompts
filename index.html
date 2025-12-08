@@ -22,51 +22,52 @@
     padding: 0 10px 10px 10px;
     color: gold;
     text-align: center;
-    font-weight: normal;
   }
 
-  #numbers-container p {
+  .number-paragraph {
     margin: 0;
     padding: 5px;
   }
 
-  #numbers-container p:nth-child(odd) {
+  .number-paragraph.odd {
     background: red;
   }
 
-  #numbers-container p:nth-child(even) {
+  .number-paragraph.even {
     background: lightcoral;
   }
 
   #question-popup-inner-button {
     border: 5px solid gold;
     padding: 5px 10px;
-    cursor: pointer;
+    margin: 10px;
   }
 </style>
 
 <script>
   (function() {
     let counter = 1;
-    const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+    const numbers = Array.from({ length: 5 }, () => Math.floor(Math.random() * 1000) + 1);
     
     const popup = document.getElementById('question-popup');
-    const numbersContainer = document.getElementById('numbers-container');
-    const button = document.getElementById('question-popup-inner-button');
     const popupTitle = document.getElementById('popup-title');
+    const numbersContainer = document.getElementById('numbers-container');
+    const innerButton = document.getElementById('question-popup-inner-button');
     
     numbers.forEach((number, index) => {
+      const numberIndex = index + 1;
       const p = document.createElement('p');
-      p.id = 'p' + (index + 1);
-      p.textContent = 'this is ' + number;
+      p.id = `p${numberIndex}`;
+      p.className = `number-paragraph ${numberIndex % 2 === 0 ? 'even' : 'odd'}`;
+      p.textContent = `this is ${number}`;
       p.addEventListener('click', function(e) {
         e.stopPropagation();
-        alert('you click on paragraph ' + (index + 1));
+        alert(`you click on paragraph ${numberIndex}`);
       });
       numbersContainer.appendChild(p);
     });
     
-    popup.addEventListener('click', function() {
+    popup.addEventListener('click', function(e) {
       popup.style.background = 'green';
       popupTitle.style.fontWeight = 'bold';
     });
@@ -78,11 +79,11 @@
       }
     });
     
-    button.addEventListener('click', function(e) {
+    innerButton.addEventListener('click', function(e) {
       e.stopPropagation();
-      button.style.borderColor = 'black';
-      button.style.fontWeight = 'bold';
-      alert('you click on me ' + counter + ' times');
+      innerButton.style.borderColor = 'black';
+      innerButton.style.fontWeight = 'bold';
+      alert(`you click on me ${counter} times`);
       counter += 2;
     });
   })();
