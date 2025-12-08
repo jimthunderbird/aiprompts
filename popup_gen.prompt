@@ -57,9 +57,10 @@ div
           - dragging start: 
             - set <paragraph with id "status">.text to "dragging number <number>"
             - set <current_paragraph>.style border to: 5px gold solid
-          - drop:
+          - dragging end:
             - set <paragraph with id "status">.text to "dropped number <number>"
             - set <current_paragraph>.style border back to normal
+            - re-order all paragraphs in numbers-list base on the dropped position of <current_paragraph>
           - hover on: 
             - set cursor to hand
           - hover off:
