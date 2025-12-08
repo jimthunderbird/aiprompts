@@ -35,12 +35,19 @@ Here is the <toml_spec>:
 [component.questions-table]
 datasource = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\n"
 type = "html table"
-click = "pop up a message: \"question details: <question.body> (<row_number>, <column_number>)\"\n"
+click = "component.questions-popup.style.visiblity: visible\ncomponent.questions-popup.datasource = \"<question>\"\n"
 
 [component.questions-list]
 type = "html section with paragraphs"
 datasource = "read questions.json and save it to <questions>\npick 4 random questions from <questions> and save it to <questions>\n"
 hover_on = "current_paragraph.style.font-weight: bold\ncurrent_paragraph.style.mouse-cursor: spinning ring\n"
+
+[component.question-popup]
+datasource = "<question>"
+type = "html div"
+detail = "width: 400px\nheight: 300px\nalign: center of the screen\nbackground: #27CCF5\nvisibility: hidden\n"
+click = "if outside of this component's boundary,visibility: hidden"
+text = "<question.body>"
 
 [component.questions-table.style]
 detail = "background: light yellow, border: 3px gold solid"
@@ -54,6 +61,8 @@ start_index = 1
 
 [component.questions-list.paragraph]
 hover_off = "current_paragraph.style.font-weight: normal"
+
+[component.question-popup.style]
 
 [logic.php.get_random_questions]
 details = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"

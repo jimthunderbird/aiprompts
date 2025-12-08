@@ -1,0 +1,12 @@
+[component.question-popup]
+datasource = "<question>"
+type = "html div"
+style.detail = """
+width: 400px
+height: 300px
+align: center of the screen
+background: #27CCF5
+visibility: hidden
+"""
+click = "if outside of this component's boundary,visibility: hidden"
+text = "<question.body>"

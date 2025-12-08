@@ -1,5 +1,6 @@
 @include component.questions-table.toml
 @include component.questions-list.toml
+@include component.question-popup.toml
 
 [logic.php.get_random_questions]
 details = """
