@@ -12,7 +12,7 @@ set <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will
 # component
 div
   - setup variables bind to this component only, do not interfere with other component:
-    - counter: starts with 1
+    - <counter>: starts with 1
   - id: question-popup
   - style: 
     - width: 400px
@@ -54,4 +54,4 @@ div
         - change border color to black
         - set font weight bold
         - pop up a message "you click on me <counter> times"
-        - increment <counter> by 1
+        - increment <counter> by 2
