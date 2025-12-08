@@ -18,7 +18,7 @@
   #status {
     background: lightyellow;
     margin: 0;
-    border: 1px silver solid;
+    border: 1px solid silver;
     padding: 0 10px 10px 10px;
     color: gold;
     text-align: center;
@@ -26,7 +26,13 @@
   }
 
   #numbers-list p {
-    cursor: default;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    cursor: grab;
+    border: none;
   }
 
   #numbers-list p:nth-child(odd) {
@@ -38,35 +44,34 @@
   }
 
   #numbers-list p.dragging {
-    border: 5px gold solid;
+    border: 5px solid gold;
   }
 
   #question-popup-inner-button {
-    border: 5px gold solid;
+    border: 5px solid gold;
   }
 </style>
 
 <script>
   (function() {
-    let counter = 1;
-    const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
-    
     const popup = document.getElementById('question-popup');
     const status = document.getElementById('status');
     const numbersList = document.getElementById('numbers-list');
     const button = document.getElementById('question-popup-inner-button');
     
-    // Populate numbers list
+    let counter = 1;
+    const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+    
     numbers.forEach((number, index) => {
       const p = document.createElement('p');
-      p.id = 'p' + (index + 1);
-      p.textContent = 'this is ' + number;
+      p.id = `p${index + 1}`;
+      p.textContent = `this is ${number}`;
       p.draggable = true;
       p.dataset.number = number;
       p.dataset.index = index + 1;
       
       p.addEventListener('dragstart', function(e) {
-        status.textContent = 'dragging number ' + number;
+        status.textContent = `dragging number ${number}`;
         this.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', this.innerHTML);
@@ -76,15 +81,14 @@
         this.classList.remove('dragging');
       });
       
-      p.addEventListener('drop', function(e) {
+      p.addEventListener('dragover', function(e) {
         e.preventDefault();
-        status.textContent = 'dropped number ' + this.dataset.number;
-        const dragging = numbersList.querySelector('.dragging');
+        const dragging = document.querySelector('.dragging');
         if (dragging && dragging !== this) {
-          const allP = Array.from(numbersList.querySelectorAll('p'));
-          const dragIndex = allP.indexOf(dragging);
-          const dropIndex = allP.indexOf(this);
-          if (dragIndex < dropIndex) {
+          const allPs = [...numbersList.querySelectorAll('p')];
+          const draggingIndex = allPs.indexOf(dragging);
+          const currentIndex = allPs.indexOf(this);
+          if (draggingIndex < currentIndex) {
             this.parentNode.insertBefore(dragging, this.nextSibling);
           } else {
             this.parentNode.insertBefore(dragging, this);
@@ -92,9 +96,14 @@
         }
       });
       
-      p.addEventListener('dragover', function(e) {
+      p.addEventListener('drop', function(e) {
         e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
+        const dragging = document.querySelector('.dragging');
+        if (dragging) {
+          const draggedNumber = dragging.dataset.number;
+          status.textContent = `dropped number ${draggedNumber}`;
+          dragging.classList.remove('dragging');
+        }
       });
       
       p.addEventListener('mouseenter', function() {
@@ -102,35 +111,34 @@
       });
       
       p.addEventListener('mouseleave', function() {
-        this.style.cursor = 'default';
+        this.style.cursor = 'grab';
       });
       
-      p.addEventListener('click', function() {
-        alert('you click on paragraph ' + this.dataset.index);
+      p.addEventListener('click', function(e) {
+        e.stopPropagation();
+        alert(`you click on paragraph ${this.dataset.index}`);
       });
       
       numbersList.appendChild(p);
     });
     
-    // Popup click inside
     popup.addEventListener('click', function(e) {
-      e.stopPropagation();
-      this.style.background = 'green';
+      popup.style.background = 'green';
       status.style.fontWeight = 'bold';
     });
     
-    // Click outside
-    document.addEventListener('click', function() {
-      popup.style.background = 'blue';
-      status.style.fontWeight = 'normal';
+    document.addEventListener('click', function(e) {
+      if (!popup.contains(e.target)) {
+        popup.style.background = 'blue';
+        status.style.fontWeight = 'normal';
+      }
     });
     
-    // Button click
     button.addEventListener('click', function(e) {
       e.stopPropagation();
       this.style.borderColor = 'black';
       this.style.fontWeight = 'bold';
-      alert('you click on me ' + counter + ' times');
+      alert(`you click on me ${counter} times`);
       counter += 2;
     });
   })();

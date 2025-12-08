@@ -8,12 +8,12 @@ put all javascript inside <script> tag
 do not output ```html and ```
 
 also, please note that:
-when we set up "local variable" for a component, it means we are setting up variable binding to this component only, it will not interfere with other components
+when we set up "local variable" or "data" for a component, it means we are setting up variable binding to this component only, it will not interfere with other components
 
 # component
 div
   - id: question-popup
-  - local variable:
+  - data:
     - <counter>: starts with 1
     - <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will change on each page load
   - style: 
@@ -50,6 +50,9 @@ div
             - background: light red
           - id: p<number_index>
           - text: this is <number>
+          - style:
+            - height: 40px
+            - align: horizontal center, vertical center
           - dragging start: 
             - set <paragraph with id "status">.text to "dragging number <number>"
             - set <current_paragraph>.style border to: 5px gold solid
