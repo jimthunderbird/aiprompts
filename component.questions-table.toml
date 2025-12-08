@@ -1,9 +1,5 @@
 [component.questions-table]
-datasource = """
-read questions.json and save it to <questions>
-pick 2 random questions from <questions> and save it to <questions>
-each row maps to <question> in <questions>
-"""
+datasource="logic.php.get_random_questions"
 type = "html table"
 header.id.label = "ID"
 header.id.data = "<question.id>"

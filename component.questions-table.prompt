@@ -2,6 +2,7 @@ You are a PHP version 8.4.13 coding expert, please generate the php codeblock ba
 
 - for all [component], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for all [component.<name>], if the datasource does not refer to a php logic, assume the variables in the datasource exists already, do not initialize those variables
+- for all [component.<name>], if the datasource refer to logic.php.<name>, call that logic's function once
 - for all [component.<name>], if it is an html component and there is no "id" attribute defined, make the html component id same as <name>
 - for all [component.<name>], if the events like click,keypress...etc does not refer to a javascript logic, generate an anonymous javascript function for it
 - for [logic.php.<name>], make the php function name same as <name>
@@ -22,7 +23,7 @@ here is the <json_spec>
 
 
 {
-    "datasource": "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\neach row maps to <question> in <questions>\n",
+    "datasource": "logic.php.get_random_questions",
     "type": "html table",
     "header": {
         "id": {
