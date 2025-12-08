@@ -1,0 +1,9 @@
+{
+    "datasource": "<question>",
+    "type": "html div",
+    "style": {
+        "detail": "width: 400px\nheight: 300px\nalign: center of the screen\nbackground: #27CCF5\nvisibility: hidden\n"
+    },
+    "click": "if outside of this component's boundary,visibility: hidden",
+    "text": "<question.body>"
+}

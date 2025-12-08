@@ -1,45 +1,19 @@
-<?php ob_start(); ?>
-
-<?php require_once "php_web_system_instruction.txt"; ?>
-
-output in the following format:
 <?php
-echo <<<CODE
-<?php
-// all php logic code here...
-?>
-CODE;
-?>
+$tmpSpecJson = file_get_contents('tmp_spec.json');
+$tmpSpec = json_decode($tmpSpecJson, true);
 
-<script>
-// all javascript code here...
-</script>
-
-<style>
-//all css code here
-</style>
-
-Here is the <json_spec>:
-
-<?php
-echo file_get_contents("./tmp_spec.json");
-?>
-
-<?php
-$final_content = ob_get_contents();
-file_put_contents("tmp.prompt", $final_content);
-ob_end_clean();
-
-$prompt_response_content = shell_exec("copilot -p \"\$(cat tmp.prompt)\"");
-
-$marker = "```php";
-
-$position = strpos($prompt_response_content, $marker);
-
-if ($position !== false) {
-    $prompt_response_content = substr($prompt_response_content, $position);
+foreach ($tmpSpec as $category => $items) {
+    if ($category === 'logic') {
+        foreach ($items as $type => $subItems) {
+            foreach ($subItems as $name => $content) {
+                $filename = "{$category}.{$type}.{$name}.json";
+                file_put_contents($filename, json_encode($content, JSON_PRETTY_PRINT));
+            }
+        }
+    } elseif ($category === 'component') {
+        foreach ($items as $name => $content) {
+            $filename = "{$category}.{$name}.json";
+            file_put_contents($filename, json_encode($content, JSON_PRETTY_PRINT));
+        }
+    }
 }
-
-$prompt_response_content = str_replace(["```php","```"],"", $prompt_response_content);
-
-file_put_contents("index.php", $prompt_response_content);

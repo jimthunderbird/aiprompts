@@ -1,0 +1,3 @@
+{
+    "details": "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\nreturn <questions>\n"
+}
