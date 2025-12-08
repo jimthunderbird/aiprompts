@@ -1,14 +1,18 @@
-show me the html/css/javascript codeblock for the following html component
-output the codeblock immediately, no explanation and no extra words
-no inline css
-no inline javascript
-do not include html tags like <!DOCTYPE html>, <html>, <head>, <meta>, only show component related html
-put all css inside <style> tag
-put all javascript inside <script> tag
-do not output ```html and ```
+show me the html/css/javascript codeblock base on the definition of an html component <html_component>
+
+- output the codeblock immediately, no explanation and no extra words
+- no inline css
+- no inline javascript
+- do not include html tags like <!DOCTYPE html>, <html>, <head>, <meta>, only show component related html
+- put all css inside <style> tag
+- put all javascript inside <script> tag
+- use pure css and javascript
+- do not output ```html and ```
 
 also, please note that:
 when we set up "local variable" or "data" for a component, it means we are setting up java variables binding to this component only, they will not interfere with other components
+
+here is the <html_component>
 
 # component
 div

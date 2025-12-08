@@ -19,6 +19,7 @@
     align-items: center;
     padding: 0;
     box-sizing: border-box;
+    border: none;
     cursor: pointer;
   }
 
@@ -26,7 +27,7 @@
     background: lightyellow;
     margin: 0;
     padding: 0 10px 10px;
-    border: 1px silver solid;
+    border: 1px solid silver;
     color: gold;
     text-align: center;
     font-weight: normal;
@@ -39,8 +40,9 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+    margin-top: 10px;
     width: 100%;
-    padding: 10px;
+    padding: 0;
     box-sizing: border-box;
   }
 
@@ -51,15 +53,10 @@
     justify-content: center;
     cursor: pointer;
     border: 1px solid silver;
-    transition: border 0.2s;
-  }
-
-  .number-item:hover {
-    cursor: pointer;
-  }
-
-  .number-item.dragging {
-    border: 5px gold solid;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 16px;
   }
 
   .number-item.odd {
@@ -70,114 +67,128 @@
     background: lightred;
   }
 
-  #question-popup-inner-button {
+  .number-item.dragging {
+    border: 5px solid gold;
+  }
+
+  button#question-popup-inner-button {
+    border: 5px solid gold;
     margin-top: 10px;
-    border: 5px gold solid;
-    background: transparent;
-    color: gold;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    transition: all 0.2s;
+    background: transparent;
+    color: black;
+    font-weight: normal;
   }
 
-  #question-popup-inner-button:hover {
-    background: #333;
-  }
-
-  #question-popup-inner-button:active {
-    background: #222;
+  button#question-popup-inner-button:hover {
+    background: #f0f0f0;
   }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const popup = document.getElementById('question-popup');
-    const status = document.getElementById('status');
-    const numbersList = document.getElementById('numbers-list');
-    const button = document.getElementById('question-popup-inner-button');
+  class QuestionPopupComponent {
+    constructor() {
+      this.counter = 1;
+      this.numbers = Array.from({ length: 5 }, () => Math.floor(Math.random() * 1000) + 1);
+      this.setupElements();
+      this.bindEvents();
+    }
 
-    // Local data
-    let counter = 1;
-    let numbers = Array.from({ length: 5 }, () => Math.floor(Math.random() * 1000) + 1);
-
-    // Render numbers
-    function renderNumbers() {
+    setupElements() {
+      const numbersList = document.getElementById('numbers-list');
       numbersList.innerHTML = '';
-      numbers.forEach((num, index) => {
+      this.numbers.forEach((num, index) => {
         const p = document.createElement('p');
-        p.className = `number-item ${index % 2 === 0 ? 'odd' : 'even'}`;
         p.id = `p${index + 1}`;
+        p.className = `number-item ${index % 2 === 0 ? 'odd' : 'even'}`;
         p.textContent = `this is ${num}`;
         p.draggable = true;
-
-        p.addEventListener('dragstart', function (e) {
-          status.textContent = `dragging number ${num}`;
-          this.classList.add('dragging');
-          e.dataTransfer.setData('text/plain', index);
-        });
-
-        p.addEventListener('dragover', function (e) {
-          e.preventDefault();
-          const draggingItem = document.querySelector('.dragging');
-          const currentItems = Array.from(numbersList.children);
-          const currentIndex = currentItems.indexOf(this);
-          const draggedIndex = parseInt(draggingItem.id.replace('p', '')) - 1;
-
-          if (draggedIndex !== currentIndex) {
-            numbersList.insertBefore(draggingItem, this);
-            const temp = numbers[draggedIndex];
-            numbers[draggedIndex] = numbers[currentIndex];
-            numbers[currentIndex] = temp;
-          }
-        });
-
-        p.addEventListener('dragend', function () {
-          status.textContent = `dropped number ${num}`;
-          this.classList.remove('dragging');
-        });
-
-        p.addEventListener('click', function () {
-          alert(`you click on paragraph ${index + 1}`);
-        });
-
-        p.addEventListener('mouseenter', function () {
-          this.style.cursor = 'pointer';
-        });
-
-        p.addEventListener('mouseleave', function () {
-          this.style.cursor = 'default';
-        });
-
         numbersList.appendChild(p);
       });
     }
 
-    renderNumbers();
+    bindEvents() {
+      const popup = document.getElementById('question-popup');
+      const status = document.getElementById('status');
+      const button = document.getElementById('question-popup-inner-button');
 
-    // Click on popup
-    popup.addEventListener('click', function (e) {
-      if (e.target === popup) {
-        popup.style.background = 'green';
-        status.style.fontWeight = 'bold';
-      }
-    });
+      // Click inside popup
+      popup.addEventListener('click', (e) => {
+        if (e.target === popup) {
+          popup.style.background = 'green';
+          status.style.fontWeight = 'bold';
+        }
+      });
 
-    // Click outside popup
-    document.addEventListener('click', function (e) {
-      if (!popup.contains(e.target)) {
-        popup.style.background = 'blue';
-        status.style.fontWeight = 'normal';
-      }
-    });
+      // Click outside popup
+      document.addEventListener('click', (e) => {
+        if (!popup.contains(e.target)) {
+          popup.style.background = 'blue';
+          status.style.fontWeight = 'normal';
+        }
+      });
 
-    // Button click
-    button.addEventListener('click', function () {
-      this.style.borderColor = 'black';
-      this.style.fontWeight = 'bold';
-      alert(`you click on me ${counter} times`);
-      counter += 2;
-    });
+      // Drag and drop
+      const items = document.querySelectorAll('.number-item');
+      items.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+          status.textContent = `dragging number ${item.textContent.split(' ')[2]}`;
+          item.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', item.id);
+        });
+
+        item.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          const draggingItem = document.querySelector('.dragging');
+          const allItems = Array.from(document.querySelectorAll('.number-item'));
+          const targetIndex = allItems.indexOf(item);
+          const draggingIndex = allItems.indexOf(draggingItem);
+          if (targetIndex !== draggingIndex) {
+            const parent = item.parentElement;
+            if (targetIndex < draggingIndex) {
+              parent.insertBefore(draggingItem, item);
+            } else {
+              parent.insertBefore(draggingItem, item.nextSibling);
+            }
+          }
+        });
+
+        item.addEventListener('dragend', (e) => {
+          const numberText = e.target.textContent;
+          const number = numberText.split(' ')[2];
+          status.textContent = `dropped number ${number}`;
+          e.target.classList.remove('dragging');
+        });
+
+        item.addEventListener('mouseenter', () => {
+          item.style.cursor = 'pointer';
+        });
+
+        item.addEventListener('mouseleave', () => {
+          item.style.cursor = 'default';
+        });
+
+        item.addEventListener('click', () => {
+          const index = item.id.replace('p', '');
+          alert(`you click on paragraph ${index}`);
+        });
+      });
+
+      // Button click
+      button.addEventListener('click', () => {
+        button.style.borderColor = 'black';
+        button.style.fontWeight = 'bold';
+        alert(`you click on me ${this.counter} times`);
+        this.counter += 2;
+      });
+    }
+  }
+
+  // Initialize component
+  document.addEventListener('DOMContentLoaded', () => {
+    new QuestionPopupComponent();
   });
 </script>
 
