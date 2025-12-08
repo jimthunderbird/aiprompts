@@ -8,7 +8,7 @@ put all javascript inside <script> tag
 do not output ```html and ```
 
 also, please note that:
-when we set up "local variable" for a component, it means we are setting up variable binding to this component only, it do not interfere with other component
+when we set up "local variable" for a component, it means we are setting up variable binding to this component only, it will not interfere with other components
 
 # component
 div
