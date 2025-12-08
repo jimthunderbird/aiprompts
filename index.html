@@ -1,0 +1,144 @@
+<style>
+#question-popup {
+  width: 400px;
+  height: 300px;
+  background: blue;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#status {
+  background: lightyellow;
+  margin: 0;
+  border: 1px solid silver;
+  padding: 0 10px 10px 10px;
+  color: gold;
+  text-align: center;
+}
+
+#numbers-list p {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+#numbers-list p:nth-child(odd) {
+  background: red;
+}
+
+#numbers-list p:nth-child(even) {
+  background: lightcoral;
+}
+
+#question-popup-inner-button {
+  border: 5px solid gold;
+}
+
+#question-popup-inner-button.clicked {
+  border-color: black;
+  font-weight: bold;
+}
+
+.dragging {
+  border: 5px solid gold !important;
+}
+
+.drag-over {
+  opacity: 0.5;
+}
+</style>
+
+<div id="question-popup">
+  <p id="status">number drag and drop status...</p>
+  <div id="numbers-list"></div>
+  <button id="question-popup-inner-button">click on me</button>
+</div>
+
+<script>
+(function() {
+  let counter = 1;
+  const numbers = [];
+  for (let i = 0; i < 5; i++) {
+    numbers.push(Math.floor(Math.random() * 1000) + 1);
+  }
+
+  const numbersList = document.getElementById('numbers-list');
+  const status = document.getElementById('status');
+  const popup = document.getElementById('question-popup');
+  const button = document.getElementById('question-popup-inner-button');
+
+  numbers.forEach((number, index) => {
+    const p = document.createElement('p');
+    p.id = `p${index + 1}`;
+    p.textContent = `this is ${number}`;
+    p.draggable = true;
+    p.dataset.number = number;
+    p.dataset.index = index + 1;
+
+    p.addEventListener('dragstart', function(e) {
+      status.textContent = `dragging number ${this.dataset.number}`;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+    });
+
+    p.addEventListener('dragend', function(e) {
+      status.textContent = `dropped number ${this.dataset.number}`;
+      this.classList.remove('dragging');
+    });
+
+    p.addEventListener('dragover', function(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      e.dataTransfer.dropEffect = 'move';
+      const dragging = document.querySelector('.dragging');
+      if (this !== dragging) {
+        const rect = this.getBoundingClientRect();
+        const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+        numbersList.insertBefore(dragging, next ? this.nextSibling : this);
+      }
+      return false;
+    });
+
+    p.addEventListener('mouseenter', function() {
+      this.style.cursor = 'pointer';
+    });
+
+    p.addEventListener('mouseleave', function() {
+      this.style.cursor = 'default';
+    });
+
+    p.addEventListener('click', function(e) {
+      e.stopPropagation();
+      alert(`you click on paragraph ${this.dataset.index}`);
+    });
+
+    numbersList.appendChild(p);
+  });
+
+  popup.addEventListener('click', function(e) {
+    this.style.background = 'green';
+    status.style.fontWeight = 'bold';
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!popup.contains(e.target)) {
+      popup.style.background = 'blue';
+      status.style.fontWeight = 'normal';
+    }
+  });
+
+  button.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.classList.add('clicked');
+    alert(`you click on me ${counter} times`);
+    counter += 2;
+  });
+})();
+</script>
+
