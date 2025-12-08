@@ -1,144 +1,183 @@
-<style>
-#question-popup {
-  width: 400px;
-  height: 300px;
-  background: blue;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#status {
-  background: lightyellow;
-  margin: 0;
-  border: 1px solid silver;
-  padding: 0 10px 10px 10px;
-  color: gold;
-  text-align: center;
-}
-
-#numbers-list p {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-}
-
-#numbers-list p:nth-child(odd) {
-  background: red;
-}
-
-#numbers-list p:nth-child(even) {
-  background: lightcoral;
-}
-
-#question-popup-inner-button {
-  border: 5px solid gold;
-}
-
-#question-popup-inner-button.clicked {
-  border-color: black;
-  font-weight: bold;
-}
-
-.dragging {
-  border: 5px solid gold !important;
-}
-
-.drag-over {
-  opacity: 0.5;
-}
-</style>
-
 <div id="question-popup">
   <p id="status">number drag and drop status...</p>
   <div id="numbers-list"></div>
   <button id="question-popup-inner-button">click on me</button>
 </div>
 
-<script>
-(function() {
-  let counter = 1;
-  const numbers = [];
-  for (let i = 0; i < 5; i++) {
-    numbers.push(Math.floor(Math.random() * 1000) + 1);
+<style>
+  #question-popup {
+    width: 400px;
+    height: 300px;
+    background: blue;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: pointer;
   }
 
-  const numbersList = document.getElementById('numbers-list');
-  const status = document.getElementById('status');
-  const popup = document.getElementById('question-popup');
-  const button = document.getElementById('question-popup-inner-button');
+  #status {
+    background: lightyellow;
+    margin: 0;
+    padding: 0 10px 10px;
+    border: 1px silver solid;
+    color: gold;
+    text-align: center;
+    font-weight: normal;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-  numbers.forEach((number, index) => {
-    const p = document.createElement('p');
-    p.id = `p${index + 1}`;
-    p.textContent = `this is ${number}`;
-    p.draggable = true;
-    p.dataset.number = number;
-    p.dataset.index = index + 1;
+  #numbers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
 
-    p.addEventListener('dragstart', function(e) {
-      status.textContent = `dragging number ${this.dataset.number}`;
-      this.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/html', this.innerHTML);
-    });
+  .number-item {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid silver;
+    transition: border 0.2s;
+  }
 
-    p.addEventListener('dragend', function(e) {
-      status.textContent = `dropped number ${this.dataset.number}`;
-      this.classList.remove('dragging');
-    });
+  .number-item:hover {
+    cursor: pointer;
+  }
 
-    p.addEventListener('dragover', function(e) {
-      if (e.preventDefault) {
-        e.preventDefault();
-      }
-      e.dataTransfer.dropEffect = 'move';
-      const dragging = document.querySelector('.dragging');
-      if (this !== dragging) {
-        const rect = this.getBoundingClientRect();
-        const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
-        numbersList.insertBefore(dragging, next ? this.nextSibling : this);
-      }
-      return false;
-    });
+  .number-item.dragging {
+    border: 5px gold solid;
+  }
 
-    p.addEventListener('mouseenter', function() {
-      this.style.cursor = 'pointer';
-    });
+  .number-item.odd {
+    background: red;
+  }
 
-    p.addEventListener('mouseleave', function() {
-      this.style.cursor = 'default';
-    });
+  .number-item.even {
+    background: lightred;
+  }
 
-    p.addEventListener('click', function(e) {
-      e.stopPropagation();
-      alert(`you click on paragraph ${this.dataset.index}`);
-    });
+  #question-popup-inner-button {
+    margin-top: 10px;
+    border: 5px gold solid;
+    background: transparent;
+    color: gold;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
 
-    numbersList.appendChild(p);
-  });
+  #question-popup-inner-button:hover {
+    background: #333;
+  }
 
-  popup.addEventListener('click', function(e) {
-    this.style.background = 'green';
-    status.style.fontWeight = 'bold';
-  });
+  #question-popup-inner-button:active {
+    background: #222;
+  }
+</style>
 
-  document.addEventListener('click', function(e) {
-    if (!popup.contains(e.target)) {
-      popup.style.background = 'blue';
-      status.style.fontWeight = 'normal';
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const popup = document.getElementById('question-popup');
+    const status = document.getElementById('status');
+    const numbersList = document.getElementById('numbers-list');
+    const button = document.getElementById('question-popup-inner-button');
+
+    // Local data
+    let counter = 1;
+    let numbers = Array.from({ length: 5 }, () => Math.floor(Math.random() * 1000) + 1);
+
+    // Render numbers
+    function renderNumbers() {
+      numbersList.innerHTML = '';
+      numbers.forEach((num, index) => {
+        const p = document.createElement('p');
+        p.className = `number-item ${index % 2 === 0 ? 'odd' : 'even'}`;
+        p.id = `p${index + 1}`;
+        p.textContent = `this is ${num}`;
+        p.draggable = true;
+
+        p.addEventListener('dragstart', function (e) {
+          status.textContent = `dragging number ${num}`;
+          this.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', index);
+        });
+
+        p.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          const draggingItem = document.querySelector('.dragging');
+          const currentItems = Array.from(numbersList.children);
+          const currentIndex = currentItems.indexOf(this);
+          const draggedIndex = parseInt(draggingItem.id.replace('p', '')) - 1;
+
+          if (draggedIndex !== currentIndex) {
+            numbersList.insertBefore(draggingItem, this);
+            const temp = numbers[draggedIndex];
+            numbers[draggedIndex] = numbers[currentIndex];
+            numbers[currentIndex] = temp;
+          }
+        });
+
+        p.addEventListener('dragend', function () {
+          status.textContent = `dropped number ${num}`;
+          this.classList.remove('dragging');
+        });
+
+        p.addEventListener('click', function () {
+          alert(`you click on paragraph ${index + 1}`);
+        });
+
+        p.addEventListener('mouseenter', function () {
+          this.style.cursor = 'pointer';
+        });
+
+        p.addEventListener('mouseleave', function () {
+          this.style.cursor = 'default';
+        });
+
+        numbersList.appendChild(p);
+      });
     }
-  });
 
-  button.addEventListener('click', function(e) {
-    e.stopPropagation();
-    this.classList.add('clicked');
-    alert(`you click on me ${counter} times`);
-    counter += 2;
+    renderNumbers();
+
+    // Click on popup
+    popup.addEventListener('click', function (e) {
+      if (e.target === popup) {
+        popup.style.background = 'green';
+        status.style.fontWeight = 'bold';
+      }
+    });
+
+    // Click outside popup
+    document.addEventListener('click', function (e) {
+      if (!popup.contains(e.target)) {
+        popup.style.background = 'blue';
+        status.style.fontWeight = 'normal';
+      }
+    });
+
+    // Button click
+    button.addEventListener('click', function () {
+      this.style.borderColor = 'black';
+      this.style.fontWeight = 'bold';
+      alert(`you click on me ${counter} times`);
+      counter += 2;
+    });
   });
-})();
 </script>
 
