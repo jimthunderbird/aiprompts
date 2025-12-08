@@ -1,0 +1,92 @@
+<div id="question-popup">
+  <p id="popup-title">this is a popup</p>
+</div>
+
+<style>
+  #question-popup {
+    width: 400px;
+    height: 300px;
+    background: blue;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #popup-title {
+    background: lightyellow;
+    margin: 0;
+    border: 1px solid silver;
+    padding: 0 10px 10px 10px;
+    color: gold;
+    text-align: center;
+  }
+
+  .number-paragraph {
+    cursor: default;
+  }
+
+  .number-paragraph:hover {
+    cursor: pointer;
+  }
+
+  .odd {
+    background: red;
+  }
+
+  .even {
+    background: lightcoral;
+  }
+
+  #question-popup-inner-button {
+    border: 5px solid gold;
+  }
+</style>
+
+<script>
+  (function() {
+    let counter = 1;
+    const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+    
+    const popup = document.getElementById('question-popup');
+    const popupTitle = document.getElementById('popup-title');
+    
+    numbers.forEach((number, index) => {
+      const numberIndex = index + 1;
+      const p = document.createElement('p');
+      p.id = 'p' + numberIndex;
+      p.className = 'number-paragraph ' + (numberIndex % 2 === 0 ? 'even' : 'odd');
+      p.textContent = 'this is ' + number;
+      p.addEventListener('click', function(e) {
+        e.stopPropagation();
+        alert('you click on paragraph ' + numberIndex);
+      });
+      popup.appendChild(p);
+    });
+    
+    const button = document.createElement('button');
+    button.id = 'question-popup-inner-button';
+    button.textContent = 'click on me';
+    button.addEventListener('click', function(e) {
+      e.stopPropagation();
+      button.style.borderColor = 'black';
+      button.style.fontWeight = 'bold';
+      alert('you click on me ' + counter + ' times');
+      counter += 2;
+    });
+    popup.appendChild(button);
+    
+    popup.addEventListener('click', function(e) {
+      popup.style.background = 'green';
+      popupTitle.style.fontWeight = 'bold';
+    });
+    
+    document.addEventListener('click', function(e) {
+      if (!popup.contains(e.target)) {
+        popup.style.background = 'blue';
+        popupTitle.style.fontWeight = 'normal';
+      }
+    });
+  })();
+</script>
+

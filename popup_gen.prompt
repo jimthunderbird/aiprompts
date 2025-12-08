@@ -45,6 +45,10 @@ div
         - background: light red
       - id: p<number_index>
       - text: this is <number>
+      - hover on: 
+        - set cursor to hand
+      - hover off:
+        - set cursor back to normal
       - click:
         - pop up a messsage: "you click on paragraph <number_index>"
     - button:
