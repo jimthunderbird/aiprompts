@@ -11,6 +11,8 @@ set <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will
 
 # component
 div
+  - setup variables bind to this component only, do not interfere with other component:
+    - counter: starts with 1
   - id: question-popup
   - style: 
     - width: 400px
@@ -34,7 +36,7 @@ div
         - padingg left, right, bottom: 10px
         - font color: gold
         - text alignment: horizontal center, veritcal top
-    - paragraph: each <number>, <number_index> in <numbers>, <number_index> starts from 1
+    - paragraph: for each <number>, <number_index> in <numbers>, <number_index> starts from 1
       - odd.style:
         - background: red
       - even.style:

@@ -1,9 +1,4 @@
 <style>
-body {
-  margin: 0;
-  padding: 0;
-}
-
 #question-popup {
   width: 400px;
   height: 300px;
@@ -14,21 +9,13 @@ body {
   transform: translate(-50%, -50%);
 }
 
-#question-popup.clicked-inside {
-  background: green;
-}
-
-#question-popup p:first-child {
+#question-popup p:first-of-type {
   background: lightyellow;
   margin: 0;
   border: 1px solid silver;
   padding: 0 10px 10px 10px;
   color: gold;
   text-align: center;
-}
-
-#question-popup.clicked-inside p:first-child {
-  font-weight: bold;
 }
 
 #question-popup p.odd {
@@ -47,6 +34,14 @@ body {
   border-color: black;
   font-weight: bold;
 }
+
+#question-popup.active {
+  background: green;
+}
+
+#question-popup.active p:first-of-type {
+  font-weight: bold;
+}
 </style>
 
 <div id="question-popup">
@@ -54,42 +49,45 @@ body {
 </div>
 
 <script>
-const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
-const popup = document.getElementById('question-popup');
-
-numbers.forEach((number, index) => {
-  const p = document.createElement('p');
-  const numberIndex = index + 1;
-  p.id = 'p' + numberIndex;
-  p.textContent = 'this is ' + number;
-  p.className = numberIndex % 2 === 0 ? 'even' : 'odd';
-  p.addEventListener('click', function(e) {
-    e.stopPropagation();
-    alert('you click on paragraph ' + numberIndex);
+(function() {
+  const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+  let counter = 1;
+  
+  const popup = document.getElementById('question-popup');
+  
+  numbers.forEach((number, index) => {
+    const p = document.createElement('p');
+    const numberIndex = index + 1;
+    p.id = 'p' + numberIndex;
+    p.textContent = 'this is ' + number;
+    p.className = numberIndex % 2 === 0 ? 'even' : 'odd';
+    p.addEventListener('click', function(e) {
+      e.stopPropagation();
+      alert('you click on paragraph ' + numberIndex);
+    });
+    popup.appendChild(p);
   });
-  popup.appendChild(p);
-});
-
-const button = document.createElement('button');
-button.id = 'question-popup-inner-button';
-button.textContent = 'click on me';
-let counter = 1;
-button.addEventListener('click', function(e) {
-  e.stopPropagation();
-  alert('you click on me ' + counter + ' times');
-  button.classList.add('clicked');
-  counter++;
-});
-popup.appendChild(button);
-
-popup.addEventListener('click', function(e) {
-  popup.classList.add('clicked-inside');
-});
-
-document.addEventListener('click', function(e) {
-  if (!popup.contains(e.target)) {
-    popup.classList.remove('clicked-inside');
-  }
-});
+  
+  const button = document.createElement('button');
+  button.id = 'question-popup-inner-button';
+  button.textContent = 'click on me';
+  button.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.classList.add('clicked');
+    alert('you click on me ' + counter + ' times');
+    counter++;
+  });
+  popup.appendChild(button);
+  
+  popup.addEventListener('click', function() {
+    this.classList.add('active');
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!popup.contains(e.target)) {
+      popup.classList.remove('active');
+    }
+  });
+})();
 </script>
 
