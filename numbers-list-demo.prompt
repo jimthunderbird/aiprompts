@@ -16,7 +16,7 @@ here is the <html_component>
 
 # component
 div
-  - id: question-popup
+  - id: numbers-list-demo
   - data:
     - <counter>: starts with 1
     - <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will change on each page load
