@@ -3,22 +3,43 @@
 function component_questions_table_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
-    shuffle($questions);
-    return array_slice($questions, 0, 2);
+    $randomKeys = array_rand($questions, min(2, count($questions)));
+    if (!is_array($randomKeys)) {
+        $randomKeys = [$randomKeys];
+    }
+    $result = [];
+    foreach ($randomKeys as $key) {
+        $result[] = $questions[$key];
+    }
+    return $result;
 }
 
 function component_questions_list_datasource() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
-    shuffle($questions);
-    return array_slice($questions, 0, 4);
+    $randomKeys = array_rand($questions, min(4, count($questions)));
+    if (!is_array($randomKeys)) {
+        $randomKeys = [$randomKeys];
+    }
+    $result = [];
+    foreach ($randomKeys as $key) {
+        $result[] = $questions[$key];
+    }
+    return $result;
 }
 
 function get_random_questions() {
     $json = file_get_contents('questions.json');
     $questions = json_decode($json, true);
-    shuffle($questions);
-    return array_slice($questions, 0, 2);
+    $randomKeys = array_rand($questions, min(2, count($questions)));
+    if (!is_array($randomKeys)) {
+        $randomKeys = [$randomKeys];
+    }
+    $result = [];
+    foreach ($randomKeys as $key) {
+        $result[] = $questions[$key];
+    }
+    return $result;
 }
 
 $questionsTableData = component_questions_table_datasource();
@@ -33,44 +54,42 @@ $questionsListData = component_questions_list_datasource();
         </tr>
     </thead>
     <tbody>
-        <?php $index = 1; ?>
-        <?php foreach ($questionsTableData as $question): ?>
+        <?php foreach ($questionsTableData as $index => $question): ?>
         <tr data-question='<?php echo htmlspecialchars(json_encode($question), ENT_QUOTES); ?>'>
             <td><?php echo htmlspecialchars($question['id']); ?></td>
             <td><?php echo htmlspecialchars($question['body']); ?></td>
         </tr>
-        <?php $index++; ?>
         <?php endforeach; ?>
     </tbody>
 </table>
 
 <section id="questions-list">
-    <?php foreach ($questionsListData as $idx => $question): ?>
-    <p class="<?php echo ($idx % 2 === 0) ? 'even' : 'odd'; ?>" data-question='<?php echo htmlspecialchars(json_encode($question), ENT_QUOTES); ?>'>
+    <?php foreach ($questionsListData as $index => $question): ?>
+    <p class="<?php echo ($index % 2 === 0) ? 'even' : 'odd'; ?>" data-question='<?php echo htmlspecialchars(json_encode($question), ENT_QUOTES); ?>'>
         <?php echo htmlspecialchars($question['body']); ?>
     </p>
     <?php endforeach; ?>
 </section>
 
-<div id="question-popup">
-    <div id="question-popup-content"></div>
-</div>
+<div id="question-popup"></div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const questionTable = document.getElementById('questions-table');
     const questionPopup = document.getElementById('question-popup');
-    const questionPopupContent = document.getElementById('question-popup-content');
-    
-    questionTable.querySelectorAll('tbody tr').forEach(function(row) {
-        row.addEventListener('click', function(e) {
-            const questionData = JSON.parse(this.getAttribute('data-question'));
-            questionPopupContent.textContent = questionData.body;
+    const questionsTable = document.getElementById('questions-table');
+    const questionsList = document.getElementById('questions-list');
+
+    questionsTable.addEventListener('click', function(e) {
+        const row = e.target.closest('tr');
+        if (row && row.dataset.question) {
+            const question = JSON.parse(row.dataset.question);
+            questionPopup.textContent = question.body;
             questionPopup.style.visibility = 'visible';
-        });
+        }
     });
-    
-    questionTable.querySelectorAll('tbody td').forEach(function(cell) {
+
+    const cells = questionsTable.querySelectorAll('td');
+    cells.forEach(cell => {
         cell.addEventListener('mouseenter', function() {
             this.style.fontWeight = 'bold';
         });
@@ -78,20 +97,32 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.fontWeight = 'normal';
         });
     });
-    
-    const questionsList = document.getElementById('questions-list');
-    questionsList.querySelectorAll('p').forEach(function(paragraph) {
+
+    const paragraphs = questionsList.querySelectorAll('p');
+    paragraphs.forEach(paragraph => {
         paragraph.addEventListener('mouseenter', function() {
             this.style.fontWeight = 'bold';
             this.style.cursor = 'wait';
         });
         paragraph.addEventListener('mouseleave', function() {
             this.style.fontWeight = 'normal';
+            this.style.cursor = 'default';
+        });
+        paragraph.addEventListener('click', function() {
+            const question = JSON.parse(this.dataset.question);
+            questionPopup.textContent = question.body;
+            questionPopup.style.visibility = 'visible';
         });
     });
-    
+
     questionPopup.addEventListener('click', function(e) {
         if (e.target === questionPopup) {
+            questionPopup.style.visibility = 'hidden';
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!questionPopup.contains(e.target) && !e.target.closest('#questions-table') && !e.target.closest('#questions-list')) {
             questionPopup.style.visibility = 'hidden';
         }
     });
@@ -104,29 +135,34 @@ document.addEventListener('DOMContentLoaded', function() {
     border: 3px solid gold;
     border-collapse: collapse;
     width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
 }
 
 #questions-table thead th {
-    background: lightYellow;
+    background: lightyellow;
     text-align: left;
-    padding: 8px;
+    padding: 10px;
+    border: 1px solid gold;
 }
 
 #questions-table tbody td {
     background: wheat;
     text-align: center;
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 10px;
+    border: 1px solid gold;
 }
 
 #questions-list {
-    display: block;
+    max-width: 800px;
+    margin: 20px auto;
 }
 
 #questions-list p {
     margin-left: 10px;
     margin-right: 10px;
     padding: 10px;
+    cursor: default;
 }
 
 #questions-list p.odd {
@@ -135,47 +171,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 #questions-list p.even {
     background: red;
+    color: white;
 }
 
 #question-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    visibility: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-#question-popup-content {
     width: 400px;
     height: 300px;
     background: #27CCF5;
+    visibility: hidden;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
-    border-radius: 8px;
-    overflow: auto;
     box-sizing: border-box;
+    z-index: 1000;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 768px) {
-    #question-popup-content {
-        width: 90%;
-        max-width: 400px;
-        height: auto;
-        max-height: 80%;
-    }
-    
     #questions-table {
         font-size: 14px;
     }
     
     #questions-table thead th,
     #questions-table tbody td {
-        padding: 6px;
+        padding: 8px;
+    }
+    
+    #question-popup {
+        width: 90%;
+        max-width: 400px;
+        height: auto;
+        min-height: 200px;
+    }
+    
+    #questions-list p {
+        font-size: 14px;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 }
 </style>

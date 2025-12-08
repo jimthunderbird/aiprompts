@@ -1,12 +1,13 @@
 [component.questions-table]
 datasource = "read questions.json and save it to <questions>\npick 2 random questions from <questions> and save it to <questions>\n"
 type = "html table"
-click = "component.questions-popup.style.visiblity: visible\ncomponent.questions-popup.datasource = \"<question>\"\n"
+click = "component.question-popup.style.visibility: visible\ncomponent.question-popup.datasource = \"<question>\"\n"
 
 [component.questions-list]
 type = "html section with paragraphs"
 datasource = "read questions.json and save it to <questions>\npick 4 random questions from <questions> and save it to <questions>\n"
 hover_on = "current_paragraph.style.font-weight: bold\ncurrent_paragraph.style.mouse-cursor: spinning ring\n"
+click = "component.question-popup.style.visibility = \"visible\"\ncomponent.question-popup.datasource = \"<question> in <questions>\"\n"
 
 [component.question-popup]
 datasource = "<question>"

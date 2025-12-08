@@ -12,3 +12,7 @@ current_paragraph.style.font-weight: bold
 current_paragraph.style.mouse-cursor: spinning ring
 """
 paragraph.hover_off = "current_paragraph.style.font-weight: normal"
+paragraph.click = """
+component.question-popup.style.visibility = "visible"
+component.question-popup.datasource = "<question> in <questions>"
+"""

@@ -14,8 +14,8 @@ style.detail = "background: light yellow, border: 1px blue solid"
 cell.hover_on = "change cell.style.font-weight: bold"
 cell.hover_off = "change cell.style.font-weight: normal"
 cell.click = """
-component.questions-popup.style.visiblity: visible
-component.questions-popup.datasource = "<question>"
+component.question-popup.style.visibility: visible
+component.question-popup.datasource = "<question>"
 """
 cell.style.background = "wheat"
 cell.style.textalign = "center"
