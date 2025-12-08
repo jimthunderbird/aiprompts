@@ -1,80 +1,64 @@
-#!/usr/bin/env python3
 import sys
-import re
+import json
+import tomllib
 from pathlib import Path
-import toml
+from typing import Any, Dict
 
 
-def recursive_merge(base, update):
-    """Recursively merge update dict into base dict"""
+def recursive_merge(base: Dict[str, Any], update: Dict[str, Any]) -> Dict[str, Any]:
+    result = base.copy()
     for key, value in update.items():
-        if key in base and isinstance(base[key], dict) and isinstance(value, dict):
-            recursive_merge(base[key], value)
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = recursive_merge(result[key], value)
         else:
-            base[key] = value
-    return base
+            result[key] = value
+    return result
 
 
-def process_includes(content, base_path):
-    """Process @include directives and merge TOML files"""
-    lines = content.split('\n')
-    include_pattern = re.compile(r'^\s*@include\s+(.+\.toml)\s*$')
+def process_toml(toml_path: Path) -> Dict[str, Any]:
+    with open(toml_path, 'r') as f:
+        content = f.read()
     
-    merged_content = {}
-    current_lines = []
+    lines = content.split('\n')
+    includes = []
+    filtered_lines = []
     
     for line in lines:
-        match = include_pattern.match(line)
-        if match:
-            # Parse accumulated lines before this include
-            if current_lines:
-                current_toml = toml.loads('\n'.join(current_lines))
-                merged_content = recursive_merge(merged_content, current_toml)
-                current_lines = []
-            
-            # Process included file
-            include_file = match.group(1).strip()
-            include_path = base_path / include_file
-            
-            if include_path.exists():
-                included_content = include_path.read_text()
-                # Recursively process includes in included file
-                included_data = process_includes(included_content, include_path.parent)
-                merged_content = recursive_merge(merged_content, included_data)
+        stripped = line.strip()
+        if stripped.startswith('@include '):
+            include_file = stripped[9:].strip()
+            includes.append(include_file)
         else:
-            current_lines.append(line)
+            filtered_lines.append(line)
     
-    # Parse remaining lines
-    if current_lines:
-        current_toml = toml.loads('\n'.join(current_lines))
-        merged_content = recursive_merge(merged_content, current_toml)
+    base_content = '\n'.join(filtered_lines)
+    toml_data = tomllib.loads(base_content)
     
-    return merged_content
+    base_dir = toml_path.parent
+    for include_file in includes:
+        include_path = base_dir / include_file
+        if include_path.exists():
+            included_data = process_toml(include_path)
+            toml_data = recursive_merge(toml_data, included_data)
+    
+    return toml_data
 
 
 def main():
     if len(sys.argv) != 2:
-        print("Error: Expected exactly one command-line argument", file=sys.stderr)
+        print("Error: Expected exactly one argument", file=sys.stderr)
         sys.exit(1)
     
     cli_arg = sys.argv[1]
-    
-    if not cli_arg.strip():
-        print("Error: Argument cannot be empty", file=sys.stderr)
-        sys.exit(1)
-    
     toml_file = Path(cli_arg)
     
     if not toml_file.exists():
         print(f"Error: File '{cli_arg}' does not exist", file=sys.stderr)
         sys.exit(1)
     
-    content = toml_file.read_text()
-    base_path = toml_file.parent if toml_file.parent != Path('.') else Path.cwd()
-    
-    toml_content = process_includes(content, base_path)
-    
-    print(toml.dumps(toml_content))
+    toml_content = process_toml(toml_file)
+    json_content = json.dumps(toml_content, indent=2)
+    print(json_content)
 
 
 if __name__ == "__main__":

@@ -1,37 +1,3 @@
-
-You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the given json spec <json_spec>
-
-- for all [component], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
-- for all [component.<name>], if the datasource does not refer to a php logic, generate a php function named "component_<replace_dash_to_underscore_in_name>_datasource"
-- for all [component.<name>], if it is an html component and there is no "id" attribute defined, make the html component id same as <name>
-- for all [component.<name>], if the events like click,keypress...etc does not refer to a javascript logic, generate an anonymous javascript function for it
-- for [logic.php.<name>], make the php function name same as <name>
-  for example:
-  [logic.php.hello_world] corresponds to a php function hello_world
-- for [logic.js.<name>], make the javascription function name same as <name>
-  for example:
-  [logic.js.hello_world] corresponds to a javascript function hello_world
-- do not use echo or heredoc to output html
-- do not use inline css
-- do not use inline javascript
-- for all the css, make sure it works on both desktop web browser and mobile web browser
-- do not include any mock testing code
-- output the codeblock immediately, no explanation, no extra words
-
-output in the following format:
-<?php
-// all php logic code here...
-?>
-<script>
-// all javascript code here...
-</script>
-
-<style>
-//all css code here
-</style>
-
-Here is the <json_spec>:
-
 {
   "logic": {
     "php": {
@@ -107,4 +73,3 @@ Here is the <json_spec>:
     }
   }
 }
-

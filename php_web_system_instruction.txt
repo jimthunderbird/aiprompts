@@ -1,4 +1,4 @@
-You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the <toml_spec>
+You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the given json spec <json_spec>
 
 - for all [component], only include their related html code, do not include html document tags like <!DOCTYPE html>, <html>, <head>, <body>...
 - for all [component.<name>], if the datasource does not refer to a php logic, generate a php function named "component_<replace_dash_to_underscore_in_name>_datasource"

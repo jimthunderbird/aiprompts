@@ -19,10 +19,10 @@ CODE;
 //all css code here
 </style>
 
-Here is the <toml_spec>:
+Here is the <json_spec>:
 
 <?php
-echo file_get_contents("./tmp_spec.toml");
+echo file_get_contents("./tmp_spec.json");
 ?>
 
 <?php

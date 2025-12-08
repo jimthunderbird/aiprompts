@@ -3,6 +3,7 @@ type = "html section with paragraphs"
 datasource="""
 read questions.json and save it to <questions>
 pick 4 random questions from <questions> and save it to <questions>
+each paragraph maps to <question> in <questions>
 """
 paragraph.style.detail = "margin left 10px, margin right 10px"
 paragraph.odd.style.background = "light green"

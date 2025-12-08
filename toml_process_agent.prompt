@@ -10,6 +10,7 @@ please give me a python script and do the following:
   @include b.toml
   we then need to read the content of a.toml and b.toml and merge them into <toml_content>
   when merging tomls, do a recursive merge so that, if two toml keys exists, replace the original one with the later included one
-- print the <toml_content> 
+- convert <toml_content> to json and save it to <json_content>
+- print <json_content>
 
 output the python codeblock immediately, no explanation, no extra words
