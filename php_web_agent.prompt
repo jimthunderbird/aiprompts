@@ -1,9 +1,0 @@
-You are a PHP version 8.4.13 coding expert, please generate the php codeblock base on the following spec:
-
-- read the content of tmp_spec.json and save it to <tmp_spec_json>
-- for each logic > php > *, logic > js.* and component > * as <key>, get its sub json <sub_json>
-    - read the file php_web_system_instruction.txt and save its content to <instruction_content>
-    - let <prompt> be <instruction_content> plus <sub_json>
-    - write <prompt> to <key>.prompt
-
-output the php codeblock immediately, no explanation, no extra words

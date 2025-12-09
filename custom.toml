@@ -1,6 +1,0 @@
-[component.questions-table]
-style.detail = "background: light yellow, border: 3px gold solid"
-
-[component.questions-list]
-paragraph.odd.style.background = "light red"
-paragraph.even.style.background = "red"

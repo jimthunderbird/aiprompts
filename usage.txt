@@ -1,1 +1,2 @@
-py toml_process_agent.py toml_html_component_spec.toml > tmp_spec.json; php php_web_agent.php; copilot -p "$(cat component.questions-list.prompt)"
+Example:
+time cat dragging.prompt | ollama run qwen3-coder:30b > result.html

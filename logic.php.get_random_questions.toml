@@ -1,6 +1,0 @@
-[logic.php.get_random_questions]
-details = """
-read questions.json and save it to <questions>
-pick 2 random questions from <questions> and save it to <questions>
-return <questions>
-"""

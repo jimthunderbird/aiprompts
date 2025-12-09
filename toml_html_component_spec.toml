@@ -1,5 +1,0 @@
-@include component.questions-table.toml
-@include component.questions-list.toml
-@include component.question-popup.toml
-@include logic.php.get_random_questions.toml
-@include custom.toml
