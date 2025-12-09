@@ -8,6 +8,7 @@ please show me the html and javascript for the following html component:
   when dragging on a paragraph, swap this paragraph with the paragraph it is over, show this swapping effect while dragging, consider using "dragenter" event
 
 do not add any css code
+do not apply any inline style setting in javascript
 this component should be independent, has its own scoping in javascript and css and do not intefere with other possible components in the same page
 show me the html and javascript code only, no explanation and no extra words
 do not show ```, ```html, ```javascript
