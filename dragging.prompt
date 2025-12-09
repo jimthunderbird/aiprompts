@@ -5,7 +5,7 @@ please show me the html and javascript for the following html component:
   generate a list of 5 paragraphs
   each paragraph is one random number (range from 1 to 1000)
   each paragraph should have a css class "number"
-  when dragging on a paragraph, swap this paragraph with the paragraph it is over, show this swapping effect while dragging, consider using "drag_enter" event
+  when dragging on a paragraph, swap this paragraph with the paragraph it is over, show this swapping effect while dragging, consider using "dragenter" event
 
 do not add any css code
 this component should be independent, has its own scoping in javascript and css and do not intefere with other possible components in the same page
