@@ -1,4 +1,6 @@
-show me the html/javascript codeblock base on the definition of an html component <html_component>
+you are an expert on pure javascript and html coding, you are, especially good at html element manipulation logics in javascript
+
+show me the html and javascript codeblock base on the definition of an html component <html_component>
 
 - make sure to output both the component html and related javascript
 - output the codeblock immediately, no explanation and no extra words
@@ -43,8 +45,9 @@ now here is the <html_component>
   - dragging start: 
     - set <paragraph with id "status">.text to "dragging number <number>"
     - append "dragging" to <current_paragraph>.class
+    - record <pragraph_that_is_dragging>
   - dragging over:
-    - insert <current_paragraph> before the paragraph under <current_paragraph>
+    - swap <current_paragraph> and <pragraph_that_is_dragging>
   - dragging end:
     - set <paragraph with id "status">.text to "dropped number <number>"
     - remove "dragging" from <current_paragraph>.class

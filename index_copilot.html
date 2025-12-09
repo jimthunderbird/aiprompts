@@ -7,70 +7,79 @@
 <script>
 (function() {
   const component = document.getElementById('numbers-list-demo');
-  const numbersList = component.querySelector('#numbers-list');
-  const statusP = component.querySelector('#status');
-  const controlButton = component.querySelector('#control-button');
+  const numbersList = document.getElementById('numbers-list');
+  const controlButton = document.getElementById('control-button');
+  const statusP = document.getElementById('status');
   
   let counter = 1;
   const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+  let paragraphThatIsDragging = null;
+  
+  document.addEventListener('click', function(e) {
+    if (component.contains(e.target)) {
+      component.classList.add('click_inside');
+    } else {
+      component.classList.remove('click_inside');
+    }
+  });
   
   numbers.forEach((number, index) => {
     const p = document.createElement('p');
+    const numberIndex = index + 1;
     p.className = 'number';
-    p.classList.add((index + 1) % 2 === 0 ? 'even' : 'odd');
-    p.id = 'p' + (index + 1);
+    p.classList.add(numberIndex % 2 === 0 ? 'even' : 'odd');
+    p.id = 'p' + numberIndex;
     p.textContent = 'this is ' + number;
     p.draggable = true;
     
     p.addEventListener('dragstart', function() {
       statusP.textContent = 'dragging number ' + number;
-      this.classList.add('dragging');
+      p.classList.add('dragging');
+      paragraphThatIsDragging = p;
     });
     
     p.addEventListener('dragover', function(e) {
       e.preventDefault();
-      const dragging = numbersList.querySelector('.dragging');
-      if (dragging && dragging !== this) {
-        numbersList.insertBefore(dragging, this);
+      if (paragraphThatIsDragging && paragraphThatIsDragging !== p) {
+        const allParagraphs = Array.from(numbersList.children);
+        const dragIndex = allParagraphs.indexOf(paragraphThatIsDragging);
+        const currentIndex = allParagraphs.indexOf(p);
+        
+        if (dragIndex < currentIndex) {
+          numbersList.insertBefore(paragraphThatIsDragging, p.nextSibling);
+        } else {
+          numbersList.insertBefore(paragraphThatIsDragging, p);
+        }
       }
     });
     
     p.addEventListener('dragend', function() {
       statusP.textContent = 'dropped number ' + number;
-      this.classList.remove('dragging');
+      p.classList.remove('dragging');
+      paragraphThatIsDragging = null;
     });
     
     p.addEventListener('mouseenter', function() {
-      this.classList.add('hover');
+      p.classList.add('hover');
     });
     
     p.addEventListener('mouseleave', function() {
-      this.classList.remove('hover');
+      p.classList.remove('hover');
     });
     
     numbersList.appendChild(p);
   });
   
-  component.addEventListener('click', function(e) {
-    if (component.contains(e.target)) {
-      component.classList.add('click_inside');
-    }
-  });
-  
-  document.addEventListener('click', function(e) {
-    if (!component.contains(e.target)) {
-      component.classList.remove('click_inside');
-    }
-  });
+  controlButton.classList.add('control-button');
   
   controlButton.addEventListener('mousedown', function() {
-    this.classList.add('click');
+    controlButton.classList.add('click');
     alert('you click on me ' + counter + ' times');
     counter += 2;
   });
   
   controlButton.addEventListener('mouseup', function() {
-    this.classList.remove('click');
+    controlButton.classList.remove('click');
   });
 })();
 </script>

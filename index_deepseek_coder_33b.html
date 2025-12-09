@@ -8,4 +8,65 @@
 <script>
   // Data setup
   let counter = 1;
-  let numbers = Array
+  let numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+
+  // DOM elements
+  const statusParagraph = document.getElementById('status');
+  const numbersListDiv = document.getElementById('numbers-list');
+  const controlButton = document.getElementById('control-button');
+
+  // Event listeners
+  document.addEventListener('click', function(event) {
+    if (event.target === numbersListDemo || numbersListDemo.contains(event.target)) {
+      numbersListDemo.classList.add('click_inside');
+    } else {
+      numbersListDemo.classList.remove('click_inside');
+    }
+  });
+
+  controlButton.addEventListener('mousedown', function() {
+    this.classList.add('click');
+    alert(`You clicked on me ${counter} times`);
+    counter += 2;
+  });
+
+  controlButton.addEventListener('mouseup', function() {
+    this.classList.remove('click');
+  });
+
+  // Populate numbers list
+  for (let i = 0; i < numbers.length; i++) {
+    const number = numbers[i];
+    const p = document.createElement('p');
+    p.id = `p${i + 1}`;
+    p.textContent = `This is ${number}`;
+    p.className = 'number';
+    if (number % 2 === 0) {
+      p.classList.add('even');
+    } else {
+      p.classList.add('odd');
+    }
+    p.addEventListener('dragstart', function() {
+      statusParagraph.textContent = `Dragging number ${number}`;
+      this.classList.add('dragging');
+    });
+    p.addEventListener('dragover', function(event) {
+      event.preventDefault();
+      numbersListDiv.insertBefore(this, event.target);
+    });
+    p.addEventListener('dragend', function() {
+      statusParagraph.textContent = `Dropped number ${number}`;
+      this.classList.remove('dragging');
+    });
+    p.addEventListener('mouseenter', function() {
+      this.classList.add('hover');
+    });
+    p.addEventListener('mouseleave', function() {
+      this.classList.remove('hover');
+    });
+    numbersListDiv.appendChild(p);
+  }
+</script>
+```
+
+

@@ -4,73 +4,75 @@
   <button id="control-button" class="control-button">click on me</button>
 </div>
 <script>
-(() => {
-  const container = document.getElementById('numbers-list-demo');
-  const status = document.getElementById('status');
-  const numbersList = document.getElementById('numbers-list');
-  const controlButton = document.getElementById('control-button');
-
+  const component = document.getElementById('numbers-list-demo');
+  const status = component.querySelector('#status');
+  const numbersList = component.querySelector('#numbers-list');
+  const controlButton = component.querySelector('#control-button');
   let counter = 1;
-  const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+  const numbers = Array.from({length:5}, () => Math.floor(Math.random()*1000)+1);
+  let draggingEl = null;
 
-  function renderNumbers() {
-    numbersList.innerHTML = '';
-    numbers.forEach((num, idx) => {
-      const p = document.createElement('p');
-      p.id = 'p' + (idx + 1);
-      p.className = 'number' + ((idx + 1) % 2 === 1 ? ' odd' : ' even');
-      p.textContent = `this is ${num}`;
-      p.draggable = true;
+  numbers.forEach((num, idx) => {
+    const p = document.createElement('p');
+    p.id = `p${idx+1}`;
+    p.textContent = `this is ${num}`;
+    p.className = 'number';
+    if ((idx+1)%2===1) p.classList.add('odd'); else p.classList.add('even');
+    p.draggable = true;
 
-      p.addEventListener('dragstart', e => {
-        e.dataTransfer.setData('text/plain', p.id);
-        status.textContent = `dragging number ${num}`;
-        p.classList.add('dragging');
-      });
-
-      p.addEventListener('dragover', e => {
-        e.preventDefault();
-        const draggedId = e.dataTransfer.getData('text/plain');
-        if (draggedId && draggedId !== p.id) {
-          const draggedEl = document.getElementById(draggedId);
-          numbersList.insertBefore(draggedEl, p);
-        }
-      });
-
-      p.addEventListener('dragend', e => {
-        status.textContent = `dropped number ${num}`;
-        p.classList.remove('dragging');
-      });
-
-      p.addEventListener('mouseenter', () => p.classList.add('hover'));
-      p.addEventListener('mouseleave', () => p.classList.remove('hover'));
-
-      numbersList.appendChild(p);
+    p.addEventListener('dragstart', function() {
+      status.textContent = `dragging number ${num}`;
+      this.classList.add('dragging');
+      draggingEl = this;
     });
-  }
 
-  renderNumbers();
+    p.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (draggingEl && draggingEl !== this) {
+        const parent = this.parentNode;
+        const placeholder = document.createElement('div');
+        parent.replaceChild(placeholder, draggingEl);
+        parent.replaceChild(draggingEl, this);
+        parent.replaceChild(this, placeholder);
+        parent.removeChild(placeholder);
+      }
+    });
 
-  controlButton.addEventListener('mousedown', e => {
-    controlButton.classList.add('click');
+    p.addEventListener('dragend', function() {
+      status.textContent = `dropped number ${num}`;
+      this.classList.remove('dragging');
+      draggingEl = null;
+    });
+
+    p.addEventListener('mouseenter', function() {
+      this.classList.add('hover');
+    });
+
+    p.addEventListener('mouseleave', function() {
+      this.classList.remove('hover');
+    });
+
+    numbersList.appendChild(p);
+  });
+
+  component.addEventListener('click', function() {
+    component.classList.add('click_inside');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!component.contains(e.target)) {
+      component.classList.remove('click_inside');
+    }
+  });
+
+  controlButton.addEventListener('mousedown', function() {
+    this.classList.add('click');
     alert(`you click on me ${counter} times`);
     counter += 2;
   });
 
-  controlButton.addEventListener('mouseup', e => {
-    controlButton.classList.remove('click');
+  controlButton.addEventListener('mouseup', function() {
+    this.classList.remove('click');
   });
-
-  container.addEventListener('click', e => {
-    container.classList.add('click_inside');
-    e.stopPropagation();
-  });
-
-  document.addEventListener('click', e => {
-    if (!container.contains(e.target)) {
-      container.classList.remove('click_inside');
-    }
-  });
-})();
 </script>
 
