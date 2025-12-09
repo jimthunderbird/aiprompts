@@ -1,0 +1,141 @@
+<div id="numbers-list-demo">
+  <p id="status">number drag and drop status...</p>
+  <div id="numbers-list"></div>
+  <button id="control-button">click on me</button>
+</div>
+
+<style>
+#numbers-list-demo {
+  padding: 20px;
+  border: 2px solid #ccc;
+}
+
+#numbers-list-demo.click_inside {
+  border-color: #007bff;
+}
+
+#status {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.number {
+  padding: 10px;
+  margin: 5px 0;
+  cursor: move;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+.number.odd {
+  background-color: #e8f4f8;
+}
+
+.number.even {
+  background-color: #fff4e6;
+}
+
+.number.dragging {
+  opacity: 0.5;
+}
+
+.number.hover {
+  background-color: #ffffcc;
+}
+
+.number.click {
+  background-color: #ffcccc;
+}
+
+.control-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #333;
+  background-color: #f0f0f0;
+}
+
+.control-button.click {
+  background-color: #ccc;
+}
+</style>
+
+<script>
+(function() {
+  const component = document.getElementById('numbers-list-demo');
+  const numbersList = document.getElementById('numbers-list');
+  const statusP = document.getElementById('status');
+  const controlButton = document.getElementById('control-button');
+  
+  let counter = 1;
+  const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1);
+  
+  numbers.forEach((number, index) => {
+    const p = document.createElement('p');
+    p.className = 'number ' + (index % 2 === 0 ? 'odd' : 'even');
+    p.id = 'p' + (index + 1);
+    p.textContent = 'this is ' + number;
+    p.draggable = true;
+    
+    p.addEventListener('dragstart', function(e) {
+      statusP.textContent = 'dragging number ' + number;
+      p.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', p.innerHTML);
+    });
+    
+    p.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      const dragging = numbersList.querySelector('.dragging');
+      if (dragging && dragging !== p) {
+        numbersList.insertBefore(dragging, p);
+      }
+    });
+    
+    p.addEventListener('dragend', function() {
+      statusP.textContent = 'dropped number ' + number;
+      p.classList.remove('dragging');
+    });
+    
+    p.addEventListener('mouseenter', function() {
+      p.classList.add('hover');
+    });
+    
+    p.addEventListener('mouseleave', function() {
+      p.classList.remove('hover');
+    });
+    
+    p.addEventListener('mousedown', function() {
+      document.querySelectorAll('.number').forEach(el => el.classList.remove('click'));
+      alert('you click on paragraph ' + (index + 1));
+      p.classList.add('click');
+    });
+    
+    p.addEventListener('mouseup', function() {
+      p.classList.remove('click');
+    });
+    
+    numbersList.appendChild(p);
+  });
+  
+  component.addEventListener('click', function(e) {
+    component.classList.add('click_inside');
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!component.contains(e.target)) {
+      component.classList.remove('click_inside');
+    }
+  });
+  
+  controlButton.addEventListener('mousedown', function() {
+    controlButton.classList.add('click');
+    alert('you click on me ' + counter + ' times');
+    counter += 2;
+  });
+  
+  controlButton.addEventListener('mouseup', function() {
+    controlButton.classList.remove('click');
+  });
+})();
+</script>
+

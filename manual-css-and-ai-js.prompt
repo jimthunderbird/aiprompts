@@ -1,0 +1,72 @@
+show me the html/css/javascript codeblock base on the definition of an html component <html_component>
+
+- output the codeblock immediately, no explanation and no extra words
+- no inline css
+- no inline javascript
+- do not include html tags like <!DOCTYPE html>, <html>, <head>, <meta>, only show component related html
+- put all css inside <style> tag
+- put all javascript inside <script> tag
+- use pure css and javascript
+- do not output ```html and ```
+
+also, please note that:
+when we set up "local variable" or "data" for a component, it means we are setting up java variables binding to this component only, they will not interfere with other components
+
+here is the <html_component>
+
+# component html
+<div id="numbers-list-demo">
+  <p id="status">number drag and drop status...</p>
+  <div id="numbers-list"></div>
+  <button id="control-button">click on me</button>
+</div>
+
+# component data
+- <counter>: starts with 1
+- <numbers>: an array of 5 random numbers ranging from 1 to 1000, numbers will change on each page load
+
+# component logic
+
+#numbers-list-demo
+- click inside of the component: 
+  - append "click_inside" to .class
+- click outside of the component: 
+  - remove "click_inside" from .class
+
+#numbers-list-demo > #numbers-list
+- paragraph: for each <number>, <number_index> in <numbers>, <number_index> starts from 1 
+  - class: "number"
+  - odd:
+    - class: "odd"
+  - even
+    - class: "even" 
+  - id: p<number_index>
+  - text: this is <number>
+  - dragging start: 
+    - set <paragraph with id "status">.text to "dragging number <number>"
+    - append "dragging" to <current_paragraph>.class
+  - dragging over:
+    - insert <current_paragraph> before the paragraph under <current_paragraph>
+  - dragging end:
+    - set <paragraph with id "status">.text to "dropped number <number>"
+    - remove "dragging" from <current_paragraph>.class
+  - hover on: 
+    - append "hover" to <current_paragraph>.class
+  - hover off:
+    - remove "hover" from <current_paragraph>.class
+  - mouse down:
+    - append "click" from all paragraphs' class
+    - pop up a messsage: "you click on paragraph <number_index>"
+    - append "click" to <current_paragraph>.class
+  - mouse up:
+    - remove "click" to <current_paragraph>.class
+ 
+#numbers-list-demo > button#control-button
+- text: click on me
+- class: "control-button"
+- mouse down:
+  - append "click" to .class
+  - pop up a message "you click on me <counter> times"
+  - increment <counter> by 2
+- mouse up:
+  - remove "click" from .class
