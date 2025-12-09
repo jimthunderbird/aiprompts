@@ -1,12 +1,11 @@
-show me the html/css/javascript codeblock base on the definition of an html component <html_component>
+show me the html/javascript codeblock base on the definition of an html component <html_component>
 
 - output the codeblock immediately, no explanation and no extra words
-- no inline css
+- no css styles at all
 - no inline javascript
 - do not include html tags like <!DOCTYPE html>, <html>, <head>, <meta>, only show component related html
-- put all css inside <style> tag
 - put all javascript inside <script> tag
-- use pure css and javascript
+- use pure javascript
 - do not output ```html and ```
 
 also, please note that:
@@ -54,12 +53,6 @@ here is the <html_component>
     - append "hover" to <current_paragraph>.class
   - hover off:
     - remove "hover" from <current_paragraph>.class
-  - mouse down:
-    - append "click" from all paragraphs' class
-    - pop up a messsage: "you click on paragraph <number_index>"
-    - append "click" to <current_paragraph>.class
-  - mouse up:
-    - remove "click" to <current_paragraph>.class
  
 #numbers-list-demo > button#control-button
 - text: click on me

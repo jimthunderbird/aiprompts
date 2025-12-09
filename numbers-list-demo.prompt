@@ -1,12 +1,9 @@
 show me the html/css/javascript codeblock base on the definition of an html component <html_component>
 
 - output the codeblock immediately, no explanation and no extra words
-- no inline css
 - no inline javascript
-- do not include html tags like <!DOCTYPE html>, <html>, <head>, <meta>, only show component related html
-- put all css inside <style> tag
 - put all javascript inside <script> tag
-- use pure css and javascript
+- do not include html tags like <!DOCTYPE html>, <html>, <head>, <meta>, only show component related html
 - do not output ```html and ```
 
 also, please note that:
