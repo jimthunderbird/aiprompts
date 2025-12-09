@@ -1,57 +1,103 @@
-Sure, here is the JavaScript code for your component based on the description you provided:
-
-```javascript
-// define variables
-let counter = 1;
-let numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1));
-
-document.addEventListener("DOMContentLoaded", function(){
-    // component logic
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Component Demo</title>
+</head>
+<body>
+  <div id="numbers-list-demo">
+    <p id="status">number drag and drop status...</p>
+    <div id="numbers-list"></div>
+    <button id="control-button" class="">click on me</button>
+  </div>
+  
+  <script>
+    let counter = 1; // local variable for the component
     
-    let divNumbersListDemo = document.getElementById('numbers-list-demo');
-    for (let i = 0; i < numbers.length; i++){
-        let p = document.createElement('p');
-        p.className = 'number';
-        p.id = 'p' + (i+1);
-        if ((i+1) % 2 == 0) p.classList.add('even'); else p.classList.add('odd');
-        p.innerText = `this is ${numbers[i]}`;
-        
-        // drag and drop events
-        p.draggable = true;
-        p.addEventListener("dragstart", function(){ 
-            document.getElementById('status').innerText = "dragging number " + this.innerText;
-            this.classList.add('dragging');
-        });
-        
-        p.addEventListener("dragover", function(e){ e.preventDefault();});
+    window.onload = function() {
+      const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1));
+      
+      document.getElementById('numbers-list').innerHTML = '';
 
-        p.addEventListener("drop", function(){ 
-            document.getElementById('status').innerText = "dropped number " + this.innerText;
-            this.classList.remove('dragging');
-        });
+      for (let i = 0; i < numbers.length; i++) {
+        let p = document.createElement("p");
+        p.className += "number";
         
-        // hover events
-        p.addEventListener('mouseenter', () => {this.classList.add('hover')}); 
-        p.addEventListener('mouseleave', () => {this.classList.remove('hover')});
-            
-        divNumbersListDemo.querySelector('#numbers-list').appendChild(p);
+        if ((i + 1) % 2 === 0) {
+          p.className += ' even';
+        } else {
+          p.className += ' odd';
+        }
+        
+        p.id = 'p' + (i + 1);
+        p.innerHTML = "this is " + numbers[i];
+        document.getElementById('numbers-list').appendChild(p);
+      }
+    };
+    
+    document.getElementById("control-button").onmousedown = function() {
+      this.className += ' click';
+      alert("you click on me " + counter + " times");
+      counter += 2;
+    };
+
+    document.getElementById("control-button").onmouseup = function() {
+      this.className = this.className.replace(/(?:^|\s)click(?!\S)/g, '');
     }
     
-    // button logic
-    let controlButton = document.getElementById("control-button");
-    controlButton.innerText="click on me";
-    controlButton.addEventListener('mousedown', function(){ 
-        this.classList.add("click");
-        alert(`you click on me ${counter} times`);
-        counter += 2; 
+    let draggingParagraph = null;
+    document.getElementById('numbers-list').addEventListener("dragstart", function (e) {
+      const p = e.target;
+      
+      if (!p.className.includes("number")) return;  // Ignore non-number paragraphs
+      
+      draggingParagraph = p;
+      document.getElementById('status').innerText = "dragging number " + p.innerText.split(" ")[2];
+      p.className += ' dragging';
     });
     
-    controlButton.addEventListener('mouseup', function(){ this.classList.remove("click");});
-  
-    divNumbersListDemo.addEventListener('mouseover', () => {divNumbersListDemo.classList.add("click_inside")}); 
-    divNumbersListDemo.addEventListener('mouseout', () => {divNumbersListDemo.classList.remove("click_inside");});
-})
-```
-Please note that this code should be included in a script tag within an HTML file or at the end of the body section if it's meant to run after the page has loaded. It does not include any CSS styles, but you can add them as necessary.
-
-
+    document.getElementById('numbers-list').addEventListener("dragover", function (e) {
+      e.preventDefault();  // Necessary to allow dropping
+      
+      const p = e.target;
+      
+      if (!p.className.includes("number")) return;  // Ignore non-number paragraphs
+        
+      let draggingText = document.getElementById('status').innerText.split(" ");
+      draggingText[1] = "and";
+      document.getElementById('status').innerText = draggingText.join(" ");
+      
+      p.className = p.className.replace(/(?:^|\s)dragging(?!\S)/g, '');  // Remove old dragging class
+      draggingParagraph.innerHTML = p.innerHTML;
+      p.innerHTML = draggingParagraph.innerHTML;
+      
+      draggingParagraph.className += " dragging";
+    });
+    
+    document.getElementById('numbers-list').addEventListener("dragend", function (e) {
+      const p = e.target;
+      
+      if (!p.className.includes("number")) return;  // Ignore non<｜begin▁of▁sentence｜>umber paragraphs
+      
+      draggingParagraph.className = draggingParagraph.className.replace(/(?:^|\s)dragging(?!\S)/g, '');
+      document.getElementById('status').innerText = "dropped number " + p.innerText.split(" ")[2];
+    });
+    
+    document.getElementById('numbers-list').addEventListener("mouseover", function (e) {
+      const p = e.target;
+      
+      if (!p.className.includes("number")) return;  // Ignore non-number paragraphs
+      
+      p.className += ' hover';
+    });
+    
+    document.getElementById('numbers-list').addEventListener("mouseout", function (e) {
+      const p = e.target;
+      
+      if (!p.className.includes("number")) return;  // Ignore non-number paragraphs
+      
+      p.className = p.className.replace(/(?:^|\s)hover(?!\S)/g, '');
+    });
+  </script>
+</body>
+</html>

@@ -12,13 +12,13 @@
 
   // DOM elements
   const container = document.getElementById('numbers-list-demo');
-  const status = document.getElementById('status');
-  const numbersList = document.getElementById('numbers-list');
-  const controlButton = document.getElementById('control-button');
+  const statusEl = document.getElementById('status');
+  const numbersListEl = document.getElementById('numbers-list');
+  const controlButtonEl = document.getElementById('control-button');
 
-  // Initialize numbers list
+  // Helper to create number paragraphs
   function renderNumbers() {
-    numbersList.innerHTML = '';
+    numbersListEl.innerHTML = '';
     componentData.numbers.forEach((num, index) => {
       const p = document.createElement('p');
       p.className = 'number';
@@ -28,61 +28,59 @@
       p.textContent = `this is ${num}`;
       p.draggable = true;
 
-      // Drag start
-      p.addEventListener('dragstart', function (e) {
-        status.textContent = `dragging number ${num}`;
+      // Drag events
+      p.addEventListener('dragstart', function () {
+        statusEl.textContent = `dragging number ${num}`;
         this.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', index);
+        componentData.draggingElement = this;
       });
 
-      // Drag over
       p.addEventListener('dragover', function (e) {
         e.preventDefault();
-        const dragIndex = parseInt(e.dataTransfer.getData('text/plain'));
-        const currentIndex = Array.from(numbersList.children).indexOf(this);
-        const isDragUp = dragIndex < currentIndex;
-        const target = isDragUp ? this.previousElementSibling : this.nextElementSibling;
-
-        if (target && target !== this) {
-          numbersList.insertBefore(this, target);
+        if (componentData.draggingElement && this !== componentData.draggingElement) {
+          const parent = this.parentElement;
+          parent.insertBefore(this, componentData.draggingElement);
         }
       });
 
-      // Drag end
       p.addEventListener('dragend', function () {
-        status.textContent = `dropped number ${num}`;
+        statusEl.textContent = `dropped number ${num}`;
         this.classList.remove('dragging');
+        componentData.draggingElement = null;
       });
 
-      // Hover
       p.addEventListener('mouseenter', function () {
         this.classList.add('hover');
       });
+
       p.addEventListener('mouseleave', function () {
         this.classList.remove('hover');
       });
 
-      numbersList.appendChild(p);
+      numbersListEl.appendChild(p);
     });
   }
 
-  // Click inside/outside
-  container.addEventListener('click', function (e) {
-    if (e.target.closest('#numbers-list-demo')) {
-      this.classList.add('click_inside');
-    } else {
-      this.classList.remove('click_inside');
+  // Click outside logic
+  document.addEventListener('click', function (e) {
+    if (!container.contains(e.target)) {
+      container.classList.remove('click_inside');
     }
   });
 
-  // Control button click logic
-  controlButton.addEventListener('mousedown', function () {
+  // Click inside logic
+  container.addEventListener('click', function (e) {
+    container.classList.add('click_inside');
+  });
+
+  // Control button logic
+  controlButtonEl.addEventListener('mousedown', function () {
     this.classList.add('click');
     alert(`you click on me ${componentData.counter} times`);
     componentData.counter += 2;
   });
 
-  controlButton.addEventListener('mouseup', function () {
+  controlButtonEl.addEventListener('mouseup', function () {
     this.classList.remove('click');
   });
 

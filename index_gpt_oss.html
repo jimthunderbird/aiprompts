@@ -1,78 +1,81 @@
 <div id="numbers-list-demo">
   <p id="status">number drag and drop status...</p>
   <div id="numbers-list"></div>
-  <button id="control-button" class="control-button">click on me</button>
+  <button id="control-button">click on me</button>
 </div>
 <script>
+(() => {
   const component = document.getElementById('numbers-list-demo');
-  const status = component.querySelector('#status');
-  const numbersList = component.querySelector('#numbers-list');
-  const controlButton = component.querySelector('#control-button');
-  let counter = 1;
-  const numbers = Array.from({length:5}, () => Math.floor(Math.random()*1000)+1);
-  let draggingEl = null;
+  const status = document.getElementById('status');
+  const numbersList = document.getElementById('numbers-list');
+  const controlButton = document.getElementById('control-button');
 
-  numbers.forEach((num, idx) => {
+  let counter = 1;
+  const numbers = Array.from({length:5},()=>Math.floor(Math.random()*1000)+1);
+  let paragraphThatIsDragging = null;
+
+  // Render numbers
+  numbers.forEach((num, idx)=>{
     const p = document.createElement('p');
     p.id = `p${idx+1}`;
-    p.textContent = `this is ${num}`;
-    p.className = 'number';
+    p.classList.add('number');
     if ((idx+1)%2===1) p.classList.add('odd'); else p.classList.add('even');
+    p.dataset.number = num;
+    p.textContent = `this is ${num}`;
     p.draggable = true;
-
-    p.addEventListener('dragstart', function() {
+    p.addEventListener('dragstart', (e)=>{
+      paragraphThatIsDragging = e.target;
       status.textContent = `dragging number ${num}`;
-      this.classList.add('dragging');
-      draggingEl = this;
+      paragraphThatIsDragging.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', idx);
     });
-
-    p.addEventListener('dragover', function(e) {
+    p.addEventListener('dragover', (e)=>{
       e.preventDefault();
-      if (draggingEl && draggingEl !== this) {
-        const parent = this.parentNode;
-        const placeholder = document.createElement('div');
-        parent.replaceChild(placeholder, draggingEl);
-        parent.replaceChild(draggingEl, this);
-        parent.replaceChild(this, placeholder);
-        parent.removeChild(placeholder);
-      }
+      const target = e.target.closest('p');
+      if (!target || !paragraphThatIsDragging || target === paragraphThatIsDragging) return;
+      const parent = target.parentNode;
+      const placeholder = document.createElement('span');
+      parent.insertBefore(placeholder, paragraphThatIsDragging);
+      parent.insertBefore(paragraphThatIsDragging, target);
+      parent.insertBefore(target, placeholder);
+      parent.removeChild(placeholder);
     });
-
-    p.addEventListener('dragend', function() {
+    p.addEventListener('dragend', (e)=>{
       status.textContent = `dropped number ${num}`;
-      this.classList.remove('dragging');
-      draggingEl = null;
+      if (paragraphThatIsDragging) {
+        paragraphThatIsDragging.classList.remove('dragging');
+      }
+      paragraphThatIsDragging = null;
     });
-
-    p.addEventListener('mouseenter', function() {
-      this.classList.add('hover');
+    p.addEventListener('mouseenter', ()=>{
+      p.classList.add('hover');
     });
-
-    p.addEventListener('mouseleave', function() {
-      this.classList.remove('hover');
+    p.addEventListener('mouseleave', ()=>{
+      p.classList.remove('hover');
     });
-
     numbersList.appendChild(p);
   });
 
-  component.addEventListener('click', function() {
+  component.addEventListener('click', (e)=>{
     component.classList.add('click_inside');
+    e.stopPropagation();
   });
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', (e)=>{
     if (!component.contains(e.target)) {
       component.classList.remove('click_inside');
     }
   });
 
-  controlButton.addEventListener('mousedown', function() {
-    this.classList.add('click');
+  controlButton.classList.add('control-button');
+  controlButton.addEventListener('mousedown', ()=>{
+    controlButton.classList.add('click');
     alert(`you click on me ${counter} times`);
     counter += 2;
   });
-
-  controlButton.addEventListener('mouseup', function() {
-    this.classList.remove('click');
+  controlButton.addEventListener('mouseup', ()=>{
+    controlButton.classList.remove('click');
   });
+})();
 </script>
 

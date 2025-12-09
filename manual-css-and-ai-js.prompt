@@ -45,7 +45,7 @@ now here is the <html_component>
   - dragging start: 
     - set <paragraph with id "status">.text to "dragging number <number>"
     - append "dragging" to <current_paragraph>.class
-    - record <pragraph_that_is_dragging>
+    - save pragraph that is dragging to <pragraph_that_is_dragging>
   - dragging over:
     - swap <current_paragraph> and <pragraph_that_is_dragging>
   - dragging end:
