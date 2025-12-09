@@ -1,2 +1,4 @@
+All of these prompts are meant to be run by a local llm
+
 Example:
 time cat dragging.prompt | ollama run qwen3-coder:30b > result.html
