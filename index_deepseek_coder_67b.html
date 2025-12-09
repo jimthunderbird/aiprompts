@@ -1,0 +1,57 @@
+Sure, here is the JavaScript code for your component based on the description you provided:
+
+```javascript
+// define variables
+let counter = 1;
+let numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 1000) + 1));
+
+document.addEventListener("DOMContentLoaded", function(){
+    // component logic
+    
+    let divNumbersListDemo = document.getElementById('numbers-list-demo');
+    for (let i = 0; i < numbers.length; i++){
+        let p = document.createElement('p');
+        p.className = 'number';
+        p.id = 'p' + (i+1);
+        if ((i+1) % 2 == 0) p.classList.add('even'); else p.classList.add('odd');
+        p.innerText = `this is ${numbers[i]}`;
+        
+        // drag and drop events
+        p.draggable = true;
+        p.addEventListener("dragstart", function(){ 
+            document.getElementById('status').innerText = "dragging number " + this.innerText;
+            this.classList.add('dragging');
+        });
+        
+        p.addEventListener("dragover", function(e){ e.preventDefault();});
+
+        p.addEventListener("drop", function(){ 
+            document.getElementById('status').innerText = "dropped number " + this.innerText;
+            this.classList.remove('dragging');
+        });
+        
+        // hover events
+        p.addEventListener('mouseenter', () => {this.classList.add('hover')}); 
+        p.addEventListener('mouseleave', () => {this.classList.remove('hover')});
+            
+        divNumbersListDemo.querySelector('#numbers-list').appendChild(p);
+    }
+    
+    // button logic
+    let controlButton = document.getElementById("control-button");
+    controlButton.innerText="click on me";
+    controlButton.addEventListener('mousedown', function(){ 
+        this.classList.add("click");
+        alert(`you click on me ${counter} times`);
+        counter += 2; 
+    });
+    
+    controlButton.addEventListener('mouseup', function(){ this.classList.remove("click");});
+  
+    divNumbersListDemo.addEventListener('mouseover', () => {divNumbersListDemo.classList.add("click_inside")}); 
+    divNumbersListDemo.addEventListener('mouseout', () => {divNumbersListDemo.classList.remove("click_inside");});
+})
+```
+Please note that this code should be included in a script tag within an HTML file or at the end of the body section if it's meant to run after the page has loaded. It does not include any CSS styles, but you can add them as necessary.
+
+

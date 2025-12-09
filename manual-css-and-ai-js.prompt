@@ -1,5 +1,6 @@
 show me the html/javascript codeblock base on the definition of an html component <html_component>
 
+- make sure to output both the component html and related javascript
 - output the codeblock immediately, no explanation and no extra words
 - no css styles at all
 - no inline javascript
@@ -7,11 +8,9 @@ show me the html/javascript codeblock base on the definition of an html componen
 - put all javascript inside <script> tag
 - use pure javascript
 - do not output ```html and ```
+- when we set up "local variable" or "data" for a component, it means we are setting up javascript variables binding to this component only, they will not interfere with other components
 
-also, please note that:
-when we set up "local variable" or "data" for a component, it means we are setting up java variables binding to this component only, they will not interfere with other components
-
-here is the <html_component>
+now here is the <html_component>
 
 # component html
 <div id="numbers-list-demo">
