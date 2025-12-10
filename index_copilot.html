@@ -8,46 +8,44 @@
 
 <script>
 (function() {
-  const component = document.getElementById('number-list');
-  const paragraphs = component.querySelectorAll('.number');
+  const container = document.getElementById('number-list');
+  const paragraphs = container.querySelectorAll('.number');
   
-  paragraphs.forEach(p => {
+  paragraphs.forEach((p, index) => {
     p.textContent = Math.floor(Math.random() * 500) + 1;
+    p.dataset.index = index;
   });
   
   let draggedElement = null;
   
-  paragraphs.forEach(p => {
+  paragraphs.forEach((p) => {
     p.addEventListener('dragstart', function(e) {
       draggedElement = this;
     });
     
     p.addEventListener('dragenter', function(e) {
-      e.preventDefault();
       if (draggedElement && draggedElement !== this) {
-        const parent = this.parentNode;
-        const draggedIndex = Array.from(parent.children).indexOf(draggedElement);
-        const targetIndex = Array.from(parent.children).indexOf(this);
+        const draggedIndex = draggedElement.dataset.index;
+        const event = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
+          detail: { draggedElement, targetElement: this }
+        });
+        document.dispatchEvent(event);
         
-        if (draggedIndex < targetIndex) {
+        const parent = this.parentNode;
+        const allParagraphs = Array.from(parent.children);
+        const draggedPos = allParagraphs.indexOf(draggedElement);
+        const thisPos = allParagraphs.indexOf(this);
+        
+        if (draggedPos < thisPos) {
           parent.insertBefore(draggedElement, this.nextSibling);
         } else {
           parent.insertBefore(draggedElement, this);
         }
-        
-        const event = new CustomEvent('component_number-list_number_dragging', {
-          detail: { draggedElement, targetElement: this }
-        });
-        component.dispatchEvent(event);
       }
     });
     
     p.addEventListener('dragover', function(e) {
       e.preventDefault();
-    });
-    
-    p.addEventListener('dragend', function(e) {
-      draggedElement = null;
     });
   });
 })();
