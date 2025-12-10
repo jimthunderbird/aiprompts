@@ -1,28 +1,75 @@
-<div id="number-list">
-  <p class="number"></p>
-  <p class="number"></p>
-  <p class="number"></p>
-  <p class="number"></p>
-  <p class="number"></p>
-</div>
-
+<div id="number-list"></div>
 <script>
-(() => {
-  const componentId = 'number-list';
-  const container = document.getElementById(componentId);
-  let draggedElement = null;
-  let placeholder = null;
+  (function() {
+    const componentId = 'number-list';
+    const container = document.getElementById(componentId);
+    
+    if (!container) return;
+    
+    const numbers = [];
+    const paragraphs = [];
+    
+    // Generate 5 random numbers
+    for (let i = 0; i < 5; i++) {
+      numbers.push(Math.floor(Math.random() * 500) + 1);
+    }
+    
+    // Create paragraphs
+    numbers.forEach((num, index) => {
+      const p = document.createElement('p');
+      p.className = 'number';
+      p.textContent = num;
+      p.setAttribute('draggable', 'true');
+      p.dataset.index = index;
+      
+      p.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', index);
+        p.classList.add('dragging');
+        const event = new CustomEvent(`component_${componentId}_number_${index}_dragging`, {
+          detail: { index: index, value: num }
+        });
+        document.dispatchEvent(event);
+      });
+      
+      p.addEventListener('dragend', () => {
+        p.classList.remove('dragging');
+      });
+      
+      p.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      
+      p.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+        const targetIndex = parseInt(p.dataset.index);
+        
+        if (draggedIndex !== targetIndex) {
+          // Swap paragraphs
+          const draggedElement = paragraphs[draggedIndex];
+          const targetElement = paragraphs[targetIndex];
+          
+          // Swap in DOM
+          const parent = targetElement.parentNode;
+          const temp = document.createElement('div');
+          parent.insertBefore(temp, targetElement);
+          parent.insertBefore(targetElement, draggedElement);
+          parent.insertBefore(draggedElement, temp);
+          parent.removeChild(temp);
+          
+          // Update array
+          [paragraphs[draggedIndex], paragraphs[targetIndex]] = [paragraphs[targetIndex], paragraphs[draggedIndex]];
+          
+          // Update data-index attributes
+          paragraphs.forEach((el, i) => {
+            el.dataset.index = i;
+          });
+        }
+      });
+      
+      paragraphs.push(p);
+      container.appendChild(p);
+    });
+  })();
+</script>
 
-  // Generate random numbers
-  const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 500) + 1);
-  
-  // Populate paragraphs
-  container.querySelectorAll('p').forEach((p, index) => {
-    p.textContent = numbers[index];
-    p.dataset.index = index;
-  });
-
-  // Drag events
-  container.addEventListener('dragstart', (e) => {
-    if (e.target.classList.contains('number')) {
-      draggedElement = e.target

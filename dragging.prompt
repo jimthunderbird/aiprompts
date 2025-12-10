@@ -8,7 +8,9 @@ please show me the html and javascript for the following html component:
   when a paragraph is being dragged, do the following:
     - swap this paragraph with the paragraph it is over
     - emit an event "component_<component.id>_number_<number_index>_dragging"
-    - the swapping should happen when the dragging paragraph is moving
+    - the swapping should happen when the dragged paragraph is moving
+
+please make sure the paragraph swapping works when the dragged paragraph is entering the very top paragraph or entering the very bottom paragraph
 
 do not add any css code
 do not apply any inline style setting in javascript
@@ -16,4 +18,5 @@ this component should be independent, has its own scoping in javascript and css 
 show me the html and javascript code only, no explanation and no extra words
 do not show ```, ```html, ```javascript
 do not include html tags like <html>, <head>, <meta>, only show me the related html and javascript codeblock
-please come up with solutions with top 3 probabilities, then pick the highest probability solution and output the codeblock immediately
+
+output the codeblock immediately

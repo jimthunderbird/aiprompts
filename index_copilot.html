@@ -1,9 +1,9 @@
 <div id="number-list">
-  <p class="number" draggable="true"></p>
-  <p class="number" draggable="true"></p>
-  <p class="number" draggable="true"></p>
-  <p class="number" draggable="true"></p>
-  <p class="number" draggable="true"></p>
+  <p class="number" draggable="true">237</p>
+  <p class="number" draggable="true">412</p>
+  <p class="number" draggable="true">89</p>
+  <p class="number" draggable="true">356</p>
+  <p class="number" draggable="true">143</p>
 </div>
 
 <script>
@@ -13,39 +13,30 @@
   
   paragraphs.forEach((p, index) => {
     p.textContent = Math.floor(Math.random() * 500) + 1;
-    p.dataset.index = index;
-  });
-  
-  let draggedElement = null;
-  
-  paragraphs.forEach((p) => {
+    
+    let draggedElement = null;
+    
     p.addEventListener('dragstart', function(e) {
       draggedElement = this;
     });
     
-    p.addEventListener('dragenter', function(e) {
-      if (draggedElement && draggedElement !== this) {
-        const draggedIndex = draggedElement.dataset.index;
-        const event = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
-          detail: { draggedElement, targetElement: this }
-        });
-        document.dispatchEvent(event);
-        
-        const parent = this.parentNode;
-        const allParagraphs = Array.from(parent.children);
-        const draggedPos = allParagraphs.indexOf(draggedElement);
-        const thisPos = allParagraphs.indexOf(this);
-        
-        if (draggedPos < thisPos) {
-          parent.insertBefore(draggedElement, this.nextSibling);
-        } else {
-          parent.insertBefore(draggedElement, this);
-        }
-      }
-    });
-    
     p.addEventListener('dragover', function(e) {
       e.preventDefault();
+    });
+    
+    p.addEventListener('drop', function(e) {
+      e.preventDefault();
+      if (draggedElement && draggedElement !== this) {
+        const tempText = draggedElement.textContent;
+        draggedElement.textContent = this.textContent;
+        this.textContent = tempText;
+        
+        const draggedIndex = Array.from(paragraphs).indexOf(draggedElement);
+        const event = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
+          detail: { index: draggedIndex }
+        });
+        document.dispatchEvent(event);
+      }
     });
   });
 })();
