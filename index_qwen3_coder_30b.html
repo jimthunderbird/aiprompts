@@ -1,72 +1,88 @@
 <div id="number-list"></div>
 <script>
   (function() {
-    const container = document.getElementById('number-list');
-    const numbers = [];
+    const componentId = 'number-list';
+    const container = document.getElementById(componentId);
+    let draggedElement = null;
+    let draggedIndex = -1;
     
-    // Generate 5 random numbers
-    for (let i = 0; i < 5; i++) {
-      numbers.push(Math.floor(Math.random() * 500) + 1);
+    // Generate random numbers
+    function generateRandomNumbers(count, min, max) {
+      const numbers = [];
+      for (let i = 0; i < count; i++) {
+        numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
+      }
+      return numbers;
     }
     
     // Create paragraphs
+    const numbers = generateRandomNumbers(5, 1, 500);
     numbers.forEach((num, index) => {
       const p = document.createElement('p');
       p.className = 'number';
       p.textContent = num;
-      p.setAttribute('draggable', 'true');
+      p.draggable = true;
       p.dataset.index = index;
       container.appendChild(p);
     });
     
-    let draggedItem = null;
-    
-    // Drag start
+    // Drag start handler
     container.addEventListener('dragstart', function(e) {
       if (e.target.classList.contains('number')) {
-        draggedItem = e.target;
-        e.target.classList.add('dragging');
-        setTimeout(() => e.target.style.opacity = '0.5', 0);
+        draggedElement = e.target;
+        draggedIndex = parseInt(draggedElement.dataset.index);
+        e.target.style.opacity = '0.5';
       }
     });
     
-    // Drag end
-    container.addEventListener('dragend', function(e) {
-      if (e.target.classList.contains('number')) {
-        e.target.classList.remove('dragging');
-        e.target.style.opacity = '1';
-        draggedItem = null;
-      }
-    });
-    
-    // Drag over
+    // Drag over handler
     container.addEventListener('dragover', function(e) {
       e.preventDefault();
-      if (draggedItem) {
-        const target = e.target;
-        if (target.classList.contains('number') && target !== draggedItem) {
-          const rect = target.getBoundingClientRect();
-          const midpoint = rect.top + rect.height / 2;
-          
-          if (e.clientY < midpoint) {
-            container.insertBefore(draggedItem, target);
-          } else {
-            container.insertBefore(draggedItem, target.nextSibling);
-          }
-          
-          // Emit event
-          const draggedIndex = parseInt(draggedItem.dataset.index);
-          const targetIndex = parseInt(target.dataset.index);
-          const event = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
-            detail: { 
-              draggedIndex,
-              targetIndex,
-              draggedValue: draggedItem.textContent,
-              targetValue: target.textContent
-            }
-          });
-          window.dispatchEvent(event);
+    });
+    
+    // Drag enter handler
+    container.addEventListener('dragenter', function(e) {
+      if (e.target.classList.contains('number') && e.target !== draggedElement) {
+        const targetElement = e.target;
+        const targetIndex = parseInt(targetElement.dataset.index);
+        
+        // Swap elements
+        const parent = container;
+        const children = Array.from(parent.children);
+        
+        // Find positions
+        const draggedPos = children.indexOf(draggedElement);
+        const targetPos = children.indexOf(targetElement);
+        
+        // Swap in DOM
+        if (draggedPos < targetPos) {
+          parent.insertBefore(targetElement, draggedElement);
+        } else {
+          parent.insertBefore(draggedElement, targetElement);
         }
+        
+        // Update indices
+        draggedElement.dataset.index = targetIndex;
+        targetElement.dataset.index = draggedIndex;
+        
+        // Emit event
+        const event = new CustomEvent(`component_${componentId}_number_${targetIndex}_dragging`, {
+          detail: { 
+            componentId: componentId,
+            numberIndex: targetIndex,
+            newIndex: draggedIndex
+          }
+        });
+        window.dispatchEvent(event);
+      }
+    });
+    
+    // Drag end handler
+    container.addEventListener('dragend', function(e) {
+      if (e.target.classList.contains('number')) {
+        e.target.style.opacity = '1';
+        draggedElement = null;
+        draggedIndex = -1;
       }
     });
   })();

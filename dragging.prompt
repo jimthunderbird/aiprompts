@@ -12,10 +12,33 @@ please show me the html and javascript for the following html component:
   - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
-DOM Manipulation
-The reordering uses the Node.insertBefore() method on the parent container: container.insertBefore(draggedItem, referenceNode)
-If the goal is to insert the item before the target, the referenceNode is the target itself (e.target).
-If the goal is to insert the item after the target, the referenceNode is the target's nextSibling.
+HTML Structure: Create the <div id="number-list"> container and dynamically generate five <p class="number"> elements within it using a loop in JavaScript.
+
+Random Numbers: Use Math.random() and Math.floor() to generate random integers between 1 and 500 for the paragraph content.
+
+Draggability: Set the draggable="true" attribute on all <p> elements.
+
+Drag Handlers:
+
+Attach dragstart to store the dragged element's reference and index.
+
+Attach dragover to prevent default behavior and allow dropping.
+
+Attach dragenter on target paragraphs to implement the swapping logic.
+
+Swapping Logic (in dragenter):
+
+Identify the target paragraph.
+
+Check if the target is different from the dragged element.
+
+Use DOM manipulation (insertBefore or replaceWith) to swap the positions of the dragged element and the target element immediately.
+
+Keep track of the new indices.
+
+Event Emission: Inside the swapping logic, use CustomEvent and dispatchEvent() on the component's parent or the window object to emit the specified event, including the component ID and the new index of the dragged number.
+
+Cleanup: Attach dragend to remove any temporary visual styles or references.
 
 [prompt output guidance]
 do not add any css code

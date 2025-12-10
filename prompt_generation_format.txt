@@ -1,0 +1,29 @@
+Each code generation prompt will have 3 parts:
+
+[component details]
+the component spec
+
+[engineering guidance]
+issue a prompt to chatgpt or gemini, for example:
+"
+i have the following spec:
+please show me the html and javascript for the following html component:
+
+[component details]
+- the component will be a div with id number-list
+- inside of the component:
+  generate a list of 5 paragraphs
+  each paragraph is one random number (range from 1 to 500)
+  each paragraph should have a css class "number"
+  when a paragraph is being dragged, do the following:
+  - swap this paragraph with the paragraph it is over
+  - emit an event "component_<component.id>_number_<number_index>_dragging"
+  - the swapping should happen when the dragged paragraph is moving
+
+please give me less than 200 words of engineering guidance on how to implement this using javascript and html DOM api, do not show me any code, just give me guidance and suggestions, no explanation and no extra words, output in the format: 
+
+[engineering guidance]
+<the guidance detail>
+"
+
+then capture the output of this prompt and use it as engineering guidance
