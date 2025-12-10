@@ -1,74 +1,63 @@
 <div id="number-list"></div>
 <script>
   (function() {
-    const componentId = 'number-list';
-    const container = document.getElementById(componentId);
-    
-    if (!container) return;
-    
+    const container = document.getElementById('number-list');
     const numbers = [];
-    const paragraphs = [];
     
-    // Generate 5 random numbers
     for (let i = 0; i < 5; i++) {
-      numbers.push(Math.floor(Math.random() * 500) + 1);
+      const paragraph = document.createElement('p');
+      paragraph.className = 'number';
+      paragraph.textContent = Math.floor(Math.random() * 500) + 1;
+      paragraph.setAttribute('draggable', 'true');
+      paragraph.dataset.index = i;
+      numbers.push(paragraph);
+      container.appendChild(paragraph);
     }
     
-    // Create paragraphs
-    numbers.forEach((num, index) => {
-      const p = document.createElement('p');
-      p.className = 'number';
-      p.textContent = num;
-      p.setAttribute('draggable', 'true');
-      p.dataset.index = index;
-      
-      p.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', index);
-        p.classList.add('dragging');
-        const event = new CustomEvent(`component_${componentId}_number_${index}_dragging`, {
-          detail: { index: index, value: num }
-        });
-        document.dispatchEvent(event);
-      });
-      
-      p.addEventListener('dragend', () => {
-        p.classList.remove('dragging');
-      });
-      
-      p.addEventListener('dragover', (e) => {
-        e.preventDefault();
-      });
-      
-      p.addEventListener('dragenter', (e) => {
-        e.preventDefault();
-        const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
-        const targetIndex = parseInt(p.dataset.index);
-        
-        if (draggedIndex !== targetIndex) {
-          // Swap paragraphs
-          const draggedElement = paragraphs[draggedIndex];
-          const targetElement = paragraphs[targetIndex];
+    let draggedItem = null;
+    
+    container.addEventListener('dragstart', function(e) {
+      if (e.target.classList.contains('number')) {
+        draggedItem = e.target;
+        e.target.classList.add('dragging');
+        setTimeout(() => e.target.classList.add('semi-transparent'), 0);
+      }
+    });
+    
+    container.addEventListener('dragend', function(e) {
+      if (e.target.classList.contains('number')) {
+        e.target.classList.remove('dragging', 'semi-transparent');
+        draggedItem = null;
+      }
+    });
+    
+    container.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      if (draggedItem) {
+        const target = e.target;
+        if (target.classList.contains('number') && target !== draggedItem) {
+          const rect = target.getBoundingClientRect();
+          const middle = rect.top + rect.height / 2;
           
-          // Swap in DOM
-          const parent = targetElement.parentNode;
-          const temp = document.createElement('div');
-          parent.insertBefore(temp, targetElement);
-          parent.insertBefore(targetElement, draggedElement);
-          parent.insertBefore(draggedElement, temp);
-          parent.removeChild(temp);
+          if (e.clientY < middle) {
+            container.insertBefore(draggedItem, target);
+          } else {
+            container.insertBefore(draggedItem, target.nextSibling);
+          }
           
-          // Update array
-          [paragraphs[draggedIndex], paragraphs[targetIndex]] = [paragraphs[targetIndex], paragraphs[draggedIndex]];
+          const draggedIndex = Array.from(container.children).indexOf(draggedItem);
+          const targetIndex = Array.from(container.children).indexOf(target);
           
-          // Update data-index attributes
-          paragraphs.forEach((el, i) => {
-            el.dataset.index = i;
+          const event = new CustomEvent('component_number-list_number_' + draggedIndex + '_dragging', {
+            detail: { 
+              draggedIndex: draggedIndex,
+              targetIndex: targetIndex
+            }
           });
+          
+          container.dispatchEvent(event);
         }
-      });
-      
-      paragraphs.push(p);
-      container.appendChild(p);
+      }
     });
   })();
 </script>
