@@ -14,7 +14,8 @@ please show me the html and javascript for the following html component:
 [engineering guidance]
 use the following code as an example:
 
-<div id="number-list"></div><script>(function() {
+<div id="number-list"></div>
+<script>(function() {
   const container = document.getElementById('number-list');
   const numbers = [];
   for (let i = 0; i < 10; i++) {
