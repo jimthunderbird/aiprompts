@@ -7,9 +7,9 @@ please show me the html and javascript for the following html component:
   each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
   when a paragraph is being dragged, do the following:
-    - swap this paragraph with the paragraph it is over
-    - emit an event "component_<component.id>_number_<number_index>_dragging"
-    - the swapping should happen when the dragged paragraph is moving
+  - swap this paragraph with the paragraph it is over
+  - emit an event "component_<component.id>_number_<number_index>_dragging"
+  - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
 DOM Manipulation

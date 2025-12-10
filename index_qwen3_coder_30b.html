@@ -4,58 +4,68 @@
     const container = document.getElementById('number-list');
     const numbers = [];
     
+    // Generate 5 random numbers
     for (let i = 0; i < 5; i++) {
-      const paragraph = document.createElement('p');
-      paragraph.className = 'number';
-      paragraph.textContent = Math.floor(Math.random() * 500) + 1;
-      paragraph.setAttribute('draggable', 'true');
-      paragraph.dataset.index = i;
-      numbers.push(paragraph);
-      container.appendChild(paragraph);
+      numbers.push(Math.floor(Math.random() * 500) + 1);
     }
+    
+    // Create paragraphs
+    numbers.forEach((num, index) => {
+      const p = document.createElement('p');
+      p.className = 'number';
+      p.textContent = num;
+      p.setAttribute('draggable', 'true');
+      p.dataset.index = index;
+      container.appendChild(p);
+    });
     
     let draggedItem = null;
     
+    // Drag start
     container.addEventListener('dragstart', function(e) {
       if (e.target.classList.contains('number')) {
         draggedItem = e.target;
         e.target.classList.add('dragging');
-        setTimeout(() => e.target.classList.add('semi-transparent'), 0);
+        setTimeout(() => e.target.style.opacity = '0.5', 0);
       }
     });
     
+    // Drag end
     container.addEventListener('dragend', function(e) {
       if (e.target.classList.contains('number')) {
-        e.target.classList.remove('dragging', 'semi-transparent');
+        e.target.classList.remove('dragging');
+        e.target.style.opacity = '1';
         draggedItem = null;
       }
     });
     
+    // Drag over
     container.addEventListener('dragover', function(e) {
       e.preventDefault();
       if (draggedItem) {
         const target = e.target;
         if (target.classList.contains('number') && target !== draggedItem) {
           const rect = target.getBoundingClientRect();
-          const middle = rect.top + rect.height / 2;
+          const midpoint = rect.top + rect.height / 2;
           
-          if (e.clientY < middle) {
+          if (e.clientY < midpoint) {
             container.insertBefore(draggedItem, target);
           } else {
             container.insertBefore(draggedItem, target.nextSibling);
           }
           
-          const draggedIndex = Array.from(container.children).indexOf(draggedItem);
-          const targetIndex = Array.from(container.children).indexOf(target);
-          
-          const event = new CustomEvent('component_number-list_number_' + draggedIndex + '_dragging', {
+          // Emit event
+          const draggedIndex = parseInt(draggedItem.dataset.index);
+          const targetIndex = parseInt(target.dataset.index);
+          const event = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
             detail: { 
-              draggedIndex: draggedIndex,
-              targetIndex: targetIndex
+              draggedIndex,
+              targetIndex,
+              draggedValue: draggedItem.textContent,
+              targetValue: target.textContent
             }
           });
-          
-          container.dispatchEvent(event);
+          window.dispatchEvent(event);
         }
       }
     });
