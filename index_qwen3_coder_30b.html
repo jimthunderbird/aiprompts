@@ -1,16 +1,9 @@
-<div id="number-list"></div>
-<script>
-(() => {
+<div id="number-list"></div><script>(function() {
   const container = document.getElementById('number-list');
-  const componentId = 'number-list';
-  let numbers = [];
-
-  // Generate 20 random numbers
-  for (let i = 0; i < 20; i++) {
+  const numbers = [];
+  for (let i = 0; i < 3; i++) {
     numbers.push(Math.floor(Math.random() * 500) + 1);
   }
-
-  // Create paragraphs
   numbers.forEach((num, index) => {
     const p = document.createElement('p');
     p.className = 'number';
@@ -19,44 +12,37 @@
     p.setAttribute('data-index', index);
     container.appendChild(p);
   });
-
   let draggedElement = null;
-  let startIndex = null;
-
-  container.addEventListener('dragstart', (e) => {
+  let initialIndex = null;
+  container.addEventListener('dragstart', function(e) {
     if (e.target.classList.contains('number')) {
       draggedElement = e.target;
-      startIndex = parseInt(draggedElement.getAttribute('data-index'));
-      e.dataTransfer.effectAllowed = 'move';
+      initialIndex = parseInt(draggedElement.getAttribute('data-index'));
     }
   });
-
-  container.addEventListener('dragenter', (e) => {
-    e.preventDefault();
-    if (e.target.classList.contains('number') && e.target !== draggedElement) {
-      const targetIndex = parseInt(e.target.getAttribute('data-index'));
+  container.addEventListener('dragenter', function(e) {
+    if (e.target.classList.contains('number') && draggedElement !== e.target) {
+      e.preventDefault();
+      const targetElement = e.target;
       const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
-
-      // Swap elements in DOM
-      if (draggedIndex < targetIndex) {
-        container.insertBefore(e.target, draggedElement);
-      } else {
-        container.insertBefore(draggedElement, e.target);
-      }
-
-      // Update data-index attributes
-      const paragraphs = container.querySelectorAll('.number');
-      paragraphs.forEach((p, index) => {
-        p.setAttribute('data-index', index);
+      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
+      const temp = draggedElement.cloneNode(true);
+      draggedElement.parentNode.replaceChild(temp, draggedElement);
+      targetElement.parentNode.replaceChild(draggedElement, targetElement);
+      temp.parentNode.replaceChild(targetElement, temp);
+      const allNumbers = container.querySelectorAll('.number');
+      allNumbers.forEach((el, idx) => {
+        el.setAttribute('data-index', idx);
       });
-
-      // Emit event
-      const event = new CustomEvent(`component_${componentId}_number_${draggedIndex}_dragging`, {
+      const event = new CustomEvent('component_number-list_number_' + draggedIndex + '_dragging', {
         detail: { from: draggedIndex, to: targetIndex }
       });
-      document.dispatchEvent(event);
+      window.dispatchEvent(event);
     }
   });
-})();
-</script>
+  container.addEventListener('dragend', function() {
+    draggedElement = null;
+    initialIndex = null;
+  });
+})();</script>
 

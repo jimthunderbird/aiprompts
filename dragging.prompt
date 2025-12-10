@@ -3,7 +3,7 @@ please show me the html and javascript for the following html component:
 [component details]
 - the component will be a div with id number-list
 - inside of the component:
-  generate a list of 20 paragraphs
+  generate a list of 3 paragraphs
   each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
   when a paragraph is being dragged, do the following:
@@ -12,13 +12,56 @@ please show me the html and javascript for the following html component:
   - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
-- This is a well-structured IIFE, a great pattern for keeping your initialization logic contained and clean.
-- It begins by dynamically creating five random numbers (1-500) and generating the necessary paragraph elements within the `div#number-list`. You've correctly set the crucial `draggable="true"` and used `data-index` to manage state—excellent practice!
-- The `dragstart` handler is straightforward, simply capturing the element and its initial index—a solid starting point for any drag operation.
-- The `dragenter` listener is where the real ingenuity lies. It cleverly leverages `e.preventDefault()` to allow the drop target, and immediately performs the **DOM manipulation (swapping)** using `insertBefore()`. This creates a smooth "live sort" experience, which is far more engaging than swapping on `drop`.
-- A critical step often missed is updating the indices. You've correctly **re-indexed all `data-index` attributes** after every swap to maintain accurate state for future drags—smart move.
-- Finally, you're embracing modern development by emitting a **custom event**. This is the right way to decouple the UI component from the consuming application, providing a clean API for external logic to react to the sorting.
-- Overall, this code is a robust demonstration of creating a dynamic, sortable component purely using vanilla JavaScript and the DOM API. Keep applying these patterns!
+use the following code as an example:
+
+<div id="number-list"></div><script>(function() {
+  const container = document.getElementById('number-list');
+  const numbers = [];
+  for (let i = 0; i < 10; i++) {
+    numbers.push(Math.floor(Math.random() * 500) + 1);
+  }
+  numbers.forEach((num, index) => {
+    const p = document.createElement('p');
+    p.className = 'number';
+    p.textContent = num;
+    p.draggable = true;
+    p.setAttribute('data-index', index);
+    container.appendChild(p);
+  });
+  let draggedElement = null;
+  let initialIndex = null;
+  container.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
+      initialIndex = parseInt(draggedElement.getAttribute('data-index'));
+    }
+  });
+  container.addEventListener('dragenter', function(e) {
+    if (e.target.classList.contains('number') && draggedElement !== e.target) {
+      e.preventDefault();
+      const targetElement = e.target;
+      const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
+      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
+      const temp = draggedElement.cloneNode(true);
+      draggedElement.parentNode.replaceChild(temp, draggedElement);
+      targetElement.parentNode.replaceChild(draggedElement, targetElement);
+      temp.parentNode.replaceChild(targetElement, temp);
+      const allNumbers = container.querySelectorAll('.number');
+      allNumbers.forEach((el, idx) => {
+        el.setAttribute('data-index', idx);
+      });
+      const event = new CustomEvent('component_number-list_number_' + draggedIndex + '_dragging', {
+        detail: { from: draggedIndex, to: targetIndex }
+      });
+      window.dispatchEvent(event);
+    }
+  });
+  container.addEventListener('dragend', function() {
+    draggedElement = null;
+    initialIndex = null;
+  });
+})();</script>
+
 
 [prompt output guidance]
 do not add any css code
