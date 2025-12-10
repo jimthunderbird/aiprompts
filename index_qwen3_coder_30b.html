@@ -1,4 +1,5 @@
-<div id="number-list"></div><script>(function() {
+<div id="number-list"></div>
+<script>(function() {
   const container = document.getElementById('number-list');
   const numbers = [];
   for (let i = 0; i < 3; i++) {
@@ -25,24 +26,5 @@
       e.preventDefault();
       const targetElement = e.target;
       const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
-      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
-      const temp = draggedElement.cloneNode(true);
-      draggedElement.parentNode.replaceChild(temp, draggedElement);
-      targetElement.parentNode.replaceChild(draggedElement, targetElement);
-      temp.parentNode.replaceChild(targetElement, temp);
-      const allNumbers = container.querySelectorAll('.number');
-      allNumbers.forEach((el, idx) => {
-        el.setAttribute('data-index', idx);
-      });
-      const event = new CustomEvent('component_number-list_number_' + draggedIndex + '_dragging', {
-        detail: { from: draggedIndex, to: targetIndex }
-      });
-      window.dispatchEvent(event);
-    }
-  });
-  container.addEventListener('dragend', function() {
-    draggedElement = null;
-    initialIndex = null;
-  });
-})();</script>
+      const targetIndex = parseInt(targetElement.getAttribute('
 

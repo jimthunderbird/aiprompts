@@ -15,7 +15,8 @@ please show me the html and javascript for the following html component:
 use the following code as an example:
 
 <div id="number-list"></div>
-<script>(function() {
+<script>
+(function() {
   const container = document.getElementById('number-list');
   const numbers = [];
   for (let i = 0; i < 10; i++) {
@@ -61,8 +62,8 @@ use the following code as an example:
     draggedElement = null;
     initialIndex = null;
   });
-})();</script>
-
+})();
+</script>
 
 [prompt output guidance]
 do not add any css code
