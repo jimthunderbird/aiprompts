@@ -3,43 +3,57 @@
 <script>
 (function() {
   const container = document.getElementById('number-list');
-  let draggedElement = null;
+  
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * 500) + 1;
+  }
+  
+  function emitEvent(eventName) {
+    const event = new CustomEvent(eventName);
+    document.dispatchEvent(event);
+  }
   
   for (let i = 0; i < 5; i++) {
     const p = document.createElement('p');
     p.className = 'number';
-    p.textContent = Math.floor(Math.random() * 1000) + 1;
+    p.textContent = generateRandomNumber();
     p.draggable = true;
+    p.dataset.index = i;
+    
+    p.addEventListener('dragstart', function(e) {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+      this.classList.add('dragging-source');
+      emitEvent(`number-list-number-${i}-dragging`);
+    });
+    
+    p.addEventListener('dragenter', function(e) {
+      e.preventDefault();
+      const draggingElement = container.querySelector('.dragging-source');
+      if (draggingElement && draggingElement !== this) {
+        const allParagraphs = Array.from(container.querySelectorAll('.number'));
+        const draggingIndex = allParagraphs.indexOf(draggingElement);
+        const targetIndex = allParagraphs.indexOf(this);
+        
+        if (draggingIndex < targetIndex) {
+          this.parentNode.insertBefore(draggingElement, this.nextSibling);
+        } else {
+          this.parentNode.insertBefore(draggingElement, this);
+        }
+      }
+    });
+    
+    p.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
+    
+    p.addEventListener('dragend', function(e) {
+      this.classList.remove('dragging-source');
+    });
+    
     container.appendChild(p);
   }
-  
-  container.addEventListener('dragstart', function(e) {
-    if (e.target.classList.contains('number')) {
-      draggedElement = e.target;
-    }
-  });
-  
-  container.addEventListener('dragenter', function(e) {
-    if (e.target.classList.contains('number') && e.target !== draggedElement) {
-      const allNumbers = Array.from(container.querySelectorAll('.number'));
-      const draggedIndex = allNumbers.indexOf(draggedElement);
-      const targetIndex = allNumbers.indexOf(e.target);
-      
-      if (draggedIndex < targetIndex) {
-        e.target.parentNode.insertBefore(draggedElement, e.target.nextSibling);
-      } else {
-        e.target.parentNode.insertBefore(draggedElement, e.target);
-      }
-    }
-  });
-  
-  container.addEventListener('dragover', function(e) {
-    e.preventDefault();
-  });
-  
-  container.addEventListener('dragend', function(e) {
-    draggedElement = null;
-  });
 })();
 </script>
 

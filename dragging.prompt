@@ -3,9 +3,11 @@ please show me the html and javascript for the following html component:
 - the component will be a div with id number-list
 - inside of the component:
   generate a list of 5 paragraphs
-  each paragraph is one random number (range from 1 to 1000)
+  each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
-  when dragging on a paragraph, swap this paragraph with the paragraph it is over, show this swapping effect while dragging, consider using "dragenter" event
+  when dragging on a paragraph, swap this paragraph with the paragraph it is over, consider using "dragenter" event
+- component emitted event
+  - when a paragraph is dragging, emit "<component.id>-number-<number_index>-dragging"
 
 do not add any css code
 do not apply any inline style setting in javascript
