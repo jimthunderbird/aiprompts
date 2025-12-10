@@ -5,11 +5,10 @@ please show me the html and javascript for the following html component:
   generate a list of 5 paragraphs
   each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
-  when dragging on a paragraph, consider using "dragenter" event, and do the following:
+  when a paragraph is being dragged, do the following:
     - swap this paragraph with the paragraph it is over
     - emit an event "component_<component.id>_number_<number_index>_dragging"
-
-- please examine the code that is generated, make sure the drag and drop works either on dragging up and dragging down
+    - the swapping should happen when the dragging paragraph is moving
 
 do not add any css code
 do not apply any inline style setting in javascript
@@ -17,3 +16,4 @@ this component should be independent, has its own scoping in javascript and css 
 show me the html and javascript code only, no explanation and no extra words
 do not show ```, ```html, ```javascript
 do not include html tags like <html>, <head>, <meta>, only show me the related html and javascript codeblock
+please come up with solutions with top 3 probabilities, then pick the highest probability solution and output the codeblock immediately

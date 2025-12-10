@@ -1,73 +1,28 @@
-<div id="number-list"></div>
+<div id="number-list">
+  <p class="number"></p>
+  <p class="number"></p>
+  <p class="number"></p>
+  <p class="number"></p>
+  <p class="number"></p>
+</div>
 
 <script>
-  (function() {
-    const componentId = 'number-list';
-    const container = document.getElementById(componentId);
-    
-    // Generate random numbers
-    const numbers = [];
-    for (let i = 0; i < 5; i++) {
-      numbers.push(Math.floor(Math.random() * 500) + 1);
-    }
-    
-    // Create paragraphs
-    numbers.forEach((num, index) => {
-      const p = document.createElement('p');
-      p.className = 'number';
-      p.textContent = num;
-      p.setAttribute('draggable', 'true');
-      p.setAttribute('data-index', index);
-      container.appendChild(p);
-    });
-    
-    // Drag and drop functionality
-    let draggedElement = null;
-    
-    document.querySelectorAll('#' + componentId + ' .number').forEach(paragraph => {
-      paragraph.addEventListener('dragstart', function(e) {
-        draggedElement = this;
-        e.dataTransfer.effectAllowed = 'move';
-      });
-      
-      paragraph.addEventListener('dragenter', function(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        
-        if (draggedElement !== this) {
-          const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
-          const targetIndex = parseInt(this.getAttribute('data-index'));
-          
-          // Swap elements in DOM
-          const parent = this.parentNode;
-          const draggedIndexInDOM = Array.from(parent.children).indexOf(draggedElement);
-          const targetIndexInDOM = Array.from(parent.children).indexOf(this);
-          
-          if (draggedIndexInDOM < targetIndexInDOM) {
-            parent.insertBefore(draggedElement, this.nextSibling);
-          } else {
-            parent.insertBefore(draggedElement, this);
-          }
-          
-          // Update data-index attributes
-          Array.from(parent.children).forEach((child, index) => {
-            child.setAttribute('data-index', index);
-          });
-          
-          // Emit event
-          const event = new CustomEvent('component_' + componentId + '_number_' + draggedIndex + '_dragging');
-          window.dispatchEvent(event);
-        }
-      });
-      
-      paragraph.addEventListener('dragover', function(e) {
-        e.preventDefault();
-      });
-      
-      paragraph.addEventListener('dragend', function() {
-        draggedElement = null;
-      });
-    });
-  })();
-</script>
+(() => {
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
+  let draggedElement = null;
+  let placeholder = null;
 
+  // Generate random numbers
+  const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 500) + 1);
+  
+  // Populate paragraphs
+  container.querySelectorAll('p').forEach((p, index) => {
+    p.textContent = numbers[index];
+    p.dataset.index = index;
+  });
+
+  // Drag events
+  container.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target
