@@ -1,0 +1,69 @@
+<div id="number-list">
+  <p class="number"></p>
+  <p class="number"></p>
+  <p class="number"></p>
+  <p class="number"></p>
+  <p class="number"></p>
+</div>
+
+<script>
+(function() {
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
+  let draggedElement = null;
+
+  // Generate random numbers
+  const numbers = [];
+  for (let i = 0; i < 5; i++) {
+    numbers.push(Math.floor(Math.random() * 500) + 1);
+  }
+
+  // Fill paragraphs with numbers
+  const paragraphs = container.querySelectorAll('p.number');
+  paragraphs.forEach((p, index) => {
+    p.textContent = numbers[index];
+    p.setAttribute('draggable', 'true');
+  });
+
+  // Drag events
+  container.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
+      e.target.classList.add('dragging');
+    }
+  });
+
+  container.addEventListener('dragend', function(e) {
+    if (e.target.classList.contains('number')) {
+      e.target.classList.remove('dragging');
+      draggedElement = null;
+    }
+  });
+
+  container.addEventListener('dragenter', function(e) {
+    if (e.target.classList.contains('number') && draggedElement !== e.target) {
+      // Swap elements
+      const parent = e.target.parentNode;
+      const draggedIndex = Array.from(parent.children).indexOf(draggedElement);
+      const targetIndex = Array.from(parent.children).indexOf(e.target);
+      
+      // Swap in DOM
+      parent.insertBefore(draggedElement, e.target);
+      
+      // Emit event
+      const event = new CustomEvent(`component_${componentId}_number_dragging`, {
+        detail: {
+          fromIndex: draggedIndex,
+          toIndex: targetIndex
+        }
+      });
+      document.dispatchEvent(event);
+    }
+  });
+
+  container.addEventListener('dragover', function(e) {
+    e.preventDefault();
+  });
+})();
+</script>
+

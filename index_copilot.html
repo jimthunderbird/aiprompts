@@ -1,59 +1,55 @@
-<div id="number-list"></div>
+<div id="number-list">
+  <p class="number" draggable="true"></p>
+  <p class="number" draggable="true"></p>
+  <p class="number" draggable="true"></p>
+  <p class="number" draggable="true"></p>
+  <p class="number" draggable="true"></p>
+</div>
 
 <script>
 (function() {
-  const container = document.getElementById('number-list');
+  const component = document.getElementById('number-list');
+  const paragraphs = component.querySelectorAll('.number');
   
-  function generateRandomNumber() {
-    return Math.floor(Math.random() * 500) + 1;
-  }
+  paragraphs.forEach(p => {
+    p.textContent = Math.floor(Math.random() * 500) + 1;
+  });
   
-  function emitEvent(eventName) {
-    const event = new CustomEvent(eventName);
-    document.dispatchEvent(event);
-  }
+  let draggedElement = null;
   
-  for (let i = 0; i < 5; i++) {
-    const p = document.createElement('p');
-    p.className = 'number';
-    p.textContent = generateRandomNumber();
-    p.draggable = true;
-    p.dataset.index = i;
-    
+  paragraphs.forEach(p => {
     p.addEventListener('dragstart', function(e) {
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/html', this.innerHTML);
-      this.classList.add('dragging-source');
-      emitEvent(`number-list-number-${i}-dragging`);
+      draggedElement = this;
     });
     
     p.addEventListener('dragenter', function(e) {
       e.preventDefault();
-      const draggingElement = container.querySelector('.dragging-source');
-      if (draggingElement && draggingElement !== this) {
-        const allParagraphs = Array.from(container.querySelectorAll('.number'));
-        const draggingIndex = allParagraphs.indexOf(draggingElement);
-        const targetIndex = allParagraphs.indexOf(this);
+      if (draggedElement && draggedElement !== this) {
+        const parent = this.parentNode;
+        const draggedIndex = Array.from(parent.children).indexOf(draggedElement);
+        const targetIndex = Array.from(parent.children).indexOf(this);
         
-        if (draggingIndex < targetIndex) {
-          this.parentNode.insertBefore(draggingElement, this.nextSibling);
+        if (draggedIndex < targetIndex) {
+          parent.insertBefore(draggedElement, this.nextSibling);
         } else {
-          this.parentNode.insertBefore(draggingElement, this);
+          parent.insertBefore(draggedElement, this);
         }
+        
+        const event = new CustomEvent('component_number-list_number_dragging', {
+          detail: { draggedElement, targetElement: this }
+        });
+        component.dispatchEvent(event);
       }
     });
     
     p.addEventListener('dragover', function(e) {
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
     });
     
     p.addEventListener('dragend', function(e) {
-      this.classList.remove('dragging-source');
+      draggedElement = null;
     });
-    
-    container.appendChild(p);
-  }
+  });
 })();
 </script>
 

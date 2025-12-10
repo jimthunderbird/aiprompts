@@ -5,9 +5,9 @@ please show me the html and javascript for the following html component:
   generate a list of 5 paragraphs
   each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
-  when dragging on a paragraph, swap this paragraph with the paragraph it is over, consider using "dragenter" event
-- component emitted event
-  - when a paragraph is dragging, emit "<component.id>-number-<number_index>-dragging"
+  when dragging on a paragraph, consider using "dragenter" event, and do the following:
+    - swap this paragraph with the paragraph it is over
+    - emit an event "component_<component.id>_number_<number_index>_dragging"
 
 do not add any css code
 do not apply any inline style setting in javascript
