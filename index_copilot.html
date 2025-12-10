@@ -1,0 +1,45 @@
+<div id="number-list"></div>
+
+<script>
+(function() {
+  const container = document.getElementById('number-list');
+  let draggedElement = null;
+  
+  for (let i = 0; i < 5; i++) {
+    const p = document.createElement('p');
+    p.className = 'number';
+    p.textContent = Math.floor(Math.random() * 1000) + 1;
+    p.draggable = true;
+    container.appendChild(p);
+  }
+  
+  container.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
+    }
+  });
+  
+  container.addEventListener('dragenter', function(e) {
+    if (e.target.classList.contains('number') && e.target !== draggedElement) {
+      const allNumbers = Array.from(container.querySelectorAll('.number'));
+      const draggedIndex = allNumbers.indexOf(draggedElement);
+      const targetIndex = allNumbers.indexOf(e.target);
+      
+      if (draggedIndex < targetIndex) {
+        e.target.parentNode.insertBefore(draggedElement, e.target.nextSibling);
+      } else {
+        e.target.parentNode.insertBefore(draggedElement, e.target);
+      }
+    }
+  });
+  
+  container.addEventListener('dragover', function(e) {
+    e.preventDefault();
+  });
+  
+  container.addEventListener('dragend', function(e) {
+    draggedElement = null;
+  });
+})();
+</script>
+
