@@ -4,7 +4,7 @@ Each code generation prompt will have 3 parts:
 the component spec
 
 [engineering guidance]
-issue a prompt to chatgpt or gemini, for example:
+issue a prompt to super large LLM like chatgpt or gemini, for example:
 "
 i have the following spec:
 please show me the html and javascript for the following html component:
