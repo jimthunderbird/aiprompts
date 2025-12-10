@@ -10,7 +10,7 @@ please show me the html and javascript for the following html component:
   when a paragraph is dragged and is moving over to another paragraph, do the following:
   - swap this paragraph with the paragraph it is over
   - when dragging started
-    - emit an event "component_<component_id>_number_<number_index>_drag_start" 
+    - emit an event "component_<component_id>_number_<number_index>_drag_started" 
     - update status to "drag started"
   - when dragging is on going
     - emit an event "component_<component_id>_number_<number_index>_drag_ongoing" 
