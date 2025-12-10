@@ -55,18 +55,16 @@
         }
         
         // Update indices
-        const paragraphs = Array.from(parent.querySelectorAll('.number'));
+        const paragraphs = parent.querySelectorAll('.number');
         paragraphs.forEach((p, i) => {
           p.dataset.index = i;
         });
         
         // Emit event
-        const event = new CustomEvent(`component_${componentId}_number_${originalIndex}_dragging`, {
-          detail: {
-            newIndex: parseInt(draggedElement.dataset.index)
-          }
+        const newEvent = new CustomEvent(`component_${componentId}_number_${draggedIndex}_dragging`, {
+          detail: { newIndex: targetIndex }
         });
-        window.dispatchEvent(event);
+        window.dispatchEvent(newEvent);
       }
     });
     
