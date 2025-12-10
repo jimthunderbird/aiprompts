@@ -4,14 +4,13 @@ please show me the html and javascript for the following html component:
 - the component will be a div with id number-list
 - inside of the component:
   generate a list of 8 paragraphs
-  each paragraph is one random number (range from 1 to 500)
+  each paragraph is one random number (range from 1 to 1000)
   each paragraph should have a css class "number"
-  when a paragraph is being dragged, do the following:
+  when a paragraph is dragged and is moving over to another paragraph, do the following:
   - swap this paragraph with the paragraph it is over
   - emit an event "component_<component_id>_number_<number_index>_drag_start" when dragging started
   - emit an event "component_<component_id>_number_<number_index>_drag_ongoing" when dragging is on going
   - emit an event "component_<component_id>_number_<number_index>_drag_ended" when dragging is ended
-  - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
 use the following example as reference:

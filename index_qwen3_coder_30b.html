@@ -1,11 +1,13 @@
-<div id="number-list"></div><script>(() => {
+<div id="number-list"></div>
+<script>
+(() => {
   const componentId = 'number-list';
   const container = document.getElementById(componentId);
   const numbers = [];
   
-  // Generate 8 random numbers between 1 and 500
+  // Generate 8 random numbers between 1 and 1000
   for (let i = 0; i < 8; i++) {
-    numbers.push(Math.floor(Math.random() * 500) + 1);
+    numbers.push(Math.floor(Math.random() * 1000) + 1);
   }
   
   // Create paragraphs
@@ -29,7 +31,7 @@
       
       // Emit drag start event
       const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_start`, {
-        detail: { index: initialIndex, value: draggedElement.textContent }
+        detail: { index: initialIndex }
       });
       document.dispatchEvent(event);
     }
@@ -57,9 +59,9 @@
       }
       
       // Emit drag ongoing event
-      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
-      const event = new CustomEvent(`component_${componentId}_number_${targetIndex}_drag_ongoing`, {
-        detail: { index: targetIndex, value: targetElement.textContent }
+      const currentIndex = parseInt(draggedElement.getAttribute('data-index'));
+      const event = new CustomEvent(`component_${componentId}_number_${currentIndex}_drag_ongoing`, {
+        detail: { index: currentIndex }
       });
       document.dispatchEvent(event);
       
@@ -78,8 +80,9 @@
       initialIndex = null;
       
       // Emit drag ended event
-      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_ended`, {
-        detail: { index: initialIndex, value: e.target.textContent }
+      const currentIndex = parseInt(e.target.getAttribute('data-index'));
+      const event = new CustomEvent(`component_${componentId}_number_${currentIndex}_drag_ended`, {
+        detail: { index: currentIndex }
       });
       document.dispatchEvent(event);
     }
@@ -90,5 +93,6 @@
   paragraphs.forEach(p => {
     p.setAttribute('draggable', 'true');
   });
-})();</script>
+})();
+</script>
 
