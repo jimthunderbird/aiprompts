@@ -1,81 +1,62 @@
 <div id="number-list"></div>
-
 <script>
-  (function() {
-    const componentId = 'number-list';
-    const container = document.getElementById(componentId);
-    const numbers = [];
-    
-    // Generate 5 random numbers
-    for (let i = 0; i < 5; i++) {
-      numbers.push(Math.floor(Math.random() * 500) + 1);
+(() => {
+  const container = document.getElementById('number-list');
+  const componentId = 'number-list';
+  let numbers = [];
+
+  // Generate 20 random numbers
+  for (let i = 0; i < 20; i++) {
+    numbers.push(Math.floor(Math.random() * 500) + 1);
+  }
+
+  // Create paragraphs
+  numbers.forEach((num, index) => {
+    const p = document.createElement('p');
+    p.className = 'number';
+    p.textContent = num;
+    p.draggable = true;
+    p.setAttribute('data-index', index);
+    container.appendChild(p);
+  });
+
+  let draggedElement = null;
+  let startIndex = null;
+
+  container.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
+      startIndex = parseInt(draggedElement.getAttribute('data-index'));
+      e.dataTransfer.effectAllowed = 'move';
     }
-    
-    // Create paragraphs
-    numbers.forEach((num, index) => {
-      const p = document.createElement('p');
-      p.className = 'number';
-      p.textContent = num;
-      p.draggable = true;
-      p.dataset.index = index;
-      container.appendChild(p);
-    });
-    
-    let draggedElement = null;
-    let originalIndex = null;
-    
-    // Drag start handler
-    container.addEventListener('dragstart', function(e) {
-      if (e.target.classList.contains('number')) {
-        draggedElement = e.target;
-        originalIndex = parseInt(draggedElement.dataset.index);
-        e.target.style.opacity = '0.5';
+  });
+
+  container.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    if (e.target.classList.contains('number') && e.target !== draggedElement) {
+      const targetIndex = parseInt(e.target.getAttribute('data-index'));
+      const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
+
+      // Swap elements in DOM
+      if (draggedIndex < targetIndex) {
+        container.insertBefore(e.target, draggedElement);
+      } else {
+        container.insertBefore(draggedElement, e.target);
       }
-    });
-    
-    // Drag over handler
-    container.addEventListener('dragover', function(e) {
-      e.preventDefault();
-    });
-    
-    // Drag enter handler for swapping
-    container.addEventListener('dragenter', function(e) {
-      if (e.target.classList.contains('number') && e.target !== draggedElement) {
-        const targetElement = e.target;
-        const targetIndex = parseInt(targetElement.dataset.index);
-        
-        // Swap elements in DOM
-        const parent = container;
-        const draggedIndex = parseInt(draggedElement.dataset.index);
-        
-        if (draggedIndex < targetIndex) {
-          parent.insertBefore(draggedElement, targetElement.nextSibling);
-        } else {
-          parent.insertBefore(draggedElement, targetElement);
-        }
-        
-        // Update indices
-        const paragraphs = parent.querySelectorAll('.number');
-        paragraphs.forEach((p, i) => {
-          p.dataset.index = i;
-        });
-        
-        // Emit event
-        const newEvent = new CustomEvent(`component_${componentId}_number_${draggedIndex}_dragging`, {
-          detail: { newIndex: targetIndex }
-        });
-        window.dispatchEvent(newEvent);
-      }
-    });
-    
-    // Drag end handler
-    container.addEventListener('dragend', function(e) {
-      if (e.target.classList.contains('number')) {
-        e.target.style.opacity = '1';
-        draggedElement = null;
-        originalIndex = null;
-      }
-    });
-  })();
+
+      // Update data-index attributes
+      const paragraphs = container.querySelectorAll('.number');
+      paragraphs.forEach((p, index) => {
+        p.setAttribute('data-index', index);
+      });
+
+      // Emit event
+      const event = new CustomEvent(`component_${componentId}_number_${draggedIndex}_dragging`, {
+        detail: { from: draggedIndex, to: targetIndex }
+      });
+      document.dispatchEvent(event);
+    }
+  });
+})();
 </script>
 

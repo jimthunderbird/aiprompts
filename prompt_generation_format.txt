@@ -24,6 +24,9 @@ please give me less than 200 words of engineering guidance on how to implement t
 
 [engineering guidance]
 <the guidance detail>
+
+use - for each advice in the engineering guidance
+output as the plaintext codeblock, return the codeblock immediately
 "
 
 then capture the output of this prompt and use it as engineering guidance

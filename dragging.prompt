@@ -3,7 +3,7 @@ please show me the html and javascript for the following html component:
 [component details]
 - the component will be a div with id number-list
 - inside of the component:
-  generate a list of 5 paragraphs
+  generate a list of 20 paragraphs
   each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
   when a paragraph is being dragged, do the following:
@@ -12,33 +12,13 @@ please show me the html and javascript for the following html component:
   - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
-HTML Structure: Create the <div id="number-list"> container and dynamically generate five <p class="number"> elements within it using a loop in JavaScript.
-
-Random Numbers: Use Math.random() and Math.floor() to generate random integers between 1 and 500 for the paragraph content.
-
-Draggability: Set the draggable="true" attribute on all <p> elements.
-
-Drag Handlers:
-
-Attach dragstart to store the dragged element's reference and index.
-
-Attach dragover to prevent default behavior and allow dropping.
-
-Attach dragenter on target paragraphs to implement the swapping logic.
-
-Swapping Logic (in dragenter):
-
-Identify the target paragraph.
-
-Check if the target is different from the dragged element.
-
-Use DOM manipulation (insertBefore or replaceWith) to swap the positions of the dragged element and the target element immediately.
-
-Keep track of the new indices.
-
-Event Emission: Inside the swapping logic, use CustomEvent and dispatchEvent() on the component's parent or the window object to emit the specified event, including the component ID and the new index of the dragged number.
-
-Cleanup: Attach dragend to remove any temporary visual styles or references.
+- This is a well-structured IIFE, a great pattern for keeping your initialization logic contained and clean.
+- It begins by dynamically creating five random numbers (1-500) and generating the necessary paragraph elements within the `div#number-list`. You've correctly set the crucial `draggable="true"` and used `data-index` to manage state—excellent practice!
+- The `dragstart` handler is straightforward, simply capturing the element and its initial index—a solid starting point for any drag operation.
+- The `dragenter` listener is where the real ingenuity lies. It cleverly leverages `e.preventDefault()` to allow the drop target, and immediately performs the **DOM manipulation (swapping)** using `insertBefore()`. This creates a smooth "live sort" experience, which is far more engaging than swapping on `drop`.
+- A critical step often missed is updating the indices. You've correctly **re-indexed all `data-index` attributes** after every swap to maintain accurate state for future drags—smart move.
+- Finally, you're embracing modern development by emitting a **custom event**. This is the right way to decouple the UI component from the consuming application, providing a clean API for external logic to react to the sorting.
+- Overall, this code is a robust demonstration of creating a dynamic, sortable component purely using vanilla JavaScript and the DOM API. Keep applying these patterns!
 
 [prompt output guidance]
 do not add any css code
