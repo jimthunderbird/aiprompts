@@ -1,8 +1,11 @@
-<div id="number-list"></div>
+<div id="number-list">
+  <div id="status">moving status</div>
+</div>
 <script>
 (() => {
   const componentId = 'number-list';
   const container = document.getElementById(componentId);
+  const statusDiv = document.getElementById('status');
   const numbers = [];
   
   // Generate 8 random numbers between 1 and 1000
@@ -28,12 +31,11 @@
       draggedElement = e.target;
       initialIndex = parseInt(draggedElement.getAttribute('data-index'));
       e.dataTransfer.effectAllowed = 'move';
-      
-      // Emit drag start event
       const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_start`, {
         detail: { index: initialIndex }
       });
-      document.dispatchEvent(event);
+      window.dispatchEvent(event);
+      statusDiv.textContent = "drag started";
     }
   });
   
@@ -47,29 +49,30 @@
       const clientY = e.clientY;
       
       if (clientY < targetRect.top + targetRect.height / 2) {
-        // Insert draggedElement before targetElement
         if (draggedElement !== targetElement) {
           targetElement.parentNode.insertBefore(draggedElement, targetElement);
         }
       } else {
-        // Insert draggedElement after targetElement
         if (draggedElement !== targetElement.nextSibling) {
           targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
         }
       }
       
-      // Emit drag ongoing event
-      const currentIndex = parseInt(draggedElement.getAttribute('data-index'));
-      const event = new CustomEvent(`component_${componentId}_number_${currentIndex}_drag_ongoing`, {
-        detail: { index: currentIndex }
-      });
-      document.dispatchEvent(event);
-      
-      // Update indices after swap
       const paragraphs = container.querySelectorAll('.number');
       paragraphs.forEach((p, index) => {
         p.setAttribute('data-index', index);
       });
+      
+      const draggedText = draggedElement.textContent;
+      const targetText = targetElement.textContent;
+      if (draggedText !== targetText) {
+        statusDiv.textContent = `${draggedText} is over ${targetText}`;
+      }
+      
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_ongoing`, {
+        detail: { index: initialIndex }
+      });
+      window.dispatchEvent(event);
     }
   });
   
@@ -79,12 +82,11 @@
       draggedElement = null;
       initialIndex = null;
       
-      // Emit drag ended event
-      const currentIndex = parseInt(e.target.getAttribute('data-index'));
-      const event = new CustomEvent(`component_${componentId}_number_${currentIndex}_drag_ended`, {
-        detail: { index: currentIndex }
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_ended`, {
+        detail: { index: initialIndex }
       });
-      document.dispatchEvent(event);
+      window.dispatchEvent(event);
+      statusDiv.textContent = "drag ended";
     }
   });
   
