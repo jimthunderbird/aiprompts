@@ -3,72 +3,100 @@ please show me the html and javascript for the following html component:
 [component details]
 - the component will be a div with id number-list
 - inside of the component:
-  generate a list of 3 paragraphs
+  generate a list of 8 paragraphs
   each paragraph is one random number (range from 1 to 500)
   each paragraph should have a css class "number"
   when a paragraph is being dragged, do the following:
   - swap this paragraph with the paragraph it is over
-  - emit an event "component_<component.id>_number_<number_index>_dragging"
+  - emit an event "component_<component_id>_number_<number_index>_drag_start" when dragging started
+  - emit an event "component_<component_id>_number_<number_index>_drag_ongoing" when dragging is on going
+  - emit an event "component_<component_id>_number_<number_index>_drag_ended" when dragging is ended
   - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
-use the following code as an example:
-
+use the following example as reference:
 <div id="number-list"></div>
 <script>
-(function() {
-  const container = document.getElementById('number-list');
+(() => {
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
   const numbers = [];
-  for (let i = 0; i < 10; i++) {
+  
+  // Generate 6 random numbers between 1 and 500
+  for (let i = 0; i < 6; i++) {
     numbers.push(Math.floor(Math.random() * 500) + 1);
   }
+  
+  // Create paragraphs
   numbers.forEach((num, index) => {
     const p = document.createElement('p');
     p.className = 'number';
     p.textContent = num;
-    p.draggable = true;
     p.setAttribute('data-index', index);
     container.appendChild(p);
   });
+  
+  // Drag and drop functionality
   let draggedElement = null;
   let initialIndex = null;
-  container.addEventListener('dragstart', function(e) {
+  
+  container.addEventListener('dragstart', (e) => {
     if (e.target.classList.contains('number')) {
       draggedElement = e.target;
       initialIndex = parseInt(draggedElement.getAttribute('data-index'));
+      e.dataTransfer.effectAllowed = 'move';
     }
   });
-  container.addEventListener('dragenter', function(e) {
-    if (e.target.classList.contains('number') && draggedElement !== e.target) {
-      e.preventDefault();
+  
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedElement && e.target.classList.contains('number')) {
       const targetElement = e.target;
-      const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
-      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
-      const temp = draggedElement.cloneNode(true);
-      draggedElement.parentNode.replaceChild(temp, draggedElement);
-      targetElement.parentNode.replaceChild(draggedElement, targetElement);
-      temp.parentNode.replaceChild(targetElement, temp);
-      const allNumbers = container.querySelectorAll('.number');
-      allNumbers.forEach((el, idx) => {
-        el.setAttribute('data-index', idx);
+      const targetRect = targetElement.getBoundingClientRect();
+      const clientY = e.clientY;
+      
+      if (clientY < targetRect.top + targetRect.height / 2) {
+        // Insert draggedElement before targetElement
+        if (draggedElement !== targetElement) {
+          targetElement.parentNode.insertBefore(draggedElement, targetElement);
+        }
+      } else {
+        // Insert draggedElement after targetElement
+        if (draggedElement !== targetElement.nextSibling) {
+          targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
+        }
+      }
+      
+      // Update indices after swap
+      const paragraphs = container.querySelectorAll('.number');
+      paragraphs.forEach((p, index) => {
+        p.setAttribute('data-index', index);
       });
-      const event = new CustomEvent('component_number-list_number_' + draggedIndex + '_dragging', {
-        detail: { from: draggedIndex, to: targetIndex }
-      });
-      window.dispatchEvent(event);
     }
   });
-  container.addEventListener('dragend', function() {
-    draggedElement = null;
-    initialIndex = null;
+  
+  container.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('number')) {
+      e.target.style.opacity = '';
+      draggedElement = null;
+      initialIndex = null;
+    }
+  });
+  
+  // Make elements draggable
+  const paragraphs = container.querySelectorAll('.number');
+  paragraphs.forEach(p => {
+    p.setAttribute('draggable', 'true');
   });
 })();
 </script>
 
 [prompt output guidance]
+make sure this component has its own scoping in javascript and css, do not intefere with other possible components in the same page
 do not add any css code
 do not apply any inline style setting in javascript
-this component should be independent, has its own scoping in javascript and css and do not intefere with other possible components in the same page
 show me the html and javascript code only, no explanation and no extra words
 do not show ```, ```html, ```javascript
 do not include html tags like <html>, <head>, <meta>, only show me the related html and javascript codeblock

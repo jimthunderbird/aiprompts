@@ -1,30 +1,94 @@
-<div id="number-list"></div>
-<script>(function() {
-  const container = document.getElementById('number-list');
+<div id="number-list"></div><script>(() => {
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
   const numbers = [];
-  for (let i = 0; i < 3; i++) {
+  
+  // Generate 8 random numbers between 1 and 500
+  for (let i = 0; i < 8; i++) {
     numbers.push(Math.floor(Math.random() * 500) + 1);
   }
+  
+  // Create paragraphs
   numbers.forEach((num, index) => {
     const p = document.createElement('p');
     p.className = 'number';
     p.textContent = num;
-    p.draggable = true;
     p.setAttribute('data-index', index);
     container.appendChild(p);
   });
+  
+  // Drag and drop functionality
   let draggedElement = null;
   let initialIndex = null;
-  container.addEventListener('dragstart', function(e) {
+  
+  container.addEventListener('dragstart', (e) => {
     if (e.target.classList.contains('number')) {
       draggedElement = e.target;
       initialIndex = parseInt(draggedElement.getAttribute('data-index'));
+      e.dataTransfer.effectAllowed = 'move';
+      
+      // Emit drag start event
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_start`, {
+        detail: { index: initialIndex, value: draggedElement.textContent }
+      });
+      document.dispatchEvent(event);
     }
   });
-  container.addEventListener('dragenter', function(e) {
-    if (e.target.classList.contains('number') && draggedElement !== e.target) {
-      e.preventDefault();
+  
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedElement && e.target.classList.contains('number')) {
       const targetElement = e.target;
-      const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
-      const targetIndex = parseInt(targetElement.getAttribute('
+      const targetRect = targetElement.getBoundingClientRect();
+      const clientY = e.clientY;
+      
+      if (clientY < targetRect.top + targetRect.height / 2) {
+        // Insert draggedElement before targetElement
+        if (draggedElement !== targetElement) {
+          targetElement.parentNode.insertBefore(draggedElement, targetElement);
+        }
+      } else {
+        // Insert draggedElement after targetElement
+        if (draggedElement !== targetElement.nextSibling) {
+          targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
+        }
+      }
+      
+      // Emit drag ongoing event
+      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
+      const event = new CustomEvent(`component_${componentId}_number_${targetIndex}_drag_ongoing`, {
+        detail: { index: targetIndex, value: targetElement.textContent }
+      });
+      document.dispatchEvent(event);
+      
+      // Update indices after swap
+      const paragraphs = container.querySelectorAll('.number');
+      paragraphs.forEach((p, index) => {
+        p.setAttribute('data-index', index);
+      });
+    }
+  });
+  
+  container.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('number')) {
+      e.target.style.opacity = '';
+      draggedElement = null;
+      initialIndex = null;
+      
+      // Emit drag ended event
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_ended`, {
+        detail: { index: initialIndex, value: e.target.textContent }
+      });
+      document.dispatchEvent(event);
+    }
+  });
+  
+  // Make elements draggable
+  const paragraphs = container.querySelectorAll('.number');
+  paragraphs.forEach(p => {
+    p.setAttribute('draggable', 'true');
+  });
+})();</script>
 
