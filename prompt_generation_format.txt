@@ -10,6 +10,7 @@ i have the following spec:
 please show me the html and javascript for the following html component:
 
 [component details]
+- make sure this component has its own scoping in javascript and css, do not intefere with other possible components in the same page
 - the component will be a div with id number-list
 - inside of the component:
   generate a list of 5 paragraphs
@@ -20,13 +21,13 @@ please show me the html and javascript for the following html component:
   - emit an event "component_<component.id>_number_<number_index>_dragging"
   - the swapping should happen when the dragged paragraph is moving
 
-please give me less than 200 words of engineering guidance on how to implement this using javascript and html DOM api, do not show me any code, just give me guidance and suggestions, no explanation and no extra words, output in the format: 
+please return me a plaintext code block with details step-by-step natural language instructions
+on how to do that in detail html and javascript, use - in the beginning of each instruction
 
-[engineering guidance]
-<the guidance detail>
+do not include any code, but show me instruction how to generate the code
 
-use - for each advice in the engineering guidance
-output as the plaintext codeblock, return the codeblock immediately
+no explanation and no extra words, return me just the plaintext code block
+
 "
 
 then capture the output of this prompt and use it as engineering guidance

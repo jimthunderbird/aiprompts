@@ -1,59 +1,60 @@
 please show me the html and javascript for the following html component:
 
 [component details]
+- make sure this component has its own scoping in javascript and css, do not intefere with other possible components in the same page
 - the component will be a div with id number-list
 - inside of the component:
-  make a div with id "status", with default text "moving status"
-  generate a list of 8 paragraphs
-  each paragraph is one random number (range from 1 to 1000)
-  each paragraph should have a css class "number"
-  when a paragraph is dragged and is moving over to another paragraph, do the following:
-  - swap this paragraph with the paragraph it is over
-  - when dragging started
-    - emit an event "component_<component_id>_number_<number_index>_drag_started" 
-    - update status to "drag started"
-  - when dragging is on going
-    - emit an event "component_<component_id>_number_<number_index>_drag_ongoing" 
-  - when dragging is ended 
-    - emit an event "component_<component_id>_number_<number_index>_drag_ended" 
-    - update status to "drag ended"
-  - when paragraph A is over paragraph B and if paragraph A's text is different from paragraph B's text
-    - update status to "<paragraph_A_text> is over <pargraph_B_text>"
+  generate a list of 5 paragraphs
+  each paragraph is one random number (range from 1 to 500)
+  each paragraph should have a css class "number"
+  when a paragraph is being dragged, do the following:
+  - swap this paragraph with the paragraph it is over
+  - emit an event "component_<component.id>_number_<number_index>_dragging"
+  - the swapping should happen when the dragged paragraph is moving
 
 [engineering guidance]
 use the following as guidance and experience:
-- Create an empty div element with the ID "number-list".
-- Start a self-executing anonymous JavaScript function.
-- Inside the function, define a constant `componentId` as 'number-list'.
-- Get the DOM element with that ID and store it in a constant named `container`.
-- Initialize an empty array named `numbers`.
-- Loop 6 times to generate random numbers.
-- In the loop, generate a random integer between 1 and 500 using `Math.floor(Math.random() * 500) + 1` and push it to the `numbers` array.
-- Iterate through the `numbers` array.
-- For each number: create a new paragraph element (`p`).
-- Set the paragraph's class name to 'number'.
-- Set its text content to the current number.
-- Set a data attribute `data-index` to the current loop index.
-- Append the paragraph element to the `container`.
-- Initialize `draggedElement` and `initialIndex` to `null`.
-- Add a 'dragstart' event listener to the `container`.
-- In the 'dragstart' handler, if the target has the class 'number', set `draggedElement` to the target, set `initialIndex` by parsing the target's `data-index`, and set the data transfer effect to 'move'.
-- Add a 'dragover' event listener to the `container`.
-- In the 'dragover' handler, prevent the default action and set the data transfer drop effect to 'move'.
-- If a `draggedElement` exists and the target has the class 'number':
-- Get the target element's bounding rectangle.
-- Get the mouse cursor's vertical position (`e.clientY`).
-- If `e.clientY` is less than the midpoint of the target element, insert the `draggedElement` before the target element.
-- Otherwise, insert the `draggedElement` after the target element (using `targetElement.nextSibling`).
-- After insertion, select all elements with class 'number' inside the container.
-- Iterate over these elements and update their `data-index` attribute to their new index in the DOM.
-- Add a 'dragend' event listener to the `container`.
-- In the 'dragend' handler, if the target has the class 'number', reset the target's opacity and set `draggedElement` and `initialIndex` back to `null`.
-- Select all paragraph elements with the class 'number' inside the container.
-- Iterate over the selected paragraphs and set the `draggable` attribute to 'true' for each one.
+- Define the HTML structure: create a `div` element with the `id` set to `number-list`.
+- Inside the `number-list` div, define a list of 5 paragraph elements (`<p>`).
+- For each paragraph, set its `class` to `number`.
+- Each paragraph should have its `draggable` attribute set to `true`.
+- Each paragraph should contain a placeholder for the random number (e.g., `[Random Number]`).
+- Optionally, for easy referencing in JavaScript, add a `data-index` attribute to each paragraph, starting from `0`.
+- Create a `<style>` block scoped to the component (e.g., inside the `number-list` div or a separate file linked only for this component) to define the CSS for `.number` and any dragging-related styles, but as a quick scoping measure, prefix CSS classes with the component ID, e.g., `#number-list .number`.
+- In the CSS, define a style for the `.number` class to give it a distinct appearance (e.g., border, padding).
+- Define a CSS class for the element being dragged, e.g., `.dragging`, and apply a visual style (e.g., opacity) to it.
+- Create a JavaScript function and immediately invoke it (an Immediately Invoked Function Expression or IIFE) to create a private scope for the component's logic.
+- Inside the IIFE, get a reference to the main component `div` using `document.getElementById('number-list')`.
+- Define a function to generate a random integer between 1 and 500 (inclusive).
+- Get all paragraph elements with the class `number` inside the component.
+- Iterate through the paragraphs and:
+    - Generate a random number using the function.
+    - Set the `textContent` of the paragraph to this number.
+    - If a `data-index` attribute was added, ensure it corresponds to the paragraph's position in the list.
+- Define a variable within the scope, e.g., `draggedElement`, to keep track of the paragraph currently being dragged.
+- Add an event listener for the `dragstart` event to the component `div` (delegation) or directly to each paragraph.
+- In the `dragstart` handler:
+    - Store the event target (`this` or `event.target`) in the `draggedElement` variable.
+    - Add the `.dragging` class to the `draggedElement`.
+    - Set the `dataTransfer` property (e.g., `event.dataTransfer.setData('text/plain', this.id)`), although not strictly necessary for in-place swapping.
+- Add an event listener for the `dragend` event.
+- In the `dragend` handler:
+    - Remove the `.dragging` class from the `draggedElement`.
+    - Set `draggedElement` to `null`.
+- Add an event listener for the `dragover` event to the component `div` or to each paragraph.
+- In the `dragover` handler:
+    - Prevent the default behavior (`event.preventDefault()`) to allow dropping.
+    - Identify the current paragraph the cursor is over, e.g., `targetElement = event.target.closest('.number')`.
+    - Check if `targetElement` is a valid paragraph, is not the same as `draggedElement`, and `draggedElement` is defined.
+    - If the conditions are met, perform the swapping logic:
+        - Determine the direction of the drag relative to the target: if the drag is moving over the top half, insert before; if over the bottom half, insert after. A simpler way is to always insert before or after based on their current order in the DOM.
+        - To swap, use `targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling)` if moving after the target, or `targetElement.parentNode.insertBefore(draggedElement, targetElement)` if moving before the target.
+        - After swapping, dispatch the custom event:
+            - Create a new `CustomEvent` named `component_number-list_number_[number_index]_dragging`.
+            - The `[number_index]` should be the `data-index` of the *dragged* element. You might need to re-evaluate the indices after swapping if you rely on them.
+            - Dispatch the event using `document.dispatchEvent(event)`.
 
 [prompt output guidance]
-make sure this component has its own scoping in javascript and css, do not intefere with other possible components in the same page
 do not add any css code
 do not apply any inline style setting in javascript
 show me the html and javascript code only, no explanation and no extra words
