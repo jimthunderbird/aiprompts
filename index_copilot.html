@@ -1,43 +1,66 @@
 <div id="number-list">
-  <p class="number" draggable="true">237</p>
-  <p class="number" draggable="true">412</p>
-  <p class="number" draggable="true">89</p>
-  <p class="number" draggable="true">356</p>
-  <p class="number" draggable="true">143</p>
+  <div id="status">moving status</div>
 </div>
 
 <script>
 (function() {
-  const container = document.getElementById('number-list');
-  const paragraphs = container.querySelectorAll('.number');
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
+  const statusDiv = document.getElementById('status');
   
-  paragraphs.forEach((p, index) => {
-    p.textContent = Math.floor(Math.random() * 500) + 1;
-    
-    let draggedElement = null;
-    
-    p.addEventListener('dragstart', function(e) {
-      draggedElement = this;
-    });
-    
-    p.addEventListener('dragover', function(e) {
-      e.preventDefault();
-    });
-    
-    p.addEventListener('drop', function(e) {
-      e.preventDefault();
-      if (draggedElement && draggedElement !== this) {
-        const tempText = draggedElement.textContent;
-        draggedElement.textContent = this.textContent;
-        this.textContent = tempText;
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('p');
+    p.className = 'number';
+    p.textContent = Math.floor(Math.random() * 1000) + 1;
+    p.draggable = true;
+    p.dataset.index = i;
+    container.appendChild(p);
+  }
+  
+  let draggedElement = null;
+  let draggedIndex = null;
+  
+  container.addEventListener('dragstart', function(e) {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
+      draggedIndex = e.target.dataset.index;
+      const event = new CustomEvent(`component_${componentId}_number_${draggedIndex}_drag_started`);
+      document.dispatchEvent(event);
+      statusDiv.textContent = 'drag started';
+    }
+  });
+  
+  container.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    if (e.target.classList.contains('number') && draggedElement) {
+      const targetIndex = e.target.dataset.index;
+      const event = new CustomEvent(`component_${componentId}_number_${draggedIndex}_drag_ongoing`);
+      document.dispatchEvent(event);
+      
+      if (draggedElement !== e.target && draggedElement.textContent !== e.target.textContent) {
+        statusDiv.textContent = `${draggedElement.textContent} is over ${e.target.textContent}`;
         
-        const draggedIndex = Array.from(paragraphs).indexOf(draggedElement);
-        const event = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
-          detail: { index: draggedIndex }
-        });
-        document.dispatchEvent(event);
+        const allNumbers = Array.from(container.querySelectorAll('.number'));
+        const draggedIdx = allNumbers.indexOf(draggedElement);
+        const targetIdx = allNumbers.indexOf(e.target);
+        
+        if (draggedIdx < targetIdx) {
+          e.target.parentNode.insertBefore(draggedElement, e.target.nextSibling);
+        } else {
+          e.target.parentNode.insertBefore(draggedElement, e.target);
+        }
       }
-    });
+    }
+  });
+  
+  container.addEventListener('dragend', function(e) {
+    if (e.target.classList.contains('number')) {
+      const event = new CustomEvent(`component_${componentId}_number_${draggedIndex}_drag_ended`);
+      document.dispatchEvent(event);
+      statusDiv.textContent = 'drag ended';
+      draggedElement = null;
+      draggedIndex = null;
+    }
   });
 })();
 </script>

@@ -21,84 +21,36 @@ please show me the html and javascript for the following html component:
     - update status to "<paragraph_A_text> is over <pargraph_B_text>"
 
 [engineering guidance]
-use the following example as reference:
-<div id="number-list"></div>
-<script>
-(() => {
-  const componentId = 'number-list';
-  const container = document.getElementById(componentId);
-  const numbers = [];
-  
-  // Generate 6 random numbers between 1 and 500
-  for (let i = 0; i < 6; i++) {
-    numbers.push(Math.floor(Math.random() * 500) + 1);
-  }
-  
-  // Create paragraphs
-  numbers.forEach((num, index) => {
-    const p = document.createElement('p');
-    p.className = 'number';
-    p.textContent = num;
-    p.setAttribute('data-index', index);
-    container.appendChild(p);
-  });
-  
-  // Drag and drop functionality
-  let draggedElement = null;
-  let initialIndex = null;
-  
-  container.addEventListener('dragstart', (e) => {
-    if (e.target.classList.contains('number')) {
-      draggedElement = e.target;
-      initialIndex = parseInt(draggedElement.getAttribute('data-index'));
-      e.dataTransfer.effectAllowed = 'move';
-    }
-  });
-  
-  container.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    
-    if (draggedElement && e.target.classList.contains('number')) {
-      const targetElement = e.target;
-      const targetRect = targetElement.getBoundingClientRect();
-      const clientY = e.clientY;
-      
-      if (clientY < targetRect.top + targetRect.height / 2) {
-        // Insert draggedElement before targetElement
-        if (draggedElement !== targetElement) {
-          targetElement.parentNode.insertBefore(draggedElement, targetElement);
-        }
-      } else {
-        // Insert draggedElement after targetElement
-        if (draggedElement !== targetElement.nextSibling) {
-          targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
-        }
-      }
-      
-      // Update indices after swap
-      const paragraphs = container.querySelectorAll('.number');
-      paragraphs.forEach((p, index) => {
-        p.setAttribute('data-index', index);
-      });
-    }
-  });
-  
-  container.addEventListener('dragend', (e) => {
-    if (e.target.classList.contains('number')) {
-      e.target.style.opacity = '';
-      draggedElement = null;
-      initialIndex = null;
-    }
-  });
-  
-  // Make elements draggable
-  const paragraphs = container.querySelectorAll('.number');
-  paragraphs.forEach(p => {
-    p.setAttribute('draggable', 'true');
-  });
-})();
-</script>
+use the following as guidance and experience:
+- Create an empty div element with the ID "number-list".
+- Start a self-executing anonymous JavaScript function.
+- Inside the function, define a constant `componentId` as 'number-list'.
+- Get the DOM element with that ID and store it in a constant named `container`.
+- Initialize an empty array named `numbers`.
+- Loop 6 times to generate random numbers.
+- In the loop, generate a random integer between 1 and 500 using `Math.floor(Math.random() * 500) + 1` and push it to the `numbers` array.
+- Iterate through the `numbers` array.
+- For each number: create a new paragraph element (`p`).
+- Set the paragraph's class name to 'number'.
+- Set its text content to the current number.
+- Set a data attribute `data-index` to the current loop index.
+- Append the paragraph element to the `container`.
+- Initialize `draggedElement` and `initialIndex` to `null`.
+- Add a 'dragstart' event listener to the `container`.
+- In the 'dragstart' handler, if the target has the class 'number', set `draggedElement` to the target, set `initialIndex` by parsing the target's `data-index`, and set the data transfer effect to 'move'.
+- Add a 'dragover' event listener to the `container`.
+- In the 'dragover' handler, prevent the default action and set the data transfer drop effect to 'move'.
+- If a `draggedElement` exists and the target has the class 'number':
+- Get the target element's bounding rectangle.
+- Get the mouse cursor's vertical position (`e.clientY`).
+- If `e.clientY` is less than the midpoint of the target element, insert the `draggedElement` before the target element.
+- Otherwise, insert the `draggedElement` after the target element (using `targetElement.nextSibling`).
+- After insertion, select all elements with class 'number' inside the container.
+- Iterate over these elements and update their `data-index` attribute to their new index in the DOM.
+- Add a 'dragend' event listener to the `container`.
+- In the 'dragend' handler, if the target has the class 'number', reset the target's opacity and set `draggedElement` and `initialIndex` back to `null`.
+- Select all paragraph elements with the class 'number' inside the container.
+- Iterate over the selected paragraphs and set the `draggable` attribute to 'true' for each one.
 
 [prompt output guidance]
 make sure this component has its own scoping in javascript and css, do not intefere with other possible components in the same page

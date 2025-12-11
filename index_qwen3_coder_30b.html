@@ -1,0 +1,96 @@
+<div id="number-list">
+  <div id="status">moving status</div>
+</div>
+
+<script>
+(() => {
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
+  const statusElement = document.getElementById('status');
+  const numbers = [];
+  
+  for (let i = 0; i < 8; i++) {
+    numbers.push(Math.floor(Math.random() * 1000) + 1);
+  }
+  
+  numbers.forEach((number, index) => {
+    const p = document.createElement('p');
+    p.className = 'number';
+    p.textContent = number;
+    p.setAttribute('data-index', index);
+    p.setAttribute('draggable', 'true');
+    container.appendChild(p);
+  });
+  
+  let draggedElement = null;
+  let initialIndex = null;
+  
+  container.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
+      initialIndex = parseInt(draggedElement.getAttribute('data-index'));
+      e.dataTransfer.effectAllowed = 'move';
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_started`, {
+        detail: { index: initialIndex }
+      });
+      document.dispatchEvent(event);
+      statusElement.textContent = 'drag started';
+    }
+  });
+  
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    if (draggedElement && e.target.classList.contains('number')) {
+      const targetElement = e.target;
+      const rect = targetElement.getBoundingClientRect();
+      const mouseY = e.clientY;
+      
+      if (mouseY < rect.top + rect.height / 2) {
+        if (targetElement.previousSibling !== draggedElement) {
+          container.insertBefore(draggedElement, targetElement);
+        }
+      } else {
+        if (targetElement.nextSibling !== draggedElement) {
+          container.insertBefore(draggedElement, targetElement.nextSibling);
+        }
+      }
+      
+      const numberElements = container.querySelectorAll('.number');
+      numberElements.forEach((element, newIndex) => {
+        element.setAttribute('data-index', newIndex);
+      });
+      
+      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_ongoing`, {
+        detail: { index: initialIndex }
+      });
+      document.dispatchEvent(event);
+      
+      if (draggedElement.textContent !== targetElement.textContent) {
+        statusElement.textContent = `${draggedElement.textContent} is over ${targetElement.textContent}`;
+      }
+    }
+  });
+  
+  container.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('number')) {
+      e.target.style.opacity = '';
+      const event = new CustomEvent(`component_${componentId}_number_${initialIndex}_drag_ended`, {
+        detail: { index: initialIndex }
+      });
+      document.dispatchEvent(event);
+      statusElement.textContent = 'drag ended';
+      draggedElement = null;
+      initialIndex = null;
+    }
+  });
+  
+  const numberElements = container.querySelectorAll('.number');
+  numberElements.forEach(element => {
+    element.setAttribute('draggable', 'true');
+  });
+})();
+</script>
+
