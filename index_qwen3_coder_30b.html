@@ -11,4 +11,54 @@
   const component = document.getElementById('number-list');
   let draggedElement = null;
 
-  const getRandomInt = (min, max) => Math.floor(Math.random() * (max
+  const getRandomNumber = () => Math.floor(Math.random() * 500) + 1;
+
+  const paragraphs = component.querySelectorAll('.number');
+  paragraphs.forEach((p, index) => {
+    p.textContent = getRandomNumber();
+    p.setAttribute('data-index', index);
+  });
+
+  component.addEventListener('dragstart', (event) => {
+    if (event.target.classList.contains('number')) {
+      draggedElement = event.target;
+      draggedElement.classList.add('dragging');
+      event.dataTransfer.setData('text/plain', draggedElement.dataset.index);
+    }
+  });
+
+  component.addEventListener('dragend', () => {
+    if (draggedElement) {
+      draggedElement.classList.remove('dragging');
+      draggedElement = null;
+    }
+  });
+
+  component.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    const targetElement = event.target.closest('.number');
+    if (targetElement && draggedElement && targetElement !== draggedElement) {
+      const targetIndex = parseInt(targetElement.dataset.index);
+      const draggedIndex = parseInt(draggedElement.dataset.index);
+
+      if (targetIndex > draggedIndex) {
+        targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
+      } else {
+        targetElement.parentNode.insertBefore(draggedElement, targetElement);
+      }
+
+      const newEvent = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
+        detail: { fromIndex: draggedIndex, toIndex: targetIndex }
+      });
+      document.dispatchEvent(newEvent);
+
+      // Update data-index after swap
+      const updatedParagraphs = component.querySelectorAll('.number');
+      updatedParagraphs.forEach((p, index) => {
+        p.setAttribute('data-index', index);
+      });
+    }
+  });
+})();
+</script>
+
