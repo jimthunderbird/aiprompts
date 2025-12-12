@@ -1,16 +1,1 @@
-please write the following logic in php
-no explanation and no extra words
-do not output ```php and ```
-output <?php in the beginning, no ending php ?> mark
 
-- def get_random_numbers(<n> no default value)
-  - <numbers> = a list of integers, from 1 to 100
-  - <numbers> = pick <n> random integers from <numbers> 
-
-- def sum_numbers(<numbers>)
-  - get the sum of the array <numbers>
-
-- <numbers> = get_random_numbers(5)
-- for each <number> in <numbers>
-  - print "hello <number>" with new line
-- print sum_numbers(<numbers>) with new line
