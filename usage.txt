@@ -1,4 +1,9 @@
-All of these prompts are meant to be run by a local llm
+Build custom model with better params:
+1. ollama show qwen3-coder:30b --modelfile >> qwen3-coder-modelfile
+   PARAMETER temperature 0.0
+   PARAMETER top_k 1
+   PARAMETER top_p 1.0
 
-Example:
-time cat dragging.prompt | ollama run qwen3-coder:30b > result.html
+2. ollam create qwen3-coder:30b-determin -f ./qwen3-coder-modelfile
+
+3. cat dragging.prompt |  ollama run qwen3-coder:30b-determin > index_qwen3_coder_30b.html
