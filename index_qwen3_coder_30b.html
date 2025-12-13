@@ -8,52 +8,59 @@
 
 <script>
 (() => {
-  const component = document.getElementById('number-list');
+  const componentId = 'number-list';
+  const container = document.getElementById(componentId);
+  if (!container) return;
+
+  const generateRandomNumber = () => Math.floor(Math.random() * 500) + 1;
+  const paragraphs = container.querySelectorAll('.number');
   let draggedElement = null;
 
-  const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-  const paragraphs = component.querySelectorAll('.number');
   paragraphs.forEach((p, index) => {
-    p.textContent = getRandomInt(1, 500);
+    p.textContent = generateRandomNumber();
     p.setAttribute('data-index', index);
   });
 
-  component.addEventListener('dragstart', (event) => {
-    if (event.target.classList.contains('number')) {
-      draggedElement = event.target;
+  container.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('number')) {
+      draggedElement = e.target;
       draggedElement.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
     }
   });
 
-  component.addEventListener('dragend', () => {
+  container.addEventListener('dragend', () => {
     if (draggedElement) {
       draggedElement.classList.remove('dragging');
       draggedElement = null;
     }
   });
 
-  component.addEventListener('dragover', (event) => {
-    event.preventDefault();
-    const targetElement = event.target.closest('.number');
-    if (targetElement && draggedElement && draggedElement !== targetElement) {
-      const targetIndex = parseInt(targetElement.getAttribute('data-index'));
-      const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!draggedElement) return;
 
+    const targetElement = e.target.closest('.number');
+    if (!targetElement || targetElement === draggedElement) return;
+
+    const targetIndex = parseInt(targetElement.getAttribute('data-index'));
+    const draggedIndex = parseInt(draggedElement.getAttribute('data-index'));
+
+    if (targetIndex !== draggedIndex) {
+      const parent = draggedElement.parentNode;
       if (targetIndex > draggedIndex) {
-        targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
+        parent.insertBefore(draggedElement, targetElement.nextSibling);
       } else {
-        targetElement.parentNode.insertBefore(draggedElement, targetElement);
+        parent.insertBefore(draggedElement, targetElement);
       }
 
-      const newEvent = new CustomEvent(`component_number-list_number_${draggedIndex}_dragging`, {
-        detail: { fromIndex: draggedIndex, toIndex: targetIndex }
+      const newDraggedIndex = parseInt(draggedElement.getAttribute('data-index'));
+      const event = new CustomEvent(`component_${componentId}_number_${newDraggedIndex}_dragging`, {
+        detail: { draggedIndex, targetIndex }
       });
-      document.dispatchEvent(newEvent);
+      document.dispatchEvent(event);
 
-      // Update data-index after swap
-      const updatedParagraphs = component.querySelectorAll('.number');
-      updatedParagraphs.forEach((p, index) => {
+      paragraphs.forEach((p, index) => {
         p.setAttribute('data-index', index);
       });
     }
