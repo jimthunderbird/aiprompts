@@ -60,7 +60,7 @@ class EncrptionUtil {
       call method.funnyFileOperation
     ]
     guidance: {
-      do not use ternary operator 
+      must use ternary operator 
     }
   }
 
