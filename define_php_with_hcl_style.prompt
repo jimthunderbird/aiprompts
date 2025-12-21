@@ -1,12 +1,14 @@
-role: PHP 8 Coding Expert
+role: PHP 8.3 Coding Expert
 
-objective: generate a class based on the specification below.
+objective: generate a codeblock
 
 constraints: [
   output ONLY code
   use PSR-12
   never wrap code in triple backticks
   return the raw text immediately
+  always use declare(strict_types=1)
+  please use method.{method_name).guidance as the constraints
 ]
 
 namespace: Core\Util
@@ -18,15 +20,15 @@ var.number {
   type: integer
 }
 
-method.construct {
+method.construct: {
   visibility: public
   static: false
-  logic: [
+  logic: [ 
     set var.number = 10
     call parent constructor with var.number
   ]
   guidance: [
-    add comments on each line of code
+    add comment on variable initialization
   ]
 }
 
@@ -35,10 +37,12 @@ method.showRandomNumber {
   static: false
   return.type: array
   logic: [
-    return {var.number} of integers ranging from 1 to 1000
+    var.numOfNumbers: get class variable {number}
+    return {numOfNumbers} of integers ranging from 1 to 1000
   ]
   guidance: [
     use array_rand function
+    add step-by-step comments
   ]
 }
 
@@ -55,25 +59,24 @@ method.sayOddEven {
     }
     call method.funnyFileOperation
   ]
-  guidance: [
+  guidance: {
     do not use ternary operator 
-  ]
+  }
 }
 
 method.funnyFileOperation {
   visibility: private
   static: true
   logic: [
-    var.fileContent: read url https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
-    if error {
+    var.fileContent: read from url https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
+    if (error) {
       print "error occurred"
     }
     print var.fileContent with new line
   ]
   guidance: [
-    use fopen to read url
-    do not use stream_context_create
-    condense if statement into one line
+    add step-by-step comments
+    use fopen
   ]
 }
 
@@ -101,4 +104,25 @@ method.sha1 {
   logic: [
     return sha1 hash of param.text
   ]
-} 
+}
+
+method.sha256 {
+  visibility: public
+  static: true
+  param.text: string
+  return: string
+  logic: [
+    return sha256 hash of param.text
+  ]
+}
+
+method.bubbleSort {
+  visibility: public
+  static: true
+  param.numbers: array of integers
+  return array
+  logic: [
+    perform bubble sort to param.numbers
+    return sorted numbers
+  ]
+}
