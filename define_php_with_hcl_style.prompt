@@ -2,10 +2,11 @@ role: PHP 8 Coding Expert
 
 objective: generate a class based on the specification below.
 
-constraints [
-  Output ONLY code
-  Use PSR-12
-  Never wrap code in triple backticks. Just provide the raw text
+constraints: [
+  output ONLY code
+  use PSR-12
+  never wrap code in triple backticks
+  return the raw text immediately
 ]
 
 namespace: Core\Util
@@ -20,9 +21,12 @@ var.number {
 method.construct {
   visibility: public
   static: false
-  logic [
+  logic: [
     set var.number = 10
     call parent constructor with var.number
+  ]
+  guidance: [
+    add comments on each line of code
   ]
 }
 
@@ -32,6 +36,9 @@ method.showRandomNumber {
   return.type: array
   logic: [
     return {var.number} of integers ranging from 1 to 1000
+  ]
+  guidance: [
+    use array_rand function
   ]
 }
 
@@ -48,20 +55,23 @@ method.sayOddEven {
     }
     call method.funnyFileOperation
   ]
+  guidance: [
+    do not use ternary operator 
+  ]
 }
 
 method.funnyFileOperation {
   visibility: private
   static: true
   logic: [
-    var.fileContent: fopen(https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt)
+    var.fileContent: read url https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
     if error {
       print "error occurred"
     }
     print var.fileContent with new line
   ]
   guidance: [
-    use php function fopen to read url
+    use fopen to read url
     do not use stream_context_create
     condense if statement into one line
   ]
