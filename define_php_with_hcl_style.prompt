@@ -1,21 +1,22 @@
 ACT AS: PHP 8 Coding Expert
 TASK: Generate a class based on the specification below.
-RULES: 
-- Output ONLY code
-- No placeholder implementation 
-
-SPECIFICATION:
+RULES: [
+  Output ONLY code
+  DO NOT output ```php and ```
+  Use PSR-12
+  For each method in the class, if the method.guidance is defined, use that as the coding guideline
+]
 
 namespace: Core\Util
 class: EncrptionUtil
 parent: App\Base\BaseObject
 
-var.number: {
-  scope: private
+var.number {
+  visibility: private
   type: integer
 }
 
-method.construct: {
+method.construct {
   visibility: public
   static: false
   logic: [
@@ -24,7 +25,7 @@ method.construct: {
   ]
 }
 
-method.showRandomNumber: {
+method.showRandomNumber {
   visibility: public
   static: false
   return.type: array
@@ -33,7 +34,7 @@ method.showRandomNumber: {
   ]
 }
 
-method.sayOddEven: {
+method.sayOddEven {
   visibility: public
   static: true
   logic: [
@@ -48,19 +49,24 @@ method.sayOddEven: {
   ]
 }
 
-method.funnyFileOperation: {
+method.funnyFileOperation {
   visibility: private
   static: true
   logic: [
-    var.fileContent: get file content from https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
+    var.fileContent: fopen(https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt)
     if error {
       print "error occurred"
     }
     print var.fileContent with new line
   ]
+  guidance: [
+    use php function fopen to read url
+    do not use stream_context_create
+    condense if statement into one line
+  ]
 }
 
-method.readFunnyFileOperation: {
+method.readFunnyFileOperation {
   visibility: private
   static: true
   return: string or nothing
@@ -71,10 +77,17 @@ method.readFunnyFileOperation: {
     }
     return var.fileContent
   ]
+  guidance: [
+    use file_get_contents to read url
+  ]
 }
 
-# feedbacks and guidance
-method.funnyFileOperation.guidance[]:use fopen to read url
-method.readFunnyFileOperation.guidance[]: use file_get_contents to read url
-method.funnyFileOperation.guidance[]:condense if statement into one line
-mthod.sayOddEven.guidance[]:use if statement explicitly
+method.sha1 {
+  visibility: public
+  static: true
+  param.text: string
+  return: string
+  logic: [
+    return sha1 hash of param.text
+  ]
+}
