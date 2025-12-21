@@ -1,10 +1,11 @@
-ACT AS: PHP 8 Coding Expert
-TASK: Generate a class based on the specification below.
-RULES: [
+role: PHP 8 Coding Expert
+
+objective: generate a class based on the specification below.
+
+constraints [
   Output ONLY code
-  DO NOT output ```php and ```
   Use PSR-12
-  For each method in the class, if the method.guidance is defined, use that as the coding guideline
+  Never wrap code in triple backticks. Just provide the raw text
 ]
 
 namespace: Core\Util
@@ -19,7 +20,7 @@ var.number {
 method.construct {
   visibility: public
   static: false
-  logic: [
+  logic [
     set var.number = 10
     call parent constructor with var.number
   ]
@@ -90,4 +91,4 @@ method.sha1 {
   logic: [
     return sha1 hash of param.text
   ]
-}
+} 
