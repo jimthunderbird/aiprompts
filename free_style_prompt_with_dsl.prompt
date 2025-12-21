@@ -1,0 +1,89 @@
+role Python Coding Expert
+
+objective generate a codeblock
+
+constraints [
+  output ONLY code
+  use PSR-12
+  never wrap code in triple backticks
+  return the raw text immediately
+  always use declare(strict_types=1)
+  use method.{method_name).guidance as the constraints
+  use function.{function_name).guidance as the constraints
+  use function.{function_name).comment as the function's comment
+  show phpdoc 
+  use strict defensive coding when accessing json data
+  use strict defensive coding when accessing nested array data
+]
+
+function printSomeMessages.guidance [
+  show comments
+  for the logic, show step-by-step comments, do not show the step number
+  use isset when accessing nested data
+]
+
+function test {
+  logic [
+    print "this is a testing function"
+  ]
+}
+
+function printSomeMessages {
+  comment: [
+    happy new year
+    this is the main running function
+    it runs the main logic, it is great
+  ]
+  param year: string
+  logic: [
+    foreach (i in ranging from 1 to 6) {
+      if (i is odd) {
+        print "odd number {i}"
+      } else {
+        print "even number {i}"
+      }
+    }
+
+    let q: server variable with key path: a.b.c.d
+    let filename: "hello.txt"
+    save "hello" to file {filename}
+
+    print "happy {param.year}" with new line
+
+    let jsonMessage: json encode {
+      error: "this is an error"
+      success: 1
+      a: {
+        b: {
+          c: "this is c"
+        }
+      }
+    }
+
+    if (error) {
+      print "json message is formatted properly"
+    }
+
+    print jsonMessage.success with new line
+    print jsonMessage.a.b.c with new line
+
+    let nestedArr: [
+      country: {
+        name: "U.S"
+      }
+    ]
+
+    print nestedArr.country.name
+  ]
+}
+
+function.test.comment: [
+  happy new year
+  this is a testing comment
+]
+
+function.test.guidance: [
+  do not show comments at all
+]
+
+call printSomeMessages(2026)
