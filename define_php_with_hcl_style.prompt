@@ -12,118 +12,118 @@ constraints: [
   please use function.{function_name).guidance as the constraints
 ]
 
-namespace: Core\Util
-class: EncrptionUtil
-parent: App\Base\BaseObject
-
-var.number {
-  visibility: private
-  type: integer
-}
-
-method.construct: {
-  visibility: public
-  static: false
-  logic: [ 
-    set var.number = 10
-    call parent constructor with var.number
-  ]
-  guidance: [
-    add comment on variable initialization
-  ]
-}
-
-method.showRandomNumber {
-  visibility: public
-  static: false
-  return.type: array
-  logic: [
-    var.numOfNumbers: get class variable {number}
-    return {numOfNumbers} of integers ranging from 1 to 1000
-  ]
-  guidance: [
-    use array_rand function
-    add step-by-step comments
-  ]
-}
-
-method.sayOddEven {
-  visibility: public
-  static: true
-  logic: [
-    for (i from 1 to 10) {
-      if (i is event number) {
-        print "event" with no new line
-      } else {
-        print "odd" with no new line
-      }
-    }
-    call method.funnyFileOperation
-  ]
-  guidance: {
-    do not use ternary operator 
+class EncrptionUtil {
+  namespace: Core\Util
+  parent: App\Base\BaseObject
+  var.number {
+    visibility: private
+    type: integer
   }
-}
 
-method.funnyFileOperation {
-  visibility: private
-  static: true
-  logic: [
-    var.fileContent: read from url https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
-    if (error) {
-      print "error occurred"
+  method.construct: {
+    visibility: public
+    static: false
+    logic: [ 
+      set var.number = 10
+      call parent constructor with var.number
+    ]
+    guidance: [
+      add comment on variable initialization
+    ]
+  }
+
+  method.showRandomNumber {
+    visibility: public
+    static: false
+    return.type: array
+    logic: [
+      var.numOfNumbers: get class variable {number}
+      return {numOfNumbers} of integers ranging from 1 to 1000
+    ]
+    guidance: [
+      use array_rand function
+      add step-by-step comments
+    ]
+  }
+
+  method.sayOddEven {
+    visibility: public
+    static: true
+    logic: [
+      for (i from 1 to 10) {
+        if (i is event number) {
+          print "event" with no new line
+        } else {
+          print "odd" with no new line
+        }
+      }
+      call method.funnyFileOperation
+    ]
+    guidance: {
+      do not use ternary operator 
     }
-    print var.fileContent with new line
-  ]
-  guidance: [
-    add step-by-step comments
-    use fopen
-  ]
-}
+  }
 
-method.readFunnyFileOperation {
-  visibility: private
-  static: true
-  return: string or nothing
-  logic: [
-    var.fileContent: get file content from https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
-    if (there is an error) {
-      return
-    }
-    return var.fileContent
-  ]
-  guidance: [
-    use file_get_contents to read url
-  ]
-}
+  method.funnyFileOperation {
+    visibility: private
+    static: true
+    logic: [
+      var.fileContent: read from url https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
+      if (error) {
+        print "error occurred"
+      }
+      print var.fileContent with new line
+    ]
+    guidance: [
+      add step-by-step comments
+      use fopen
+    ]
+  }
 
-method.sha1 {
-  visibility: public
-  static: true
-  param.text: string
-  return: string
-  logic: [
-    return sha1 hash of param.text
-  ]
-}
+  method.readFunnyFileOperation {
+    visibility: private
+    static: true
+    return: string or nothing
+    logic: [
+      var.fileContent: get file content from https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
+      if (there is an error) {
+        return
+      }
+      return var.fileContent
+    ]
+    guidance: [
+      use file_get_contents to read url
+    ]
+  }
 
-method.sha256 {
-  visibility: public
-  static: true
-  param.text: string
-  return: string
-  logic: [
-    return sha256 hash of param.text
-  ]
-}
+  method.sha1 {
+    visibility: public
+    static: true
+    param.text: string
+    return: string
+    logic: [
+      return sha1 hash of param.text
+    ]
+  }
 
-method.bubbleSort {
-  visibility: public
-  static: true
-  param.numbers: array of integers
-  return array
-  logic: [
-    perform bubble sort to param.numbers
-    return sorted numbers
-  ]
+  method.sha256 {
+    visibility: public
+    static: true
+    param.text: string
+    return: string
+    logic: [
+      return sha256 hash of param.text
+    ]
+  }
+
+  method.bubbleSort {
+    visibility: public
+    static: true
+    param.numbers: array of integers
+    return array
+    logic: [
+      perform bubble sort to param.numbers
+      return sorted numbers
+    ]
+  }
 }
