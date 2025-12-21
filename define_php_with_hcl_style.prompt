@@ -9,6 +9,7 @@ constraints: [
   return the raw text immediately
   always use declare(strict_types=1)
   please use method.{method_name).guidance as the constraints
+  please use function.{function_name).guidance as the constraints
 ]
 
 namespace: Core\Util
