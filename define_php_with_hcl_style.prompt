@@ -1,0 +1,80 @@
+ACT AS: PHP 8 Coding Expert
+TASK: Generate a class based on the specification below.
+RULES: 
+- Output ONLY code
+- No placeholder implementation 
+
+SPECIFICATION:
+
+namespace: Core\Util
+class: EncrptionUtil
+parent: App\Base\BaseObject
+
+var.number: {
+  scope: private
+  type: integer
+}
+
+method.construct: {
+  visibility: public
+  static: false
+  logic: [
+    set var.number = 10
+    call parent constructor with var.number
+  ]
+}
+
+method.showRandomNumber: {
+  visibility: public
+  static: false
+  return.type: array
+  logic: [
+    return {var.number} of integers ranging from 1 to 1000
+  ]
+}
+
+method.sayOddEven: {
+  visibility: public
+  static: true
+  logic: [
+    for (i from 1 to 10) {
+      if (i is event number) {
+        print "event" with no new line
+      } else {
+        print "odd" with no new line
+      }
+    }
+    call method.funnyFileOperation
+  ]
+}
+
+method.funnyFileOperation: {
+  visibility: private
+  static: true
+  logic: [
+    var.fileContent: get file content from https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
+    if error {
+      print "error occurred"
+    }
+    print var.fileContent with new line
+  ]
+}
+
+method.readFunnyFileOperation: {
+  visibility: private
+  static: true
+  return: string or nothing
+  logic: [
+    var.fileContent: get file content from https://github.com/jimthunderbird/aiprompts/blob/main/dragging.prompt
+    if (there is an error) {
+      return
+    }
+    return var.fileContent
+  ]
+}
+
+# feedbacks and guidance
+method.funnyFileOperation.guidance[]:use fopen to read url
+method.readFunnyFileOperation.guidance[]: use file_get_contents to read url
+method.funnyFileOperation.guidance[]:condense if statement into one line
+mthod.sayOddEven.guidance[]:use if statement explicitly
