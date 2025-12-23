@@ -1,54 +1,30 @@
-# Role: PHP 8 And Laravel 10 Coding Expert
+# Role: PHP 8, Laravel 10, and MYSQL Coding Expert
 
 # Objective: Generate a codeblock. Return the codeblock immediately
 
 # Constraints
 # Always starts with <?php
-##Do not include ```php and ```
-##Use PSR-12 coding standard
-##Do not use declare(strict_types=1)
-##Show PHPDoc required for every method or function
-##Use strict defensive coding when accessing JSON data.
-##Use strict defensive coding when accessing nested array data.
-namespace App.Util
+## Do not include ```php and ```
+## Use PSR-12 coding standard
+## Do not use declare(strict_types=1)
+## Show PHPDoc required for every method or function
+## Use strict defensive coding when accessing JSON data.
+## Use strict defensive coding when accessing nested array data.
+## Map this.{name} to php this->{name}
+## When the intent is to call a function {function} or method {method}, always assume they already exist, do not define {function} or {method}
 
-class EncryptionUtil {
-  public static function md5(string text) return string {
-    return md5 of {text} 
-  }
-}
-
-class NumberUtil {
-  private int number
-  const MAX_NUMBERS_SIZE 100
-
-  public construct() {
-    this.number = 20 
-  }
-
-  #public function mergeSort(array numbers) return array {
-  #do not use recursion
-  #}
-
-  #public function getRandomNNumbersInRange(int rangeStart, int rangeEnd, int n) return array {
-  #do not need to consider const MAX_NUMBERS_SIZE
-  #}
-
-  public function outputJSON() {
-    print json with the data {
-      success: 1
-      message: "got some numbers"
-      numbers: {random 3 numbers from 1 to 20}
+namespace System
+class SystemManager extends App.CoreManager {
+  getAllUsers() return array {
+    try {
+      print "hello"
+    } catch (throwable e) {
+      print e.message
+      this.tellTheWorldWeHaveError(e.message)
+      this.tellOtherWorldWeHaveError(e.message)
+      this.numOfError ++
     }
   }
-
-  pubilc function getAllUsers() {
-    use laravel DB wrapper
-    use raw sql
-    get the following user data fields:
-    first_name
-    last_name
-    email
-    phone_number
-  }
 }
+
+print json with result from getAllUsers, no header needed, with newline
