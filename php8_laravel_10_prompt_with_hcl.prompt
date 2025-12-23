@@ -11,6 +11,7 @@
 ## Use strict defensive coding when accessing JSON data.
 ## Use strict defensive coding when accessing nested array data.
 ## Map this.{name} to php this->{name}
+## Map parent.{name} to php parent::{name}
 ## When the intent is to call a function {function} or method {method}, always assume they already exist, do not define {function} or {method}
 
 namespace System
@@ -20,6 +21,7 @@ class SystemManager extends App.CoreManager {
       print "hello"
     } catch (throwable e) {
       print e.message
+      parent.tellParentWeHaveError(e.message)
       this.tellTheWorldWeHaveError(e.message)
       this.tellOtherWorldWeHaveError(e.message)
       this.numOfError ++
